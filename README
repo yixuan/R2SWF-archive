@@ -1,0 +1,5 @@
+This is an R package to convert several images
+to a Flash file using the Ming library.
+
+I'm not sure if this is a duplicate effort, since 
+the package swfDevice is already there. Maybe not.
