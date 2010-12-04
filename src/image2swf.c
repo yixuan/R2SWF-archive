@@ -39,6 +39,6 @@ void png2swf(char** inputPics, int* nPics, double* interval, char** outputFileNa
 
     SWFMovie_save(m, outputFileName[0]);
 
-    free(m);
-    free(image);
+    destroySWFBitmap((SWFBitmap) image);
+    destroySWFMovie(m);
 }
