@@ -21,7 +21,7 @@
 png2swf <- function(expr, interval = 1, output = "movie.swf",
     dev = "png", img.name = "Rplot", ...) {
     if (is.character(dev)) dev = get(dev)
-    dev(file.path(tempdir(), paste(filename, "%d.", "png", sep = "")), ...)
+    dev(file.path(tempdir(), paste(img.name, "%d.", "png", sep = "")), ...)
     eval(expr)
     dev.off()
 
