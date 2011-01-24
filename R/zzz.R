@@ -1,3 +1,3 @@
-.First.lib <- function(lib, pkg) {
+.onLoad <- function(lib, pkg) {
     library.dynam("R2SWF", pkg, lib)
 }
