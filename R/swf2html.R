@@ -1,4 +1,4 @@
-##' Embed the SWF file into an HTML file.
+##' Embed the SWF file into an HTML page.
 ##'
 ##' @param swf.file the path of the SWF file
 ##' @param output the output path of the HTML file
@@ -33,6 +33,6 @@ swf2html = function(swf.file, output, width = 480, height = 480) {
 </body>
 </html>
 ', file = output, append = TRUE)
-    try(browseURL(output), silent = TRUE)
+    if (interactive()) try(browseURL(output), silent = TRUE)
     invisible(output)
 }
