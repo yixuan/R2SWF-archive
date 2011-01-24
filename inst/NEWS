@@ -1,0 +1,7 @@
+		  CHANGES IN R2SWF VERSION 0.1-0
+
+NEW FEATURES
+
+    o png2swf() to convert png files to a Flash animation
+
+    o swf2html() to embed a Flash file into an HTML page
