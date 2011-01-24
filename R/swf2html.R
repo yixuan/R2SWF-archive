@@ -6,6 +6,7 @@
 ##' @param height height of the Flash
 ##' @return the output path of the HTML file
 ##' @author Yihui Xie <\url{http://yihui.name}>
+##' @export
 ##' @examples
 ##' png2swf({
 ##'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))

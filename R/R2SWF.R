@@ -14,6 +14,7 @@
 ##' @param ... other arguments to be passed to the graphics device
 ##' @return NULL
 ##' @author Yixuan Qiu \email{yixuan.qiu@@cos.name}
+##' @export
 ##' @examples png2swf({
 ##'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
 ##' })
