@@ -1,0 +1,73 @@
+AUTOCONF = ./config.win
+include $(AUTOCONF)
+
+
+XSLT_STATICLIB = libxslt.a
+EXSLT_STATICLIB = libexslt.a
+
+BINPREF =
+CC = $(BINPREF)gcc
+CFLAGS = -O2 -Wall
+
+CPPFLAGS = -DWIN32 -D_WINDOWS -D_MBCS -DLIBXML_STATIC -DLIBXSLT_STATIC -DLIBEXSLT_STATIC
+CPPFLAGS += -I. -I./libxslt -I./libexslt -I../libxml2/include
+
+LD = $(CC)
+LDFLAGS = -L../libxml2
+LIBS =
+
+AR = $(BINPREF)ar
+ARFLAGS = rcs
+
+CP = cp
+RM = rm -f
+
+
+XSLT_OBJS = libxslt/attributes.o \
+	libxslt/attrvt.o \
+	libxslt/documents.o \
+	libxslt/extensions.o \
+	libxslt/extra.o \
+	libxslt/functions.o \
+	libxslt/imports.o \
+	libxslt/keys.o \
+	libxslt/namespaces.o \
+	libxslt/numbers.o \
+	libxslt/pattern.o \
+	libxslt/preproc.o \
+	libxslt/security.o \
+	libxslt/templates.o \
+	libxslt/transform.o \
+	libxslt/variables.o \
+	libxslt/xslt.o \
+	libxslt/xsltlocale.o \
+	libxslt/xsltutils.o
+
+EXSLT_OBJS = libexslt/common.o \
+	libexslt/crypto.o \
+	libexslt/date.o \
+	libexslt/exslt.o \
+	libexslt/functions.o \
+	libexslt/math.o \
+	libexslt/saxon.o \
+	libexslt/sets.o \
+	libexslt/strings.o \
+	libexslt/dynamic.o
+
+all: $(XSLT_STATICLIB) $(EXSLT_STATICLIB)
+
+$(XSLT_STATICLIB): $(XSLT_OBJS)
+	$(AR) $(ARFLAGS) $@ $(XSLT_OBJS)
+
+$(EXSLT_STATICLIB): $(EXSLT_OBJS)
+	$(AR) $(ARFLAGS) $@ $(EXSLT_OBJS)
+
+
+.PHONY: all clean
+
+clean:
+	$(RM) $(XSLT_STATICLIB)
+	$(RM) $(EXSLT_STATICLIB)
+	$(RM) $(XSLT_OBJS)
+	$(RM) $(EXSLT_OBJS)
+

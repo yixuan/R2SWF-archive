@@ -8,10 +8,10 @@
 ##' @author Yihui Xie <\url{http://yihui.name}>
 ##' @export
 ##' @examples
-##' png2swf({
+##' output = png2swf({
 ##'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
 ##' }, output = 'test.swf')
-##' swf2html('test.swf')
+##' swf2html(output)
 swf2html = function(swf.file, output, width = 480, height = 480) {
     if (missing(output)) output = paste(sub('\\.swf$', '', swf.file), '.html', sep = '')
     cat(sprintf('

@@ -1,0 +1,37 @@
+STATICLIB = libfreetype.a
+
+BINPREF =
+CC = $(BINPREF)gcc
+CFLAGS = -O2 -Wall
+CPPFLAGS = -DFT2_BUILD_LIBRARY -DFT_CONFIG_OPTION_SYSTEM_ZLIB -I./include $(ZLIB_CPPFLAGS)
+
+LD = $(CC)
+LDFLAGS =
+
+AR = $(BINPREF)ar
+ARFLAGS = rcs
+
+CP = cp
+RM = rm -f
+
+
+OBJS = ftbase.o ftbbox.o ftbdf.o \
+	   ftbitmap.o ftcid.o ftdebug.o ftfstype.o ftgasp.o \
+	   ftglyph.o ftgxval.o ftinit.o ftlcdfil.o \
+	   ftmm.o ftotval.o ftpatent.o ftpfr.o ftstroke.o \
+	   ftsynth.o ftsystem.o fttype1.o ftwinfnt.o ftxf86.o \
+	   raster.o smooth.o truetype.o
+
+
+all: $(STATICLIB)
+
+$(STATICLIB): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
+
+.PHONY: all clean
+
+clean:
+	$(RM) $(STATICLIB)
+	$(RM) *.o 
+

@@ -1,0 +1,38 @@
+PKG_CPPFLAGS = -DLIBXML_STATIC -DLIBXSLT_STATIC -DLIBEXSLT_STATIC
+PKG_CPPFLAGS += -I. -I./libpng -I./freetype/include -I./libxml2/include -I./libxslt $(R_XTRA_CPPFLAGS)
+PKG_LIBS= -L./libxslt -lxslt -lexslt -L./libxml2 -lxml2 -L./freetype -lfreetype -L./libpng -lpng -L"$(R_HOME)/$(IMPDIR)" $(ZLIB_LIBS)
+
+.PHONY: all libpng libfreetype libxml2 libxslt clean
+
+all: $(SHLIB)
+
+$(SHLIB): libpng libfreetype libxml2 libxslt
+
+libpng:
+	cd libpng && \
+		make -f Makefile.win all ZLIB_CPPFLAGS=$(R_XTRA_CPPFLAGS)
+
+libfreetype:
+	cd freetype && \
+		make -f Makefile.win all ZLIB_CPPFLAGS=$(R_XTRA_CPPFLAGS)
+
+libxml2:
+	cd libxml2 && \
+		make -f Makefile.win all
+
+libxslt:
+	cd libxslt && \
+		make -f Makefile.win all
+
+clean:
+	$(RM) *.o
+	$(RM) *.dll
+	cd libpng && \
+		make -f Makefile.win clean
+	cd freetype && \
+		make -f Makefile.win clean
+	cd libxml2 && \
+		make -f Makefile.win clean
+	cd libxslt && \
+		make -f Makefile.win clean
+
