@@ -9,12 +9,10 @@ R2SWF depends on the following libraries:
     freetype     http://www.freetype.org/
     libpng       http://www.libpng.org/
 
-For Unix-like OS, be sured that these libraries along with the
+For Unix-like OS, be sure that these libraries along with the
 development files are installed.
 
-For Windows, the source code of these libraries are included
-in the package, so you do not need to build them yourself.  
-
+For Windows, the dependent libraries will be downloaded automatically when building this package. (Currently only for 32-bit Windows)
 
 To install the 'package' here:
 
