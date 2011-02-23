@@ -69,7 +69,9 @@ bool SVGColor::parse(string &color) {
 				g = (unsigned char)(pG / 100.0 * 255.0);
 				b = (unsigned char)(pB / 100.0 * 255.0);
 				a = 255;
-			} else if(sscanf(color.c_str(), "rgb(%hu,%hu,%hu)", &r, &g, &b) == 3) {
+			} else if(sscanf(color.c_str(), "rgb(%hu,%hu,%hu)", (short unsigned int*)&r,
+														        (short unsigned int*)&g,
+																(short unsigned int*)&b) == 3) {
 				a = 255;
 				return true;
 			} else {
