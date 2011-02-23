@@ -1,0 +1,37 @@
+#!/bin/sh
+
+echo "  checking dependent libraries"
+errors=no
+
+if [ ! -e src/win32/lib/libxml2.a ]; then
+    if [ ! -e src/R2SWF-dep-current-win.tar.gz ]; then
+	echo "  cannot find dependent libraries..."
+	echo "  attempting to download them..."
+	${R_HOME}/bin${R_ARCH_BIN}/R --vanilla --slave -e "download.file('http://cos.name/wp-content/uploads/2011/02/R2SWF-dep-current-win.tar.gz','src/R2SWF-dep-current-win.tar.gz',mode='wb')"
+    fi
+    if [ ! -e src/R2SWF-dep-current-win.tar.gz ]; then
+		errors=yes
+    else
+		echo "  unpacking dependent libraries"
+		tar fxz src/R2SWF-dep-current-win.tar.gz
+		if [ ! -e src/win32/lib/libxml2.a ]; then
+			errors=yes
+		fi
+    fi
+fi
+
+if [ ${errors} == yes ]; then
+    echo ""
+    echo "  *** ERROR: unable to find dependent libraries"
+    echo ""
+    echo "  They must be either in src/win32 and src/win64 or in a tar-ball"
+    echo "  src/R2SWF-dep-current-win.tar.gz"
+    echo ""
+    echo "  You can get the latest binary ball from"
+    echo "  http://cos.name/wp-content/uploads/2011/02/"
+	echo "  R2SWF-dep-current-win.tar.gz"
+    echo ""
+    exit 1
+fi
+
+exit 0
