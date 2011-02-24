@@ -10,6 +10,6 @@ all: include/zlib.h
 
 include/zlib.h:
 	@echo " * downloading dependent libraries..."
-	${R_HOME}/bin${R_ARCH_BIN}/R --vanilla --slave -e "download.file('http://cos.name/wp-content/uploads/2011/02/R2SWF-dep-current-win.tar.gz','R2SWF-dep-current-win.tar.gz',mode='wb')"
+	${R_HOME}/bin${R_ARCH_BIN}/R --vanilla --slave -e "download.file('http://yixuan.cos.name/files/R2SWF-dep-current-win.tar.gz','R2SWF-dep-current-win.tar.gz',mode='wb')"
 	tar fxz R2SWF-dep-current-win.tar.gz
 
