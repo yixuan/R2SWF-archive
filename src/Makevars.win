@@ -1,10 +1,15 @@
-PKG_CPPFLAGS = -DLIBXML_STATIC -DLIBXSLT_STATIC -DLIBEXSLT_STATIC
+PKG_CPPFLAGS = -DLIBXML_STATIC -DLIBXSLT_STATIC -DLIBEXSLT_STATIC -I. -I./include
 
 ifeq "${R_ARCH}" "/x64"
-PKG_CPPFLAGS += -I. -I./win64/include $(R_XTRA_CPPFLAGS)
-PKG_LIBS = -L./win64/lib -lxslt -lexslt -lxml2 -lfreetype -lpng -L"$(R_HOME)/$(IMPDIR)" $(ZLIB_LIBS)
+PKG_LIBS = -L./win64 -lxslt -lexslt -lxml2 -lfreetype -lpng -lz
 else
-PKG_CPPFLAGS += -I. -I./win32/include $(R_XTRA_CPPFLAGS)
-PKG_LIBS = -L./win32/lib -lxslt -lexslt -lxml2 -lfreetype -lpng -L"$(R_HOME)/$(IMPDIR)" $(ZLIB_LIBS)
+PKG_LIBS = -L./win32 -lxslt -lexslt -lxml2 -lfreetype -lpng -lz
 endif
+
+all: include/zlib.h
+
+include/zlib.h:
+	@echo " * downloading dependent libraries..."
+	${R_HOME}/bin${R_ARCH_BIN}/R --vanilla --slave -e "download.file('http://cos.name/wp-content/uploads/2011/02/R2SWF-dep-current-win.tar.gz','R2SWF-dep-current-win.tar.gz',mode='wb')"
+	tar fxz R2SWF-dep-current-win.tar.gz
 
