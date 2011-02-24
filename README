@@ -12,7 +12,7 @@ R2SWF depends on the following libraries:
 For Unix-like OS, be sure that these libraries along with the
 development files are installed.
 
-For Windows, the dependent libraries will be downloaded automatically when building this package. (Currently only for 32-bit Windows)
+For Windows, the dependent libraries will be downloaded automatically when building this package.
 
 To install the 'package' here:
 
