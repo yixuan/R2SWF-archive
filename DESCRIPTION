@@ -5,7 +5,7 @@ Date: 2011-03-05
 Author: Yixuan Qiu and Yihui Xie
 Maintainer: Yixuan Qiu <yixuan.qiu@cos.name>
 SystemRequirements: libxml2, libxslt, zlib, freetype, libpng
-Description: This package uses swfmill(http://swfmill.org/) to create Flash animations.
+Description: This package uses swfmill (http://swfmill.org/) to create Flash animations.
 License: GPL
 URL: http://github.com/yihui/R2SWF
 BugReports: https://github.com/yihui/R2SWF/issues

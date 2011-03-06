@@ -1,13 +1,15 @@
 ##' Get the size of an image. This function returns the width and
-##' height of an image. Supported formats are jpg/jpeg, png, gif and svg.
+##' height of an image. Supported formats are jpg/jpeg, png, gif and
+##' svg.
 ##'
-##' This function is mainly used internally to decide the width and height
-##' of the SWF file according to the sizes of input images.
+##' This function is mainly used internally to decide the width and
+##' height of the SWF file according to the sizes of input images.
 ##'
 ##' For jpg/jpeg, png and gif formats, the function returns the image
-##' size in pixels. For svg file, width is always set to 640 px and height
-##' is adjusted according to the width/height ratio. If the image size
-##' could not be determined, then default values (640x640, in pixels) are used.
+##' size in pixels. For svg file, width is always set to 640 px and
+##' height is adjusted according to the width/height ratio. If the
+##' image size could not be determined, then default values (640x640,
+##' in pixels) are used.
 ##'
 ##' @param filename the path of the image file.
 ##' @return A list containing the width and height of the image.
@@ -45,9 +47,9 @@ get_image_size <- function(filename)
 ##' convert them to a Flash file. Supported input formats are jpg/jpeg,
 ##' png, tiff and svg.
 ##'
-##' This function creates a temporary XML file and then calls the swfmill
-##' programme(http://swfmill.org/) to implement the conversion. Currently
-##' the support of SVG file is not perfected yet.
+##' This function creates a temporary XML file and then calls the
+##' swfmill program (http://swfmill.org/) to implement the
+##' conversion. Currently the support of SVG file is not perfect yet.
 ##'
 ##' @param filenames the file names of the images to be converted.
 ##' @param output the name of the output swf file.
@@ -107,7 +109,8 @@ image2swf <- function(filenames, output = "movie.swf", interval = 1)
 ##' @param expr an expression to generate a sequence of images.
 ##' @param interval the time interval between animation frames.
 ##' @param output the name of the output swf file.
-##' @param dev the name of the graphics device to use (e.g. \code{'png'} or \code{'jpeg'})
+##' @param dev the name of the graphics device to use
+##' (e.g. \code{'png'} or \code{'jpeg'})
 ##' @param file.ext the file extension for the images
 ##' @param img.name the file name of the images without the extension
 ##' @param ... other arguments to be passed to the graphics device.
