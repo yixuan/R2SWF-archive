@@ -1,10 +1,9 @@
 Package: R2SWF
 Version: 0.1-0
 Title: Convert R Graphics to Flash Animations
-Date: 2011-02-05
+Date: 2011-03-05
 Author: Yixuan Qiu and Yihui Xie
 Maintainer: Yixuan Qiu <yixuan.qiu@cos.name>
-Suggests: RSvgDevice
 SystemRequirements: libxml2, libxslt, zlib, freetype, libpng
 Description: This package uses swfmill(http://swfmill.org/) to create Flash animations.
 License: GPL
