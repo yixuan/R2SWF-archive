@@ -2,8 +2,6 @@
 
 NEW FEATURES
 
-    o png2swf() to convert png files to a Flash animation
-
-    o jpeg2swf() to convert jpg/jpeg files to a Flash animation
+    o image2swf() and dev2swf() to convert png/jpeg files to a Flash animation
 
     o swf2html() to embed a Flash file into an HTML page
