@@ -1,6 +1,6 @@
 ##' Get the size of an image. This function returns the width and
 ##' height of an image. Supported formats are jpg/jpeg, png, gif and svg.
-##' 
+##'
 ##' This function is mainly used internally to decide the width and height
 ##' of the SWF file according to the sizes of input images.
 ##'
@@ -13,8 +13,8 @@
 ##' @return A list containing the width and height of the image.
 ##' @author Yixuan Qiu \email{yixuan.qiu@@cos.name}
 ##' @export
-##' @examples get.image.size(normalizePath(file.path(R.home("doc"),"html/logo.jpg")))
-get.image.size <- function(filename)
+##' @examples get_image_size(normalizePath(file.path(R.home("doc"),"html/logo.jpg")))
+get_image_size <- function(filename)
 {
 	tmp = rawToChar(readBin(filename[1], "raw", 5))
 	if(tmp == "<?xml")
@@ -44,7 +44,7 @@ get.image.size <- function(filename)
 ##' Given the file names of a sequence of images, this function can
 ##' convert them to a Flash file. Supported input formats are jpg/jpeg,
 ##' png, tiff and svg.
-##' 
+##'
 ##' This function creates a temporary XML file and then calls the swfmill
 ##' programme(http://swfmill.org/) to implement the conversion. Currently
 ##' the support of SVG file is not perfected yet.
@@ -63,7 +63,7 @@ get.image.size <- function(filename)
 ##' }
 image2swf <- function(filenames, output = "movie.swf", interval = 1)
 {
-	size = get.image.size(filenames[1])
+	size = get_image_size(filenames[1])
 	tempxml = "temp.xml"
 	sink(tempxml)
 	cat("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n")
@@ -97,10 +97,10 @@ image2swf <- function(filenames, output = "movie.swf", interval = 1)
 ##' function can record the images with the
 ##' \code{\link[grDevices]{png}()} device and convert them to a Flash
 ##' file.
-##' 
+##'
 ##' You can use another PNG device instead of the default
 ##' \code{\link[grDevices]{png}()} by setting the \code{dev} argument
-##' to the name of the function that opens a PNG device, e.g. \link[Cairo]{CairoPNG} 
+##' to the name of the function that opens a PNG device, e.g. \link[Cairo]{CairoPNG}
 ##' in the \pkg{Cairo} package.
 ##'
 ##' @param expr an expression to generate a sequence of images.
@@ -128,7 +128,7 @@ png2swf <- function(expr, interval = 1, output = "movie.swf",
 
     png.files = list.files(pattern = paste(img.name, "[0-9]*\\.png$", sep = ''))
     output = image2swf(png.files, output, interval)
-    
+
     setwd(olddir)
 	invisible(output)
 }
@@ -138,10 +138,10 @@ png2swf <- function(expr, interval = 1, output = "movie.swf",
 ##' function can record the images with the
 ##' \code{\link[grDevices]{jpeg}()} device and convert them to a Flash
 ##' file.
-##' 
+##'
 ##' You can use another JPEG device instead of the default
 ##' \code{\link[grDevices]{jpeg}()} by setting the \code{dev} argument
-##' to the name of the function that opens a JPEG device, e.g. \link[Cairo]{CairoJPEG} 
+##' to the name of the function that opens a JPEG device, e.g. \link[Cairo]{CairoJPEG}
 ##' in the \pkg{Cairo} package.
 ##'
 ##' @param expr an expression to generate a sequence of images.
@@ -169,7 +169,7 @@ jpeg2swf <- function(expr, interval = 1, output = "movie.swf",
 
     jpeg.files = list.files(pattern = paste(img.name, "[0-9]*\\.jpeg$", sep = ''))
     output = image2swf(jpeg.files, output, interval)
-    
+
     setwd(olddir)
 	invisible(output)
 }
