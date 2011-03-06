@@ -55,11 +55,12 @@ get_image_size <- function(filename)
 ##' @return The path of the generated swf file if successful, or NULL is returned.
 ##' @author Yixuan Qiu \email{yixuan.qiu@@cos.name}
 ##' @export
-##' @examples \dontrun{
-##' png("Rplot\%03d.png")
+##' @examples if (capabilities('png')) {
+##' png("Rplot%03d.png")
 ##' for(i in 1:9) plot(runif(20), ylim = c(0, 1))
 ##' dev.off()
-##' image2swf(paste("Rplot00", 1:9, ".png", sep = ""))
+##' image2swf(sprintf("Rplot%03d.png", 1:9))
+##' }
 ##' }
 image2swf <- function(filenames, output = "movie.swf", interval = 1)
 {
