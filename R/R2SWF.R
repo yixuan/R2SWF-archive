@@ -61,7 +61,7 @@ get_image_size <- function(filename)
 ##' dev.off()
 ##' image2swf(sprintf("Rplot%03d.png", 1:9))
 ##' }
-##' }
+##'
 image2swf <- function(filenames, output = "movie.swf", interval = 1)
 {
 	size = get_image_size(filenames[1])
@@ -93,85 +93,48 @@ image2swf <- function(filenames, output = "movie.swf", interval = 1)
 	}
 }
 
-##' Convert R graphics to SWF using PNG device.
-##' Given an R expression that can produce a sequence of images, this
-##' function can record the images with the
-##' \code{\link[grDevices]{png}()} device and convert them to a Flash
-##' file.
+##' Convert R graphics to SWF using different graphics devices. Given
+##' an R expression that can produce a sequence of images, this
+##' function will record the images with the device provided (e.g.
+##' \code{\link[grDevices]{png}()} or \code{\link[grDevices]{jpeg}()})
+##' and convert them to a Flash file.
 ##'
-##' You can use another PNG device instead of the default
-##' \code{\link[grDevices]{png}()} by setting the \code{dev} argument
-##' to the name of the function that opens a PNG device, e.g. \link[Cairo]{CairoPNG}
+##' You can also use devices which are not in the \pkg{grDevices}
+##' package by setting the \code{dev} argument to the name of the
+##' function that opens a device, e.g. \code{\link[Cairo]{CairoPNG}}
 ##' in the \pkg{Cairo} package.
 ##'
 ##' @param expr an expression to generate a sequence of images.
 ##' @param interval the time interval between animation frames.
 ##' @param output the name of the output swf file.
-##' @param dev the name of the graphics device to use (should be a PNG device but
-##' not limited to the \link[grDevices]{png} device in the
-##' \pkg{grDevice} package).
-##' @param img.name the file name of the png images.
+##' @param dev the name of the graphics device to use (e.g. \code{'png'} or \code{'jpeg'})
+##' @param file.ext the file extension for the images
+##' @param img.name the file name of the images without the extension
 ##' @param ... other arguments to be passed to the graphics device.
-##' @return The path of the generated swf file if successful, or NULL is returned.
+##' @return The path of the generated swf file if succeeded
 ##' @author Yixuan Qiu \email{yixuan.qiu@@cos.name}
 ##' @export
-##' @examples png2swf({
+##' @examples
+##' dev2swf({
 ##'   for(i in 1:10) plot(runif(20), ylim = c(0, 1))
-##' })
-png2swf <- function(expr, interval = 1, output = "movie.swf",
-    dev = "png", img.name = "Rplot", ...)
+##' }, dev='png', file.ext='png', output='movie-png.swf')
+##'
+##' dev2swf({
+##'   for(i in 1:10) plot(runif(20), ylim = c(0, 1))
+##' }, dev='jpeg', file.ext='jpeg', output='movie-jpeg.swf')
+##'
+dev2swf <- function(expr, interval = 1, output = "movie.swf",
+    dev = "png", file.ext = 'png', img.name = "Rplot", ...)
 {
     if (is.character(dev)) dev = get(dev)
 	olddir = setwd(tempdir())
-    dev(paste(img.name, "%d.", "png", sep = ""), ...)
+    dev(paste(img.name, "%d.", file.ext, sep = ""), ...)
     eval(expr)
     dev.off()
 
-    png.files = list.files(pattern = paste(img.name, "[0-9]*\\.png$", sep = ''))
-    output = image2swf(png.files, output, interval)
+    files = list.files(pattern = paste(img.name, "[0-9]*\\.", file.ext, '$', sep = ''))
+    output = image2swf(files, output, interval)
 
     setwd(olddir)
-	invisible(output)
+    invisible(output)
 }
-
-##' Convert R graphics to SWF using JPEG device.
-##' Given an R expression that can produce a sequence of images, this
-##' function can record the images with the
-##' \code{\link[grDevices]{jpeg}()} device and convert them to a Flash
-##' file.
-##'
-##' You can use another JPEG device instead of the default
-##' \code{\link[grDevices]{jpeg}()} by setting the \code{dev} argument
-##' to the name of the function that opens a JPEG device, e.g. \link[Cairo]{CairoJPEG}
-##' in the \pkg{Cairo} package.
-##'
-##' @param expr an expression to generate a sequence of images.
-##' @param interval the time interval between animation frames.
-##' @param output the name of the output swf file.
-##' @param dev the name of the graphics device to use (should be a JPEG device but
-##' not limited to the \link[grDevices]{jpeg} device in the
-##' \pkg{grDevice} package).
-##' @param img.name the file name of the png images.
-##' @param ... other arguments to be passed to the graphics device.
-##' @return The path of the generated swf file if successful, or NULL is returned.
-##' @author Yixuan Qiu \email{yixuan.qiu@@cos.name}
-##' @export
-##' @examples jpeg2swf({
-##'   for(i in 1:10) plot(runif(20), ylim = c(0, 1))
-##' })
-jpeg2swf <- function(expr, interval = 1, output = "movie.swf",
-    dev = "jpeg", img.name = "Rplot", ...)
-{
-    if (is.character(dev)) dev = get(dev)
-	olddir = setwd(tempdir())
-    dev(paste(img.name, "%d.", "jpeg", sep = ""), ...)
-    eval(expr)
-    dev.off()
-
-    jpeg.files = list.files(pattern = paste(img.name, "[0-9]*\\.jpeg$", sep = ''))
-    output = image2swf(jpeg.files, output, interval)
-
-    setwd(olddir)
-	invisible(output)
-}
-

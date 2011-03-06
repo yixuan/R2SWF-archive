@@ -8,7 +8,7 @@
 ##' @author Yihui Xie <\url{http://yihui.name}>
 ##' @export
 ##' @examples
-##' output = png2swf({
+##' output = dev2swf({
 ##'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
 ##' }, output = 'test.swf')
 ##' swf2html(output)
