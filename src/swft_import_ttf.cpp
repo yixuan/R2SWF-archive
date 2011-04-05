@@ -160,7 +160,10 @@ void importDefineFont2( DefineFont2 *tag, const char *filename, const char *font
 	if( face->style_flags & FT_STYLE_FLAG_ITALIC ) tag->setitalic(true);
 	if( face->style_flags & FT_STYLE_FLAG_BOLD ) tag->setbold(true);
 	if( !fontname ) fontname = face->family_name;
-	tag->setname( strdup(fontname) );
+	char *fn;
+	fn = new char[strlen(fontname) + 1];
+	strcpy(fn, fontname);
+	tag->setname(fn);
 
 	if( !ctx->quiet ) {
 		//fprintf( stderr, "Importing TTF: '%s' - '%s'%s%s (%i glyphs) charcode offset %i\n", filename, fontname,
@@ -349,7 +352,10 @@ void importDefineFont3( DefineFont3 *tag, const char *filename, const char *font
 	if( face->style_flags & FT_STYLE_FLAG_ITALIC ) tag->setitalic(true);
 	if( face->style_flags & FT_STYLE_FLAG_BOLD ) tag->setbold(true);
 	if( !fontname ) fontname = face->family_name;
-	tag->setname( strdup(fontname) );
+	char *fn;
+   	fn= new char[strlen(fontname) + 1];
+	strcpy(fn, fontname);
+	tag->setname(fn);
 
 	if( !ctx->quiet ) {
 		//fprintf( stderr, "Importing TTF: '%s' - '%s'%s%s (%i glyphs) charcode offset %i\n", filename, fontname,

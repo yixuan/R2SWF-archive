@@ -33,7 +33,7 @@ bool GlyphList::parse( Reader *r, int end, Context *ctx ) {
 	
 	if( ctx->debugTrace ) fprintf(stderr, "GL nGlyphs: %i, glyphs %s, map %s\n", (int)nGlyphs, ctx->wideGlyphOffsets?"wide":"narrow", ctx->wideMap?"wide":"narrow" );
 	
-	int offset[ nGlyphs+1 ];
+	int *offset = new int[ nGlyphs+1 ];
 	memset( offset, 0, sizeof(int)*nGlyphs+1 );
 	if( ctx->wideGlyphOffsets ) {
 		for( int i=s; i<nOffsets; i++ ) {
@@ -83,6 +83,7 @@ bool GlyphList::parse( Reader *r, int end, Context *ctx ) {
 			}
 		}	
 	}
+	delete[] offset;
 
 	return r->getError() == SWFR_OK;
 }

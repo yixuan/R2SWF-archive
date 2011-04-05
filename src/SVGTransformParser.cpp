@@ -12,7 +12,7 @@ void TransformParser::handleData(const string& transformType, const vector<strin
 	size_t cnt = params.size();
 	Matrix m;
 
-	double p[cnt];	
+	double *p = new double[cnt];
 	for(unsigned int i = 0; i < cnt; i++) {
 		p[i] = atof(params[i].c_str());
 	}
@@ -67,6 +67,8 @@ void TransformParser::handleData(const string& transformType, const vector<strin
 	} else {
 		cerr << "WARNING: unknown SVG transformation (" << transformType << ")" << endl;
 	}
+
+	delete[] p;
 }
 
 }
