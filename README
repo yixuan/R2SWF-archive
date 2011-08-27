@@ -1,22 +1,18 @@
 This is an R package to convert several formats of images to a
-Flash file(swf) using swfmill(http://swfmill.org/).
+Flash file(swf).
 
 R2SWF depends on the following libraries:
 
-    libxml2      http://xmlsoft.org/
-    libxslt      http://xmlsoft.org/
     zlib         http://www.zlib.net/
-    freetype     http://www.freetype.org/
     libpng       http://www.libpng.org/
+    libming      http://www.libming.org/
 
-For Unix-like OS, be sure that these libraries along with the
-development files are installed.
-
-For Windows, the dependent libraries will be downloaded automatically when building this package.
+However, the source code of the dependent libraries are included in the package,
+so you don't need to install them by yourself.
 
 To install the 'package' here:
 
-install.packages(c('Rd2roxygen', 'formatR'))
+install.packages('Rd2roxygen')
 setwd('where/is/R2SWF')
 library(Rd2roxygen)
 rab('R2SWF', install = TRUE)
