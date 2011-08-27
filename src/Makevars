@@ -1,0 +1,26 @@
+PKG_CPPFLAGS = -I./zlib -I./libpng -I./libming -I.
+PKG_LIBS = -L./libming -lming -L./libpng -lpng -L./zlib -lz
+
+.PHONY: all zlib libpng libming clean
+
+all: $(SHLIB)
+
+$(SHLIB): zlib/libz.a libpng/libpng.a libming/libming.a
+
+zlib/libz.a:
+	cd zlib && $(MAKE) all BINPREF=$(BINPREF)
+
+libpng/libpng.a:
+	cd libpng && $(MAKE) all BINPREF=$(BINPREF)
+
+libming/libming.a:
+	cd libming && $(MAKE) all BINPREF=$(BINPREF)
+
+clean:
+	$(RM) *.o
+	$(RM) *.dll
+	$(RM) *.so
+	cd zlib && $(MAKE) clean
+	cd libpng && $(MAKE) clean
+	cd libming && $(MAKE) clean
+
