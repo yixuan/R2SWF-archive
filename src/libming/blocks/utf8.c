@@ -23,7 +23,9 @@ int UTF8Length(const char *string)
 
 	for(i=0; i<l; ++i)
 	{
-		unsigned int byte0, byte1, byte2;
+		/* unsigned int byte0, byte1, byte2; */
+		/* Commented by Yixuan Qiu */
+		unsigned int byte0 = 0, byte1 = 0, byte2 = 0;
 
 		byte0 = (unsigned int)string[i];
 
