@@ -14,7 +14,7 @@ SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
 	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
 
     int nFiles = LENGTH(fileNames);
-	int i, nSupportedFiles;
+	int i;
 	int dimNotSet = 1;
 	int swfHeight, swfWidth;
 	SWFBitmap image = NULL;
@@ -52,11 +52,9 @@ SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
 
 			SWFMovie_add(m, (SWFBlock) image);
 			SWFMovie_nextFrame(m);
-			nSupportedFiles++;
 		} else {
 			SWFMovie_add(m, (SWFBlock) image);
 			SWFMovie_nextFrame(m);
-			nSupportedFiles++;
 		}
 	}
     SWFMovie_save(m, CHAR(STRING_ELT(outName, 0)));
