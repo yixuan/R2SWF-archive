@@ -9,13 +9,13 @@ LIBPNG = $(LIBPNGLIB)/libpng.a
 CP = cp -fp
 RM = rm -f
 
-CC = $(BINPREF)gcc 
+CC = $(BINPREF)gcc
 LD = $(CC)
 AR_RC = $(BINPREF)ar rcs
 
 CRELEASE = -O3
 LDRELEASE = -s
-CFLAGS = -Wall $(CRELEASE)
+CFLAGS = -std=gnu99 -Wall $(CRELEASE)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
