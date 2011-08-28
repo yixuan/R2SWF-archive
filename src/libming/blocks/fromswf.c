@@ -953,6 +953,8 @@ static void definemorphshape(TAG tp, int lev)
 	unsigned long loff;
 	/* unsigned char *endp; */
 	/* Commented by Yixuan Qiu */
+    unsigned char *endp = NULL;
+
 	int n;
 
 	id = change_id(tp);
@@ -1065,8 +1067,9 @@ static void placeobject(TAG tp, int lv)
 	int hasfilters, hasbitmapcaching, hasblendmode;
 	*/
 	/* Commented by Yixuan Qiu */
-    int haschar;
-	short depth, charid;
+	int hasname = 0, hasratio = 0, hascxform = 0, hasmatrix = 0, haschar = 0, hasmove = 0, hasactions = 0, hasmask = 0;
+	short depth = 0, charid = 0;
+	int hasfilters = 0, hasbitmapcaching = 0, hasblendmode = 0;
 
 	if (lv == 3) {
 		getbits((BITS)tp, 5);
@@ -1118,7 +1121,7 @@ static void cxform(TAG tp, int alpha)
 {	int hasadd, hasmult, nbits;
 	/* int ra, ga, ba, aa, rm, gm, bm, am=0; */
 	/* Commented by Yixuan Qiu */
-	int ra, ga, ba, rm, gm, bm, am=0;
+	int ra, ga, ba, aa = 0, rm, gm, bm, am = 0;
 
 	hasadd = getbits((BITS) tp, 1);
 	hasmult = getbits((BITS) tp, 1);
@@ -1178,8 +1181,8 @@ static void definetextfield(TAG tp)
 	/* int haslength, noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
 	int hascolor, haslayout, hastext, hasfont; */
 	/* Commented by Yixuan Qiu */
-	int noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
-	int hascolor, hasfont;
+    int haslength = 0, noedit = 0, password = 0, multiline = 0, wordwrap = 0, drawbox = 0, noselect = 0, html = 0, usefont = 0;
+	int hascolor = 0, haslayout = 0, hastext = 0, hasfont = 0;
 	
 	textid = change_id(tp);
 	if(verbose) printf("textfield %d\n", textid);
