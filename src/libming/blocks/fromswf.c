@@ -951,7 +951,8 @@ static void shape(TAG tp, int lev)
 static void definemorphshape(TAG tp, int lev)
 {	unsigned short id, fcnt, lcnt;
 	unsigned long loff;
-	unsigned char *endp;
+	/* unsigned char *endp; */
+	/* Commented by Yixuan Qiu */
 	int n;
 
 	id = change_id(tp);
@@ -1057,9 +1058,16 @@ static void definetext(TAG tp, int lev)
 }
 
 static void placeobject(TAG tp, int lv)
-{	int hasname, hasratio, hascxform, hasmatrix, haschar, hasmove, hasactions, hasmask;
+{	
+	/*
+	int hasname, hasratio, hascxform, hasmatrix, haschar, hasmove, hasactions, hasmask;
 	short depth, charid;
 	int hasfilters, hasbitmapcaching, hasblendmode;
+	*/
+	/* Commented by Yixuan Qiu */
+    int haschar;
+	short depth, charid;
+
 	if (lv == 3) {
 		getbits((BITS)tp, 5);
 		hasbitmapcaching = getbits((BITS)tp, 1);
@@ -1108,7 +1116,10 @@ static void definebutton(TAG tp)
 
 static void cxform(TAG tp, int alpha)
 {	int hasadd, hasmult, nbits;
-	int ra, ga, ba, aa, rm, gm, bm, am=0;
+	/* int ra, ga, ba, aa, rm, gm, bm, am=0; */
+	/* Commented by Yixuan Qiu */
+	int ra, ga, ba, rm, gm, bm, am=0;
+
 	hasadd = getbits((BITS) tp, 1);
 	hasmult = getbits((BITS) tp, 1);
 	nbits = getbits((BITS) tp, 4);
@@ -1164,8 +1175,11 @@ static void definebutton2(TAG tp)
 static void definetextfield(TAG tp)
 {
 	short textid, fontid=0;
-	int haslength, noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
-	int hascolor, haslayout, hastext, hasfont;
+	/* int haslength, noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
+	int hascolor, haslayout, hastext, hasfont; */
+	/* Commented by Yixuan Qiu */
+	int noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
+	int hascolor, hasfont;
 	
 	textid = change_id(tp);
 	if(verbose) printf("textfield %d\n", textid);
