@@ -119,7 +119,9 @@ typedef union SWFMovieBlockType_u SWFMovieBlockType;
 #if __GNUC__ > 3 ||  \
 	(__GNUC__ == 3 && (__GNUC_MINOR__ > 3 || \
                  (__GNUC_MINOR__ == 3 && __GNUC_PATCHLEVEL__ > 0)))
-#define __to_movie_block(x) (union SWFMovieBlockType_u)x
+/* #define __to_movie_block(x) (union SWFMovieBlockType_u)x */
+/* Commented by Yixuan Qiu */
+#define __to_movie_block(x) (union SWFMovieBlockType_u) { x }
 #else
 #define __to_movie_block(x) (union SWFMovieBlockType_u) { x }
 #endif
