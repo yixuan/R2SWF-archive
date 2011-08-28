@@ -57,7 +57,7 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
     double lwd = atof(stroke_width);
 	sstyle->lwd = (unsigned short) floor(lwd > 255 ? 255 : lwd);
 
-	int cap, endcap, join; 
+	int cap, endcap; 
 	const char *stroke_linecap;
     stroke_linecap = CHAR(STRING_ELT(style, STYIND_STROKE_LINECAP));
     if(!strcmp("round", stroke_linecap))
@@ -71,7 +71,8 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
 		cap = SWF_LINESTYLE_CAP_NONE;
 		endcap = SWF_LINESTYLE_FLAG_ENDCAP_NONE;
 	}
-
+    
+	int join;
 	const char *stroke_linejoin;
    	stroke_linejoin = CHAR(STRING_ELT(style, STYIND_STROKE_LINEJOIN));
 	if(!strcmp("round", stroke_linejoin))
@@ -198,7 +199,7 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 		s = newSWFShape();
         SWFShape_drawBlankRect(s, REAL(size)[0], REAL(size)[1],
 				               REAL(size)[2], REAL(size)[3]);
-		SWFMovie_add(m, s);
+		SWFMovie_add(m, (SWFBlock) s);
 
 		pathsList = VECTOR_ELT(filesData, i);
 		pathsListLen = LENGTH(pathsList);
@@ -211,7 +212,7 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 	        xy = VECTOR_ELT(path, 2);
     		SWFShape_setStyleFromData(s, style, &strokeStyle, &fillStyle);
 	    	SWFShape_drawFromData(s, data, xy);
-		    SWFMovie_add(m, s);
+		    SWFMovie_add(m, (SWFBlock) s);
 		}
 		SWFMovie_nextFrame(m);
 	}
