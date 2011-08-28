@@ -11,7 +11,7 @@ AR_RC = $(BINPREF)ar rcs
 
 CRELEASE = -O2
 LDRELEASE = -s
-CFLAGS = -Wall $(CRELEASE)
+CFLAGS = -std=gnu99 -Wall $(CRELEASE)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
