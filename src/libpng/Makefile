@@ -5,13 +5,12 @@ ZLIB = $(ZLIBLIB)/libz.a
 CP = cp -fp
 RM = rm -f
 
-CC = $(BINPREF)gcc
 LD = $(CC)
-AR_RC = $(BINPREF)ar rcs
+AR_RC = $(AR) rcs
 
-CRELEASE = -O2
+CRELEASE = -O3
 LDRELEASE = -s
-CFLAGS = -std=gnu99 -Wall $(CRELEASE)
+CFLAGS = -std=gnu99 $(CRELEASE) -Wall $(CPICFLAGS)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
@@ -24,8 +23,8 @@ OBJS =  png$(O) pngerror$(O) pngget$(O) pngmem$(O) pngpread$(O) \
 
 all: libpng$(A)
 
-.c$(O):
-	$(CC) -c $(CFLAGS) -I$(ZLIBINC) $<
+%.o: %.c
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -c -o $@ $<
 
 libpng$(A): $(OBJS)
 	$(AR_RC) $@ $(OBJS)
@@ -37,19 +36,3 @@ clean:
 	-$(RM) libpng$(A)
 	-$(RM) *$(O) 
 
-
-png$(O):      png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngerror$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngget$(O):   png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngmem$(O):   png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngpread$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngread$(O):  png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngrio$(O):   png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngrtran$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngrutil$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngset$(O):   png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngtrans$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngwio$(O):   png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngwrite$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngwtran$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h
-pngwutil$(O): png.h pngconf.h pngpriv.h pngstruct.h pnginfo.h pngdebug.h

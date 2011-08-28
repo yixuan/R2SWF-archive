@@ -9,13 +9,12 @@ LIBPNG = $(LIBPNGLIB)/libpng.a
 CP = cp -fp
 RM = rm -f
 
-CC = $(BINPREF)gcc
 LD = $(CC)
-AR_RC = $(BINPREF)ar rcs
+AR_RC = $(AR) rcs
 
 CRELEASE = -O3
 LDRELEASE = -s
-CFLAGS = -std=gnu99 -Wall $(CRELEASE)
+CFLAGS = -std=gnu99 $(CRELEASE) -Wall $(CPICFLAGS)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
@@ -41,12 +40,14 @@ OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
 	blocks/text$(O) blocks/textfield$(O) blocks/ttffont$(O) \
 	blocks/utf8$(O) blocks/videostream$(O)
 
-SRCS = $(subst $(O),.c,$(OBJS))
 
 all: libming$(A)
 
-$(OBJS): $(SRCS)
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c -o $@ $(subst $(O),.c,$@)
+%.o: %.c
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c -o $@ $<
+
+blocks/%.o: blocks/%.c
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c -o $@ $<
 
 libming$(A): $(OBJS)
 	$(AR_RC) $@ $(OBJS)
