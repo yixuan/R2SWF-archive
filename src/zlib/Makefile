@@ -1,7 +1,7 @@
 STATICLIB = libz.a
 
-CFLAGS = -O3 -Wall
-EXTRA_CFLAGS = -DNO_VIZ
+CFLAGS = -std=gnu99 -O3 -Wall
+EXTRA_CFLAGS = -DNO_VIZ -DHAVE_UNISTD_H
 
 CC = $(BINPREF)gcc
 LD = $(CC)
