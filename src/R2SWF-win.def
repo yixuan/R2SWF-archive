@@ -1,0 +1,4 @@
+LIBRARY R2SWF.dll
+EXPORTS
+ image2swf
+ svg2swf
