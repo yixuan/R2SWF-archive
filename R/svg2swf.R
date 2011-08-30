@@ -111,7 +111,7 @@ parseSVG = function(file.name)
 ##' See the example.
 ##' @export
 ##' @author Yixuan Qiu <\email{yixuan.qiu@@cos.name}>
-##' @examples if(require("Cairo")) {
+##' @examples \dontrun{if(require("Cairo")) {
 ##'   filenames = sprintf("Rplot%03d.svg", 1:9)
 ##'   for(fn in filenames) {
 ##'     CairoSVG(fn)
@@ -120,6 +120,7 @@ parseSVG = function(file.name)
 ##'   }
 ##'   output = svg2swf(filenames)
 ##'   swf2html(output)
+##' }
 ##' }
 ##'
 svg2swf = function(filenames, outdir = getwd(), output = "movie.swf",
