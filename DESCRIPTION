@@ -1,7 +1,7 @@
 Package: R2SWF
-Version: 0.2-0
+Version: 0.2-1
 Title: Convert R Graphics to Flash Animations
-Date: 2011-08-27
+Date: 2011-09-01
 Author: Yixuan Qiu and Yihui Xie
 Maintainer: Yixuan Qiu <yixuan.qiu@cos.name>
 Depends:
