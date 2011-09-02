@@ -9,13 +9,13 @@ all: $(SHLIB)
 $(SHLIB): zlib/libz.a libpng/libpng.a libming/libming.a
 
 zlib/libz.a:
-	cd zlib && $(MAKE) all CC=$(CC) AR=$(AR) CPICFLAGS=$(CPICFLAGS)
+	cd zlib && $(MAKE) all CC="$(CC)" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
 
 libpng/libpng.a:
-	cd libpng && $(MAKE) all CC=$(CC) AR=$(AR) CPICFLAGS=$(CPICFLAGS)
+	cd libpng && $(MAKE) all CC="$(CC)" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
 
 libming/libming.a:
-	cd libming && $(MAKE) all CC=$(CC) AR=$(AR) CPICFLAGS=$(CPICFLAGS)
+	cd libming && $(MAKE) all CC="gcc -std=gnu99" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
 
 clean:
 	$(RM) *.o
