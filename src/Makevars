@@ -15,7 +15,7 @@ libpng/libpng.a:
 	cd libpng && $(MAKE) all CC="$(CC)" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
 
 libming/libming.a:
-	cd libming && $(MAKE) all CC="gcc -std=gnu99" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
+	cd libming && $(MAKE) all CC="$(CC)" AR="$(AR)" CPICFLAGS="$(CPICFLAGS)"
 
 clean:
 	$(RM) *.o
