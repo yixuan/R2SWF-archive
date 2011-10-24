@@ -682,12 +682,13 @@ newSWFSoundStream(FILE* file)
 	return s;
 }
 
-SWFSoundStream
+/* SWFSoundStream
 newSWFSoundStreamFromFileno(int fd)
 {
 	FILE *fp = fdopen(fd, "r");
 	return newSWFSoundStream(fp);
-}
+} */
+/* Commented by Yixuan Qiu */
 
 
 /*

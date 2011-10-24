@@ -311,7 +311,10 @@ newSWFInput_file(FILE *f)
 	if ( fseek(f, 0, SEEK_CUR) == -1 )
 		return newSWFInput_stream(f);
 
-	if ( fstat(fileno(f), &buf) == -1 )
+	/* if ( fstat(fileno(f), &buf) == -1 ) */
+	/* Commented by Yixuan Qiu */
+	if ( fstat(f->_file, &buf) == -1 )
+
 		SWF_error("Couldn't fstat filehandle in newSWFInput_file");
 
 	input = (SWFInput) malloc(sizeof(struct SWFInput_s));

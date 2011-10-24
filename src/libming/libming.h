@@ -18,9 +18,9 @@
 */
 
 /* libming.h - global typedefs, etc.
- * 
+ *
  * $Id$
- * 
+ *
  * Notice: This header file contains declarations of functions and types that
  * are just used internally. All library functions and types that are supposed
  * to be publicly accessable are defined in ./src/ming.h.
@@ -29,6 +29,8 @@
 #ifndef SWF_LIBMING_H_INCLUDED
 #define SWF_LIBMING_H_INCLUDED
 
+#include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 
@@ -69,6 +71,15 @@ typedef unsigned char BOOL;
 #ifndef rint
   #define rint(d) (floor((d)+0.5))
 #endif
+
+
+
+char* __my__strdup (const char *s);
+#ifndef strdup
+  #define strdup __my__strdup
+#endif
+
+
 
 #ifndef WIN32
   #include <unistd.h>

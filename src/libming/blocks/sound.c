@@ -239,12 +239,14 @@ newSWFSound(FILE *f, byte flags)
 
 /* added by David McNab <david@rebirthing.co.nz> */
 /* required so that python can pass in file descriptors instead of FILE* streams */
-SWFSound
+
+/* SWFSound
 newSWFSoundFromFileno(int fd, byte flags)
 {
 	FILE *fp = fdopen(fd, "r");
 	return newSWFSound(fp, flags);
-}
+} */
+/* Commented by Yixuan Qiu */
 
 
 SWFSound
