@@ -55,13 +55,13 @@ finishBrowserFont(SWFBrowserFont font)
 	SWF_assert(BLOCK(font)->swfVersion);
 
 	out = newSWFOutput();
-	font->out = out;	
-	
+	font->out = out;
+
 	SWFOutput_writeUInt16(out, CHARACTERID(font));
 	if(BLOCK(font)->swfVersion > 5)	/* maybe italic or bold flag? */
 		SWFOutput_writeUInt8(out, SWF_FONT_WIDECODES);
 	else
-	 	SWFOutput_writeUInt8(out, 0); 
+	 	SWFOutput_writeUInt8(out, 0);
 
 	SWFOutput_writeUInt8(out, 0); /* reserved flags */
 	SWFOutput_writeUInt8(out, strlen(font->name));
@@ -79,9 +79,9 @@ static int
 completeSWFBrowserFont(SWFBlock block)
 {
 	SWFBrowserFont font = (SWFBrowserFont)block;
-	if(font->out == NULL) 
+	if(font->out == NULL)
 		finishBrowserFont(font);
-	
+
 	BLOCK(font)->type = SWF_DEFINEFONT2; /* see below */
 	return SWFOutput_getLength(font->out);
 }
@@ -124,7 +124,7 @@ newSWFBrowserFont(const char *name)
 SWFOutput
 SWFBrowserFont_getOutput(SWFBrowserFont font)
 {
-	if(font->out == NULL) // in case complete is called twice
+	if(font->out == NULL) /* in case complete is called twice */
 		finishBrowserFont(font);
 
 	return font->out;

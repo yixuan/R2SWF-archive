@@ -40,7 +40,7 @@ SWFCharacterInit(SWFCharacter character)
 
 	character->dependencies = NULL;
 	character->nDependencies = 0;
-	
+
 	character->isFinished = FALSE;
 
 	character->onPlace = NULL;
@@ -57,7 +57,7 @@ destroySWFCharacter(SWFCharacter character)
 	if ( character->bounds != NULL )
 		destroySWFRect(character->bounds);
 
-	// destroySWFBlock((SWFBlock)character);
+	/* destroySWFBlock((SWFBlock)character); */
 
 	free(character);
 }

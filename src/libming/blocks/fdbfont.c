@@ -64,7 +64,7 @@ readKernInfo16(SWFInput input, struct kernInfo16 *kern)
 }
 
 
-static inline void checkShapeHeader(SWFInput input,
+static void checkShapeHeader(SWFInput input,
                                     int *numFillBits,
                                     int *numLineBits)
 {
@@ -76,7 +76,7 @@ static inline void checkShapeHeader(SWFInput input,
 		SWF_error("FdbFont read glyph: bad file format (was expecting line bits = 0)\n");
 }
 
-static inline void checkShapeStyle(SWFInput input, char style,
+static void checkShapeStyle(SWFInput input, char style,
                              int numFillBits, int numLineBits)
 {
 	if ( style & 1 )
@@ -162,7 +162,7 @@ static SWFShape readGlyphShape(SWFInput input)
 		return shape;
 	}
 	checkShapeStyle(input, style, numFillBits, numLineBits);
-	
+
 	/* translate the glyph's shape records into drawing commands */
 	while (translateShapeRecord(input, shape))
 		;
@@ -170,7 +170,7 @@ static SWFShape readGlyphShape(SWFInput input)
 	return shape;
 }
 
-static inline int readFontLayout(SWFInput input, SWFFont font)
+static int readFontLayout(SWFInput input, SWFFont font)
 {
 	int i;
 	struct SWFRect_s __rect;
@@ -180,12 +180,12 @@ static inline int readFontLayout(SWFInput input, SWFFont font)
 	font->ascent = SWFInput_getSInt16(input);
 	font->descent = SWFInput_getSInt16(input);
 	font->leading = SWFInput_getSInt16(input);
-	
+
 	/* get advances */
 	for (i = 0; i < font->nGlyphs; ++i )
 		font->advances[i] = SWFInput_getSInt16(input);
 
-	// temp hack
+	/* temp hack */
 	for (i = 0; i < font->nGlyphs; ++i )
 		readBounds(input, &__rect);
 
@@ -215,7 +215,7 @@ static inline int readFontLayout(SWFInput input, SWFFont font)
 	return 0;
 }
 
-static inline int checkFdbHeader(SWFInput input)
+static int checkFdbHeader(SWFInput input)
 {
 	char f, d, b, z;
 	f = SWFInput_getChar(input);
@@ -224,17 +224,17 @@ static inline int checkFdbHeader(SWFInput input)
 	z = SWFInput_getChar(input);
 
 	if(f != 'f' || d != 'd' || b != 'b' || z != '0')
-	{	
+	{
 		SWF_warn("loadSWFFont: not a fdb file\n");
 		return -1;
 	}
-	
+
 	return 0;
 }
 
 SWFFont loadSWFFontFromInput(SWFInput input)
 {
-	SWFFont font; 
+	SWFFont font;
 	int namelen, flags, i, nGlyphs;
 
 	if(input == NULL)
@@ -244,10 +244,10 @@ SWFFont loadSWFFontFromInput(SWFInput input)
 		return NULL;
 
 
-	font = newSWFFont();	
+	font = newSWFFont();
 	flags = SWFInput_getChar(input);
 	font->flags = flags;
-	font->langCode = SWFInput_getChar(input); 
+	font->langCode = SWFInput_getChar(input);
 	namelen = SWFInput_getChar(input);
 	font->name = (char *) malloc(namelen + 1);
 	for ( i=0; i < namelen; ++i )
@@ -257,18 +257,18 @@ SWFFont loadSWFFontFromInput(SWFInput input)
 	nGlyphs = SWFInput_getUInt16(input);
 
 	font->nGlyphs = nGlyphs;
-	font->glyphToCode = (unsigned short*)malloc(nGlyphs * sizeof(short));	
+	font->glyphToCode = (unsigned short*)malloc(nGlyphs * sizeof(short));
 	if ( flags & SWF_FONT_WIDEOFFSETS )
 	{
 		for (i=0; i < nGlyphs; ++i)
-			SWFInput_getUInt32(input); // glyph offset
-		SWFInput_getUInt32(input); // code table offset
+			SWFInput_getUInt32(input); /* glyph offset */
+		SWFInput_getUInt32(input); /* code table offset */
 	}
 	else
 	{
 		for(i=0; i < nGlyphs; ++i)
-			SWFInput_getUInt16(input); // glyph offset
-		SWFInput_getUInt16(input); // code table offset
+			SWFInput_getUInt16(input); /* glyph offset */
+		SWFInput_getUInt16(input); /* code table offset */
 	}
 
 	font->shapes = (SWFShape *)malloc(nGlyphs * sizeof(SWFShape));
@@ -289,7 +289,7 @@ SWFFont loadSWFFontFromInput(SWFInput input)
 
 	if ( flags & SWF_FONT_HASLAYOUT )
 		readFontLayout(input, font);
-	SWFFont_buildReverseMapping(font);	
+	SWFFont_buildReverseMapping(font);
 	return font;
 }
 
@@ -324,7 +324,7 @@ static void oprintf(struct out *op, const char *fmt, ...)
 {	va_list ap;
 	char buf[256];
 	int d, l;
-	
+
 	va_start(ap, fmt);
 	l = vsprintf(buf, fmt, ap);
 	while((d = op->ptr - op->buf) + l >= op->len-1)
@@ -335,7 +335,7 @@ static void oprintf(struct out *op, const char *fmt, ...)
 		*op->ptr++ = buf[d];
 }
 
-// return a malloc'ed string describing the glyph shape
+/* return a malloc'ed string describing the glyph shape */
 char *
 SWFFont_getShape(SWFFont font, unsigned short c)
 {
@@ -366,7 +366,7 @@ SWFFont_getShape(SWFFont font, unsigned short c)
 
 	readBitsP(f, 2); /* type 0, newstyles */
 	style = readBitsP(f, 3);
-	
+
 	if(readBitsP(f, 1))
 	{	moveBits = readBitsP(f, 5);
 		x = startX + readSBitsP(f, moveBits);

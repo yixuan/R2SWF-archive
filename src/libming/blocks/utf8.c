@@ -25,7 +25,7 @@ int UTF8Length(const char *string)
 	{
 		/* unsigned int byte0, byte1, byte2; */
 		/* Commented by Yixuan Qiu */
-		unsigned int byte0 = 0, byte1 = 0, byte2 = 0;
+		unsigned int byte0;
 
 		byte0 = (unsigned int)string[i];
 
@@ -36,7 +36,9 @@ int UTF8Length(const char *string)
 				if (++i >= l)
 					break;
 
-				byte1 = (unsigned int)string[i];
+				/* byte1 = (unsigned int)string[i]; */
+				/* Commented by Yixuan Qiu */
+
 				++str_len;
 			}
 			else if ((byte0 & 0xf0) == 0xe0)
@@ -44,12 +46,15 @@ int UTF8Length(const char *string)
 				if (++i >= l)
 					break;
 
-				byte1 = (unsigned int)string[i];
+				/* byte1 = (unsigned int)string[i]; */
+				/* Commented by Yixuan Qiu */
 
 				if (++i >= l)
 					break;
 
-				byte2 = (unsigned int)string[i];
+				/* byte2 = (unsigned int)string[i]; */
+				/* Commented by Yixuan Qiu */
+
 				++str_len;
 			}
 			else

@@ -32,6 +32,20 @@
 #include "libming.h"
 
 
+int SWFFilter_testBlockType(int type)
+{
+	switch(type)
+	{
+		case SWF_DEFINEBUTTON:
+		case SWF_DEFINEBUTTON2:
+		case SWF_DEFINESPRITE:
+		case SWF_DEFINETEXT:
+		case SWF_DEFINETEXT2:
+			return 1;
+		default: return 0;
+	}
+}
+
 struct Shadow_s
 {
 	float	angle;
@@ -42,16 +56,16 @@ struct Shadow_s
 
 /*
  * create a new SWFShadow (contructor)
- * This Function creates a new SWFShadow object. Only useful for creating 
+ * This Function creates a new SWFShadow object. Only useful for creating
  * SWFFilter objects.
  */
-SWFShadow 
-newSWFShadow(float angle /* angle in radians */, 
-             float distance /* distance in px*/, 
+SWFShadow
+newSWFShadow(float angle /* angle in radians */,
+             float distance /* distance in px*/,
              float strength /* strength */)
 {
 	SWFShadow shadow = (SWFShadow)malloc(sizeof(struct Shadow_s));
-	
+
 	shadow->angle = angle;
 	shadow->distance = distance;
 	shadow->strength = strength;
@@ -77,9 +91,9 @@ struct Blur_s
  * This function creates a new SWFBlur object. Only useful for creating
  * SWFFilter objects
  */
-SWFBlur 
-newSWFBlur(float blurX /* horiz. blur amount */, 
-           float blurY /* vert. blur amount */, 
+SWFBlur
+newSWFBlur(float blurX /* horiz. blur amount */,
+           float blurY /* vert. blur amount */,
            int passes /* number of passes. shoub be <= 3 */)
 {
 	SWFBlur blur = (SWFBlur)malloc(sizeof(struct Blur_s));
@@ -103,9 +117,9 @@ struct BlurFilter
 
 struct DropShadowFilter
 {
-	SWFColor		color;	
+	SWFColor		color;
 	SWFBlur 		blur;
-	SWFShadow		shadow;	
+	SWFShadow		shadow;
 	int 			flags;
 };
 
@@ -129,16 +143,16 @@ struct BevelFilter
 struct GradientGlowFilter
 {
 	SWFGradient	gradient;
-	SWFBlur		blur;	
+	SWFBlur		blur;
 	SWFShadow	shadow;
-	int 		flags;	
+	int 		flags;
 };
 
 struct GradientBevelFilter
 {
 	SWFGradient	gradient;
 	SWFBlur	 	blur;
-	SWFShadow	shadow;	
+	SWFShadow	shadow;
 	int 		flags;
 };
 
@@ -152,19 +166,19 @@ struct FilterMatrix_s
 
 /*
  * create a new FilterMatrix (constructor)
- * This function creates a new SFWFilterMatrix. Only useful 
+ * This function creates a new SFWFilterMatrix. Only useful
  * for creating SWFFilter objects.
  */
-SWFFilterMatrix 
-newSWFFilterMatrix(int cols /* number of cols */, 
-                   int rows /* number of rows */, 
+SWFFilterMatrix
+newSWFFilterMatrix(int cols /* number of cols */,
+                   int rows /* number of rows */,
                    float *vals /* vals[cols * rows]. Will be copied */)
 {
 	SWFFilterMatrix matrix;
 
 	if(cols <= 0 || rows <= 0)
 		return NULL;
-	
+
 	matrix = (SWFFilterMatrix)malloc(sizeof(struct FilterMatrix_s));
 
 	matrix->cols = cols;
@@ -223,9 +237,9 @@ static void writeDropShadowFilter(SWFOutput out, struct DropShadowFilter *filter
 	SWFOutput_writeUInt8(out, filter->color.green);
 	SWFOutput_writeUInt8(out, filter->color.blue);
 	SWFOutput_writeUInt8(out, filter->color.alpha);
-	
+
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
 
 	SWFOutput_writeFixed(out, filter->shadow->angle);
 	SWFOutput_writeFixed(out, filter->shadow->distance);
@@ -241,7 +255,7 @@ static void writeBlurFilter(SWFOutput out, struct BlurFilter *filter)
 	int flags = 0;
 
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
 
 	flags = 0xff & (filter->blur->passes << 3);
 	SWFOutput_writeUInt8(out, flags);
@@ -257,7 +271,7 @@ static void writeGlowFilter(SWFOutput out, struct GlowFilter *filter)
 	SWFOutput_writeUInt8(out, filter->color.alpha);
 
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
 
 	SWFOutput_writeFixed8(out, filter->strength);
 	flags |= filter->flags;
@@ -280,8 +294,8 @@ static void writeBevelFilter(SWFOutput out, struct BevelFilter *filter)
 	SWFOutput_writeUInt8(out, filter->highlightColor.alpha);
 
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
-	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
+
 	SWFOutput_writeFixed(out, filter->shadow->angle);
 	SWFOutput_writeFixed(out, filter->shadow->distance);
 	SWFOutput_writeFixed8(out, filter->shadow->strength);
@@ -296,10 +310,10 @@ static void writeGradientGlowFilter(SWFOutput out, struct GradientGlowFilter *fi
 	int flags = FILTER_MODE_COMPOSITE;
 
 	SWFOutput_writeGradientAsFilter(out, filter->gradient);
-	
+
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
-	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
+
 	SWFOutput_writeFixed(out, filter->shadow->angle);
 	SWFOutput_writeFixed(out, filter->shadow->distance);
 	SWFOutput_writeFixed8(out, filter->shadow->strength);
@@ -343,10 +357,10 @@ static void writeGradientBevelFilter(SWFOutput out, struct GradientBevelFilter *
 	int flags = FILTER_MODE_COMPOSITE;
 
 	SWFOutput_writeGradientAsFilter(out, filter->gradient);
-	
+
 	SWFOutput_writeFixed(out, filter->blur->blurX);
-	SWFOutput_writeFixed(out, filter->blur->blurY);	
-	
+	SWFOutput_writeFixed(out, filter->blur->blurY);
+
 	SWFOutput_writeFixed(out, filter->shadow->angle);
 	SWFOutput_writeFixed(out, filter->shadow->distance);
 	SWFOutput_writeFixed8(out, filter->shadow->strength);
@@ -356,7 +370,7 @@ static void writeGradientBevelFilter(SWFOutput out, struct GradientBevelFilter *
 	SWFOutput_writeUInt8(out, flags);
 }
 
-void 
+void
 SWFOutput_writeSWFFilter(SWFOutput out, SWFFilter filter)
 {
 	if(out == NULL || filter == NULL)
@@ -392,10 +406,10 @@ SWFOutput_writeSWFFilter(SWFOutput out, SWFFilter filter)
 		default:
 			SWF_error("destroySWFFilter: invalid filter\n");
 	}
-	
+
 }
 
-void 
+void
 destroySWFFilter(SWFFilter filter)
 {
 	if(filter == NULL)
@@ -404,28 +418,28 @@ destroySWFFilter(SWFFilter filter)
 	switch(filter->id)
 	{
 		case SWFFILTER_TYPE_DROPSHADOW:
-			// destroyDropShadowFilter(&filter->filter.dropShadow);
+			/* destroyDropShadowFilter(&filter->filter.dropShadow); */
 			break;
 		case SWFFILTER_TYPE_BLUR:
-			// destroyBlurFilter(&filter->filter.blur);
+			/* destroyBlurFilter(&filter->filter.blur); */
 			break;
 		case SWFFILTER_TYPE_GLOW:
-			// destroyGlowFilter(&filter->filter.glow);
+			/* destroyGlowFilter(&filter->filter.glow); */
 			break;
 		case SWFFILTER_TYPE_BEVEL:
-			//destroyBevelFilter(&filter->filter.bevel);
+			/* destroyBevelFilter(&filter->filter.bevel); */
 			break;
 		case SWFFILTER_TYPE_GRADIENTGLOW:
-			// destroyGradientGlowFilter(&filter->filter.gradientGlow);
+			/* destroyGradientGlowFilter(&filter->filter.gradientGlow); */
 			break;
 		case SWFFILTER_TYPE_CONVOLUTION:
-			// destroyConvolutionFilter(&filter->filter.convolution);
+			/* destroyConvolutionFilter(&filter->filter.convolution); */
 			break;
 		case SWFFILTER_TYPE_COLORMATRIX:
-			// destroyColorMatrixFilter(&filter->filter.colorMatrix);
+			/* destroyColorMatrixFilter(&filter->filter.colorMatrix); */
 			break;
 		case SWFFILTER_TYPE_GRADIENTBEVEL:
-			// destroyGradientBevelFilter(&filter->filter.gradientBevel);
+			/* destroyGradientBevelFilter(&filter->filter.gradientBevel); */
 			break;
 		default:
 			SWF_error("destroySWFFilter: invalid filter\n");
@@ -433,8 +447,8 @@ destroySWFFilter(SWFFilter filter)
 	free(filter);
 }
 
-/* 
- * creates a new ColormatrixFilter 
+/*
+ * creates a new ColormatrixFilter
  * Matrix has to be 5 x 4
  * [r0 ... r4]
  * [g0 ... g4]
@@ -453,7 +467,7 @@ newColorMatrixFilter(SWFFilterMatrix matrix /* matrix */)
 	{
 		SWF_warn("newColorMatrixFilter: color matrix has to be 5x4\n");
 		return NULL;
-	}	
+	}
 
 	filter = (SWFFilter)malloc(sizeof(struct SWFFilter_s));
 	filter->id = SWFFILTER_TYPE_COLORMATRIX;
@@ -466,8 +480,8 @@ newColorMatrixFilter(SWFFilterMatrix matrix /* matrix */)
 /*
  * creates a new ConvolutionFilter
  */
-SWFFilter 
-newConvolutionFilter(SWFFilterMatrix matrix /* matrix */, 
+SWFFilter
+newConvolutionFilter(SWFFilterMatrix matrix /* matrix */,
                      float divisor /* divisor applied to matrix */,
                      float bias /* matrix bias */,
                      SWFColor color /* default color */,
@@ -492,23 +506,23 @@ newConvolutionFilter(SWFFilterMatrix matrix /* matrix */,
 
 	return filter;
 }
-                     
+
 
 
 /*
- * create a GradientBevelFilter 
+ * create a GradientBevelFilter
  * This functions creates a gradient bevel filter. Extends BevelFilter by
  * using a gradient instead of a simple color
  */
 SWFFilter
-newGradientBevelFilter(SWFGradient gradient /* gradient */, 
+newGradientBevelFilter(SWFGradient gradient /* gradient */,
                        SWFBlur blur /* blur */,
                        SWFShadow shadow /* shadow */,
                        int flags /* FILTER_MODE_INNER,  FILTER_MODE_KO, FILTER_MODE_ONTOP */)
 {
 	SWFFilter filter;
 	struct GradientBevelFilter *gBevel;
-	
+
 	if(gradient == NULL || blur == NULL)
 		return NULL;
 
@@ -523,16 +537,16 @@ newGradientBevelFilter(SWFGradient gradient /* gradient */,
 	gBevel->flags = flags;
 
 	return filter;
-} 
+}
 
-/* 
+/*
  * creates a GardientGlowFilter
  * This functions creates a gradient glow filter. Extends GlowFilter by
  * using a gradient instead of a simple color
  */
-SWFFilter 
-newGradientGlowFilter(SWFGradient gradient /* gradient */, 
-                      SWFBlur blur /* blur */, 
+SWFFilter
+newGradientGlowFilter(SWFGradient gradient /* gradient */,
+                      SWFBlur blur /* blur */,
                       SWFShadow shadow /* shadow */,
                       int flags /* FILTER_MODE_INNER,  FILTER_MODE_KO, FILTER_MODE_ONTOP */)
 {
@@ -555,14 +569,14 @@ newGradientGlowFilter(SWFGradient gradient /* gradient */,
 	return filter;
 }
 
-/* 
+/*
  * creates a BevelFilter
  * This functions creates a bevel filter. Creates a smooth bevel
  */
-SWFFilter 
-newBevelFilter(SWFColor shadowColor /* shadow color */, 
-               SWFColor highlightColor /* highlight color */, 
-               SWFBlur blur /* blur */, 
+SWFFilter
+newBevelFilter(SWFColor shadowColor /* shadow color */,
+               SWFColor highlightColor /* highlight color */,
+               SWFBlur blur /* blur */,
                SWFShadow shadow /* shadow */,
                int flags /* FILTER_MODE_INNER,  FILTER_MODE_KO, FILTER_MODE_ONTOP */)
 {
@@ -579,26 +593,26 @@ newBevelFilter(SWFColor shadowColor /* shadow color */,
 
 	bevel->shadowColor = shadowColor;
 	bevel->highlightColor = highlightColor;
-	bevel->blur = blur; 
+	bevel->blur = blur;
 	bevel->shadow = shadow;
 	bevel->flags = flags;
 
 	return filter;
 }
 
-/* 
+/*
  * creates a GlowFilter
  * This functions creates a glow filter.
  */
-SWFFilter 
-newGlowFilter(SWFColor color /* color of shadow */, 
-              SWFBlur blur /* blur */, 
-              float strength /* strength */, 
+SWFFilter
+newGlowFilter(SWFColor color /* color of shadow */,
+              SWFBlur blur /* blur */,
+              float strength /* strength */,
               int flags /* FILTER_MODE_INNER,  FILTER_MODE_KO */)
 {
 	SWFFilter filter;
 	struct GlowFilter *glow;
-	
+
 	if(blur == NULL)
 		return NULL;
 
@@ -616,10 +630,10 @@ newGlowFilter(SWFColor color /* color of shadow */,
 }
 
 /*
- * creates a BlurFilter 
+ * creates a BlurFilter
  * This functions creates a blur filter.
  */
-SWFFilter 
+SWFFilter
 newBlurFilter(SWFBlur blur /* blur */)
 {
 	SWFFilter filter;
@@ -636,13 +650,13 @@ newBlurFilter(SWFBlur blur /* blur */)
 }
 
 /*
- * creates a DropShadowFilter 
+ * creates a DropShadowFilter
  * This functions creates a drop shadow filter filter.
  */
-SWFFilter 
-newDropShadowFilter(SWFColor color /* color of shadow */, 
-                    SWFBlur blur /* blur */, 
-                    SWFShadow shadow /* shadow */, 
+SWFFilter
+newDropShadowFilter(SWFColor color /* color of shadow */,
+                    SWFBlur blur /* blur */,
+                    SWFShadow shadow /* shadow */,
                     int flags /* FILTER_MODE_INNER,  FILTER_MODE_KO */)
 {
 	struct DropShadowFilter *dropShadow;

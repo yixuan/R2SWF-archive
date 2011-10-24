@@ -324,7 +324,7 @@ scanJpegFile(SWFInput input)
 
 				length += l + 2;
 				l -= 7;
-				
+
 				SWFInput_seek(input, l, SEEK_CUR);
 
 				break;
@@ -467,8 +467,8 @@ newSWFJpegWithAlpha_fromInput(SWFInput input, SWFInput alpha)
 	CHARACTERID(jpeg) = ++SWF_gNumCharacters;
 
 	BLOCK(jpeg)->writeBlock = writeSWFJpegWithAlphaToMethod;
-	BLOCK(jpeg)->complete = completeSWFJpegBitmap; // can use same complete
-	BLOCK(jpeg)->dtor = (destroySWFBlockMethod) destroySWFJpegBitmap;			 // ditto here
+	BLOCK(jpeg)->complete = completeSWFJpegBitmap; /* can use same complete */
+	BLOCK(jpeg)->dtor = (destroySWFBlockMethod) destroySWFJpegBitmap;			 /* ditto here */
 	BLOCK(jpeg)->type = SWF_DEFINEBITSJPEG3;
 
 	jpeg->input = input;

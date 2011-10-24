@@ -385,7 +385,7 @@ int
 SWFOutput_numSBits(int num)
 {
 	if ( num < 0 )
-		// XXX - one more than necessary if num = -2^n:
+		/* XXX - one more than necessary if num = -2^n: */
 		return SWFOutput_numBits(-num)+1;
 	else
 		return SWFOutput_numBits(num)+1;
@@ -408,7 +408,7 @@ SWFOutput_writeString(SWFOutput out, const unsigned char *string)
 	SWFOutput_writeUInt8(out, 0);
 }
 
-void 
+void
 SWFOutput_writeFixed(SWFOutput out, double val)
 {
 	unsigned int fixed;
@@ -417,7 +417,7 @@ SWFOutput_writeFixed(SWFOutput out, double val)
 	SWFOutput_writeUInt32(out, fixed);
 }
 
-void 
+void
 SWFOutput_writeFixed8(SWFOutput out, double val)
 {
 	unsigned int fixed;
@@ -442,7 +442,7 @@ SWFOutput_writeFloat(SWFOutput out, float f)
 	SWFOutput_writeUInt8(out, p[2]);
 	SWFOutput_writeUInt8(out, p[1]);
 	SWFOutput_writeUInt8(out, p[0]);
-#endif	
+#endif
 }
 
 void
@@ -499,7 +499,7 @@ SWFOutput_writeFloat16(SWFOutput out, float f)
 
 	*pf = f;
 	i = (unsigned int)*buf;
-	
+
 	sig = (FLOAT_SIGN_MASK & i) >> FLOAT_SIGN_SHIFT;
 
 	exp = (FLOAT_EXP_MASK & i) >> FLOAT_EXP_SHIFT;
@@ -509,8 +509,8 @@ SWFOutput_writeFloat16(SWFOutput out, float f)
 
 	exp += FLOAT16_BIAS;
 	exp &= 0x1f;
-	
-	// reduce mantissa to 11-bit
+
+	/* reduce mantissa to 11-bit */
 	mat >>= 12;
 
 	i = sig << FLOAT16_SIGN_SHIFT | exp << FLOAT16_EXP_SHIFT | (mat & 0x7ff);
@@ -520,10 +520,10 @@ SWFOutput_writeFloat16(SWFOutput out, float f)
 #define ENC_HIGH_BIT 0x80
 #define ENC_BYTE_MASK 0x7f
 
-void 
+void
 SWFOutput_writeEncUInt32(SWFOutput out, unsigned int i)
 {
-	if(i == 0) // special case 
+	if(i == 0) /* special case  */
 	{
 		SWFOutput_writeUInt8(out, 0);
 		return;

@@ -143,7 +143,7 @@ writeSWFDBLBitmapDataToMethod(SWFBlock block, SWFByteOutputMethod method, void *
 	methodWriteUInt16(dbl->width, method, data);
 	methodWriteUInt16(dbl->height, method, data);
 	i=block->length-8;
-	if(dbl->format == 3)	// palette image
+	if(dbl->format == 3)	/* palette image */
 		method(dbl->format2, data);
 	else
 		i++;
@@ -217,7 +217,7 @@ destroySWFDBLBitmap_andInputs(SWFDBLBitmap bitmap)
 	if ( bitmap->input != NULL )
 		destroySWFInput(bitmap->input);
 
-  // The bounds rectangle will be already freed in destroySWFCharacter
+  /* The bounds rectangle will be already freed in destroySWFCharacter */
 	/*if ( CHARACTER(bitmap)->bounds != NULL )
 		destroySWFRect(CHARACTER(bitmap)->bounds);*/
 

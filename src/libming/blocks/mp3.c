@@ -26,63 +26,63 @@
 #include "sound.h"
 
 
-// [version][idx]
+/* [version][idx] */
 static unsigned short mp3_samplingrate_tbl[4][4] =
-{ 
-	// mpeg 2.5
+{
+	/* mpeg 2.5 */
 	{ 11025, 12000, 8000, 0},
-	// reserved
+	/* reserved */
 	{ 0, 0, 0, 0},
-	// mpeg 2
+	/* mpeg 2 */
 	{ 22050, 24000, 16000, 0},
-	// mpeg 1
+	/* mpeg 1 */
 	{ 44100, 48000, 32000, 0}
 };
 
-// [version][layer][idx]
-static unsigned short mp3_bitrate_tbl[4][4][16] = 
+/* [version][layer][idx] */
+static unsigned short mp3_bitrate_tbl[4][4][16] =
 {
-	// mpeg 2.5
-	{ 
-		// reserved
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		// layer 3
-		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
-		// layer 2
-		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
-		// layer 1
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	},
-	
-	// reserved
-	{ 
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	},
-
-	// mpeg version 2
+	/* mpeg 2.5 */
 	{
-		// reserved
+		/* reserved */
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		// layer 3
+		/* layer 3 */
 		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
-		// layer 2
+		/* layer 2 */
 		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
-		// layer 1
+		/* layer 1 */
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	},
+
+	/* reserved */
+	{
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	},
+
+	/* mpeg version 2 */
+	{
+		/* reserved */
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		/* layer 3 */
+		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
+		/* layer 2 */
+		{ 0, 8, 16, 24,	32, 40,	48, 56, 64, 80, 96, 112, 128, 144, 160, 0},
+		/* layer 1 */
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 	},
-	// mpeg version 1
-	{ 
-		// reserved
+	/* mpeg version 1 */
+	{
+		/* reserved */
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		// layer 3	
+		/* layer 3 */
 		{ 0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 0},
-		// layer 2
+		/* layer 2 */
 		{ 0, 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384, 0 },
-		// layer 1
+		/* layer 1 */
 		{ 0, 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 382, 416, 448, 0}
 	}
 };
@@ -94,26 +94,26 @@ static unsigned short mp3_bitrate_tbl[4][4][16] =
 			return 0;		\
 	} while(0);
 
-	
+
 /*
- * reads a MP3 header 
+ * reads a MP3 header
  * returns:
  * 	0 if EOF
  * 	-1 if invalid header; stream is unaltered
  * 	1 on success
- */	
+ */
 int readMP3Header(SWFInput input, struct mp3_header *mp3h)
 {
 	int frameSync, br, sr;
 	if(SWFInput_length(input) - SWFInput_tell(input) < 4)
 		return 0;
-	
+
 	frameSync = SWFInput_readBits(input, 11);
 	CHECK_STREAM(input);
 
 	mp3h->version = SWFInput_readBits(input, 2);
 	mp3h->layer = SWFInput_readBits(input, 2);
-	SWFInput_readBits(input, 1); // protect bit
+	SWFInput_readBits(input, 1); /* protect bit */
 	CHECK_STREAM(input);
 
 	br = SWFInput_readBits(input, 4);
@@ -121,12 +121,12 @@ int readMP3Header(SWFInput input, struct mp3_header *mp3h)
 	mp3h->bitrate = mp3_bitrate_tbl[mp3h->version][mp3h->layer][br];
 	mp3h->samplingRate = mp3_samplingrate_tbl[mp3h->version][sr];
 	mp3h->padding = SWFInput_readBits(input, 1);
-	SWFInput_readBits(input, 1); // private bit
+	SWFInput_readBits(input, 1); /* private bit */
 	CHECK_STREAM(input);
-	
+
 	mp3h->channelMode = SWFInput_readBits(input, 2);
-	SWFInput_readBits(input, 2); // extension
-	SWFInput_readBits(input, 3); // copyright, orig, emphasis
+	SWFInput_readBits(input, 2); /* extension */
+	SWFInput_readBits(input, 3); /* copyright, orig, emphasis */
 	CHECK_STREAM(input);
 	SWFInput_byteAlign(input);
 	if((frameSync & 0x7ff) != 0x7ff)
@@ -137,7 +137,7 @@ int readMP3Header(SWFInput input, struct mp3_header *mp3h)
 
 	if(mp3h->version == 1 || mp3h->layer == 0)
 	{
-		SWFInput_seek(input, -4, SEEK_CUR);  
+		SWFInput_seek(input, -4, SEEK_CUR);
 		return -1;
 	}
 	return 1;
@@ -149,22 +149,22 @@ int nextMP3Frame(SWFInput input)
 	struct mp3_header mp3h;
 
 	ret = readMP3Header(input, &mp3h);
-	
+
 	if(ret < 0)
 		return -1;
-	
+
 	if(ret == 0 || SWFInput_eof(input))
 		return 0;
-	
+
 	if(mp3h.samplingRate == 0 || mp3h.bitrate == 0)
 		SWF_error("invalid mp3 file\n");
 	if(mp3h.version == MP3_VERSION_1)
 	{
-		frameLen = 144 * mp3h.bitrate * 1000 
+		frameLen = 144 * mp3h.bitrate * 1000
 				/ mp3h.samplingRate + mp3h.padding;
 	}
 	else
-		frameLen = 72 * mp3h.bitrate * 1000 
+		frameLen = 72 * mp3h.bitrate * 1000
 			/ mp3h.samplingRate + mp3h.padding;
 
 	SWFInput_seek(input, frameLen-4, SEEK_CUR);
@@ -177,12 +177,12 @@ int nextMP3Frame(SWFInput input)
  */
 int getMP3Flags(SWFInput input, byte *flags)
 {
-	struct mp3_header mp3h;	
+	struct mp3_header mp3h;
 	int rate=0, channels, start = 0;
 	int ret;
 
-	/* 
-	 * skip stream until first MP3 header which starts with 0xffe 
+	/*
+	 * skip stream until first MP3 header which starts with 0xffe
 	 */
 	while((ret = readMP3Header(input, &mp3h)) < 0)
 	{
@@ -202,21 +202,21 @@ int getMP3Flags(SWFInput input, byte *flags)
 	switch ( mp3h.version )
 	{
 		case MP3_VERSION_1:
-			rate = SWF_SOUND_44KHZ; 
+			rate = SWF_SOUND_44KHZ;
 			break;
 
 		case MP3_VERSION_2:
-			rate = SWF_SOUND_22KHZ; 
+			rate = SWF_SOUND_22KHZ;
 			break;
 
 		case MP3_VERSION_25:
-			rate = SWF_SOUND_11KHZ; 
+			rate = SWF_SOUND_11KHZ;
 			break;
 	}
 
 	*flags =
 		SWF_SOUND_MP3_COMPRESSED | rate | SWF_SOUND_16BITS | channels;
-	return start;	
+	return start;
 }
 
 int getMP3Samples(SWFInput input, int flags, int *wanted)
@@ -239,15 +239,15 @@ int getMP3Samples(SWFInput input, int flags, int *wanted)
 		return -1;
 	}
 
-	while(*wanted < 0 || numSamples < *wanted - frameSize) 
+	while(*wanted < 0 || numSamples < *wanted - frameSize)
 	{
 		length = nextMP3Frame(input);
 		if(length <= 0)
-			break;	
+			break;
 		totalLength += length;
 		numSamples += frameSize;
 	}
-	*wanted = numSamples;			
+	*wanted = numSamples;
 	return totalLength;
 }
 
@@ -265,7 +265,7 @@ unsigned int getMP3Duration(SWFInput input)
 		return 0;
 	if(getMP3Samples(input, flags, &samples) <= 0)
 		return 0;
-	
+
 	sampleRate = SWFSound_getSampleRate(flags);
 	SWFInput_seek(input, start, SEEK_SET);
 	return samples * 1000.0	/ sampleRate;

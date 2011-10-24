@@ -222,8 +222,19 @@ int SWFShape_drawScaledCubicTo(SWFShape shape, int bx, int by,
 	double t1 = 0.0, t2 = 1.0;
 	int nCurves = 0;
 
-	cubic pts = { { ax, ay }, { bx, by }, {cx, cy }, { dx, dy } };
+	/* cubic pts = { { ax, ay }, { bx, by }, {cx, cy }, { dx, dy } }; */
+	/* cubic New; */
+	/* Commented by Yixuan Qiu */
+	cubic pts;
 	cubic New;
+	pts.a.x = ax;
+	pts.a.y = ay;
+	pts.b.x = bx;
+	pts.b.y = by;
+	pts.c.x = cx;
+	pts.c.y = cy;
+	pts.d.x = dx;
+	pts.d.y = dy;
 
 	if ( d > 0 )
 	{

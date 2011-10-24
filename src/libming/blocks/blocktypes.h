@@ -20,7 +20,7 @@
 /* blocktypes.h
  *
  * $Id$
- * 
+ *
  * Notice: This header file contains declarations of functions and types that
  * are just used internally. All library functions and types that are supposed
  * to be publicly accessable are defined in ./src/ming.h.
@@ -65,7 +65,7 @@ typedef enum
   SWF_DEFINETEXT2               = 33,
   SWF_DEFINESCALINGGRID		= 78,  /* SWF_version  >= 8 */
   SWF_DOACTION                  = 12,
-  SWF_ENABLEDEBUGGER		= 58,  /* SWF_version  <  6 */ 
+  SWF_ENABLEDEBUGGER		= 58,  /* SWF_version  <  6 */
   SWF_ENABLEDEBUGGER2		= 64,  /* SWF_version  >= 6 */
   SWF_SCRIPTLIMITS		= 65,  /* SWF_version  >= 7 */
   SWF_SETTABINDEX		= 66,  /* SWF_version  >= 7 */
@@ -109,15 +109,15 @@ typedef enum
   SWF_REFLEX			= 777,
 
   /*obsolete and/or undocumented tags */
-  SWF_DEFINECOMMANDOBJ		= 50,  
-  SWF_DEFINETEXTFORMAT		= 42,  
-  SWF_DEFINEVIDEO		= 38, 
-  SWF_FRAMETAG			= 47,  
-  SWF_FREEALL			= 31,  
-  SWF_FREECHARACTER		=  3,  
-  SWF_GENCOMMAND		= 49,  
-  SWF_FONTREF			= 52,  
-  SWF_NAMECHARACTER		= 40,  
+  SWF_DEFINECOMMANDOBJ		= 50,
+  SWF_DEFINETEXTFORMAT		= 42,
+  SWF_DEFINEVIDEO		= 38,
+  SWF_FRAMETAG			= 47,
+  SWF_FREEALL			= 31,
+  SWF_FREECHARACTER		=  3,
+  SWF_GENCOMMAND		= 49,
+  SWF_FONTREF			= 52,
+  SWF_NAMECHARACTER		= 40,
   SWF_PATHSAREPOSTSCRIPT	= 25,
   SWF_SYNCFRAME			= 29,
   SWF_CHARACTERSET		= 51,
@@ -131,10 +131,10 @@ typedef enum
 } SWFBlocktype;
 
 
-static inline int SWFBlocktype_swfVersion(int type)
+/* static int SWFBlocktype_swfVersion(int type)
 {
 	switch(type)
-	{	
+	{
 		case SWF_END:
 		case SWF_SHOWFRAME:
 		case SWF_DEFINESHAPE:
@@ -142,7 +142,7 @@ static inline int SWFBlocktype_swfVersion(int type)
 		case SWF_REMOVEOBJECT:
 		case SWF_DEFINEBITS:
 		case SWF_DEFINEBUTTON:
-		case SWF_JPEGTABLES:	
+		case SWF_JPEGTABLES:
 		case SWF_SETBACKGROUNDCOLOR:
 		case SWF_DEFINEFONT:
 		case SWF_DEFINETEXT:
@@ -151,7 +151,7 @@ static inline int SWFBlocktype_swfVersion(int type)
 		case SWF_PREBUILTCLIP:
 		case SWF_PREBUILT:
 			return 1;
-		
+
 		case SWF_DEFINESOUND:
 		case SWF_STARTSOUND:
 		case SWF_DEFINEBUTTONSOUND:
@@ -178,9 +178,9 @@ static inline int SWFBlocktype_swfVersion(int type)
 		case SWF_DEFINEFONT2:
 		case SWF_GENCOMMAND:
 			return 3;
-		
+
 		case SWF_DEFINEEDITTEXT:
-			return 4;		
+			return 4;
 
 		case SWF_EXPORTASSETS:
 		case SWF_IMPORTASSETS:
@@ -213,6 +213,7 @@ static inline int SWFBlocktype_swfVersion(int type)
 			SWF_warn("unknown tag type %i\n", type);
 			return -1;
 	}
-}
+} */
+/* Commented by Yixuan Qiu */
 
 #endif /* SWF_BLOCKTYPES_H_INCLUDED */

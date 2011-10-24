@@ -31,7 +31,7 @@
 #if USE_ZLIB
 #include "zlib.h"
 
-// workarround for zlib previous 1.2.x
+/* workarround for zlib previous 1.2.x */
 #ifndef compressBound
 #define compressBound(__slen) ((__slen) + ((__slen) >> 12) + ((__slen) >> 14) + 11)
 #endif
@@ -40,7 +40,7 @@
 
 void destroySWFBitmap(SWFBitmap bitmap)
 {
-	// this will acall bitmap->dtor;
+	/* this will acall bitmap->dtor; */
 	destroySWFBlock((SWFBlock) bitmap);
 }
 
@@ -94,7 +94,7 @@ SWFBitmap newSWFBitmap_fromInput(SWFInput input)
 }
 
 
-SWFBitmap newSWFBitmap_fromRawImg(unsigned char *raw, 
+SWFBitmap newSWFBitmap_fromRawImg(unsigned char *raw,
                                   SWFRawImgFmt srcFmt, SWFBitmapFmt dstFmt,
                                   unsigned short width, unsigned short height)
 {
@@ -119,7 +119,7 @@ SWFBitmap newSWFBitmap_fromRawImg(unsigned char *raw,
 	image.height = height;
 	image.hasalpha = 1;
 	image.format = 5;
-	
+
 	insize = width * height * 4;
 	outsize = compressBound(insize);
 	image.data = (unsigned char*) malloc(outsize);
@@ -150,7 +150,7 @@ SWFBitmap newSWFBitmap_fromRawImg(unsigned char *raw,
 	SWF_warn("newSWFBitmap_fromRawImg: depends on zlib support\n");
 	return NULL;
 #endif
-} 
+}
 
 /*
  * Local variables:

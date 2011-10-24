@@ -18,7 +18,7 @@
 */
 
 /* soundinstance.h
- * 
+ *
  * $Id$
  *
  * Notice: This header file contains declarations of functions and types that
@@ -35,7 +35,7 @@ SWFSoundInstance newSWFSoundInstance(SWFSound sound);
 SWFSoundInstance newSWFSoundInstance_stop(SWFSound sound);
 SWFSoundInstance newSWFSoundInstance_startNoMultiple(SWFSound sound);
 
-// button.c calls these, so they're exposed:
+/* button.c calls these, so they're exposed: */
 void writeSWFSoundInstanceToMethod(SWFBlock block,
 				SWFByteOutputMethod method, void *data);
 int completeSWFSoundInstance(SWFBlock block);

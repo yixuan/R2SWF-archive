@@ -1,7 +1,7 @@
 /* error.h
  *
  * $Id$
- * 
+ *
  * Notice: This header file contains declarations of functions and types that
  * are just used internally. All library functions and types that are supposed
  * to be publicly accessable are defined in ./src/ming.h.
@@ -21,6 +21,7 @@ void error_default(const char *msg, ...);
 SWFMsgFunc setSWFWarnFunction(SWFMsgFunc warn);
 SWFMsgFunc setSWFErrorFunction(SWFMsgFunc error);
 
+/*
 #ifndef _MSC_VER
 #define SWF_warn(msg, va...) 		\
 do {					\
@@ -54,7 +55,13 @@ do {					\
 }
 #else
 #define SWF_warnOnce _SWF_warn
-#endif					
+#endif
+*/
+/* Commented by Yixuan Qiu */
+#define SWF_warn _SWF_warn
+#define SWF_error _SWF_error
+#define SWF_warnOnce _SWF_warn
+
 
 /* fix for cygwin compile */
 #ifndef __STRING

@@ -20,7 +20,7 @@
 /* $Id$ */
 
 #include <stdlib.h>
-#include <stdio.h> 	 
+#include <stdio.h>
 #include <stdarg.h>
 
 #include "shape.h"
@@ -100,7 +100,7 @@ struct SWFShape_s
 	BOOL isMorph;
 	BOOL isEnded;
 	int useVersion;
-	// SWF_DEFINESHAPE4 extensions
+	/* SWF_DEFINESHAPE4 extensions */
 	unsigned char flags;
 	SWFRect edgeBounds;
 #if TRACK_ALLOCS
@@ -115,7 +115,7 @@ SWFShape_writeShapeRecord(SWFShape shape, ShapeRecord record, SWFOutput out);
 
 
 static void
-writeSWFShapeBlockToMethod(SWFBlock block, 
+writeSWFShapeBlockToMethod(SWFBlock block,
                            SWFByteOutputMethod method, void* data)
 {
 	SWFOutput out = ((SWFShape)block)->out;
@@ -129,7 +129,7 @@ completeSWFShapeBlock(SWFBlock block)
 	SWFShape shape = (SWFShape)block;
 
 	SWFShape_end(shape);
-	
+
 	return SWFOutput_getLength(shape->out);
 }
 
@@ -140,7 +140,7 @@ destroySWFShape(SWFShape shape)
 	int i;
 	if(shape->fills != NULL)
 	{
-		// Fills have to be destroyed by users. 
+		/* Fills have to be destroyed by users. */
 		/*
 		for ( i=0; i<shape->nFills; ++i )
 			destroySWFFillStyle(shape->fills[i]);
@@ -174,7 +174,7 @@ destroySWFShape(SWFShape shape)
 	destroySWFCharacter((SWFCharacter) shape);
 }
 
-SWFShape 
+SWFShape
 newSWFGlyphShape()
 {
 	SWFShape shape = (SWFShape)malloc(sizeof(struct SWFShape_s));
@@ -189,7 +189,7 @@ newSWFGlyphShape()
 	BLOCK(shape)->complete = NULL;
 	BLOCK(shape)->dtor = NULL;
 	BLOCK(shape)->type = SWF_UNUSEDBLOCK;
-	
+
 	shape->out = newSWFOutput();
 	CHARACTER(shape)->bounds = newSWFRect(0,0,0,0);
 	shape->edgeBounds = newSWFRect(0,0,0,0);
@@ -233,7 +233,7 @@ newSWFShape()
 	BLOCK(shape)->complete = completeSWFShapeBlock;
 	BLOCK(shape)->dtor = (destroySWFBlockMethod) destroySWFShape;
 	BLOCK(shape)->type = SWF_DEFINESHAPE3;
-	
+
 	CHARACTERID(shape) = ++SWF_gNumCharacters;
 
 	shape->out = newSWFOutput();
@@ -290,7 +290,7 @@ newSWFShapeFromBitmap(SWFBitmap bitmap, int flag)
 
 	SWFShape_setRightFillStyle(shape, fill);
 
-	// XXX - scale shouldn't be hardcoded! (here, or in newSWFBitmapFillStyle)
+	/* XXX - scale shouldn't be hardcoded! (here, or in newSWFBitmapFillStyle) */
 	SWFShape_drawScaledLine(shape, width * 20, 0);
 	SWFShape_drawScaledLine(shape, 0, height * 20);
 	SWFShape_drawScaledLine(shape, -width * 20, 0);
@@ -309,7 +309,7 @@ SWFOutput_writeGlyphShape(SWFOutput out, SWFShape shape)
 	c = 1<<4;
 	SWFOutput_writeUInt8(out, c);
 	shape->nFills = 1;
-	shape->nLines = 0;		
+	shape->nLines = 0;
 	for ( i=0; i<shape->nRecords; ++i )
 	{
 		if(!styleDone && shape->records[i].type == SHAPERECORD_STATECHANGE)
@@ -317,8 +317,8 @@ SWFOutput_writeGlyphShape(SWFOutput out, SWFShape shape)
 			shape->records[i].record.stateChange->flags |= SWF_SHAPE_FILLSTYLE0FLAG;
 			shape->records[i].record.stateChange->leftFill = 1;
 			styleDone = 1;
-		}	
-	
+		}
+
 		if ( i < shape->nRecords-1 ||
 				 shape->records[i].type != SHAPERECORD_STATECHANGE )
 		{
@@ -340,7 +340,7 @@ SWFShape_end(SWFShape shape)
 		return;
 
 	shape->isEnded = TRUE;
-	
+
 	buffer = SWFOutput_getBuffer(shape->out);
 	buffer[0] =
 		(SWFOutput_numBits(shape->nFills) << 4) + SWFOutput_numBits(shape->nLines);
@@ -358,7 +358,7 @@ SWFShape_end(SWFShape shape)
 
 	SWFOutput_writeBits(shape->out, 0, 6); /* end tag */
 	SWFOutput_byteAlign(shape->out);
-		
+
 	/* addStyleHeader creates a new output and adds the existing one after
 		 itself- so even though it's called afterwards it's written before,
 		 as it should be */
@@ -425,12 +425,12 @@ SWFShape_addStyleHeader(SWFShape shape)
 		SWFOutput_writeRect(out, shape->edgeBounds);
 		SWFOutput_writeUInt8(out, shape->flags);
 	}
-	
-	SWFOutput_writeFillStyles(out, shape->fills, shape->nFills, 
+
+	SWFOutput_writeFillStyles(out, shape->fills, shape->nFills,
 		BLOCK(shape)->type, shape->edgeBounds);
-	SWFOutput_writeLineStyles(out, shape->lines, shape->nLines, 
+	SWFOutput_writeLineStyles(out, shape->lines, shape->nLines,
 		BLOCK(shape)->type, shape->edgeBounds);
-	
+
 	/* prepend shape->out w/ shape header */
 	SWFOutput_setNext(out, shape->out);
 	shape->out = out;
@@ -444,8 +444,8 @@ SWFShape_addStyleHeader(SWFShape shape)
 
 #define SHAPERECORD_INCREMENT 32
 
-/* copy shaperecord from other shape */ 
-static ShapeRecord addShapeRecord(SWFShape shape, ShapeRecord record, 
+/* copy shaperecord from other shape */
+static ShapeRecord addShapeRecord(SWFShape shape, ShapeRecord record,
                                   int *vx, int *vy, float scale)
 {
 	if ( shape->nRecords % SHAPERECORD_INCREMENT == 0 )
@@ -490,7 +490,7 @@ static ShapeRecord addShapeRecord(SWFShape shape, ShapeRecord record,
 		}
 		case SHAPERECORD_CURVETO:
 		{
-			CurveToRecord curveTo = (CurveToRecord) 
+			CurveToRecord curveTo = (CurveToRecord)
 				calloc(1,sizeof(struct curveToRecord));
 			*curveTo = *record.record.curveTo;
 			curveTo->controlx *= scale;
@@ -498,7 +498,7 @@ static ShapeRecord addShapeRecord(SWFShape shape, ShapeRecord record,
 			curveTo->anchorx *= scale;
 			curveTo->anchory *= scale;
 			shape->records[shape->nRecords].record.curveTo = curveTo;
-			
+
 			*vx += curveTo->controlx;
 			*vy += curveTo->controly;
 			SWFRect_includePoint(SWFCharacter_getBounds(CHARACTER(shape)),
@@ -552,7 +552,7 @@ newShapeRecord(SWFShape shape, shapeRecordType type)
 
 	shape->records[shape->nRecords].type = type;
 
-// this is intentional - at least one popular compiler cannot handle [shape->nRecords++]
+/* this is intentional - at least one popular compiler cannot handle [shape->nRecords++] */
 	shape->nRecords++;
 	return shape->records[shape->nRecords-1];
 }
@@ -749,8 +749,8 @@ SWFShape_drawScaledCurve(SWFShape shape,
 
 	if ( controldx == 0 && controldy == 0 && anchordx == 0 && anchordy == 0 )
 		return;
-	
-	// printf("curve %i,%i, %i, %i\n", controldx, controldy, anchordx,  anchordy);
+
+	/* printf("curve %i,%i, %i, %i\n", controldx, controldy, anchordx,  anchordy); */
 
 	record = newShapeRecord(shape, SHAPERECORD_CURVETO);
 
@@ -784,7 +784,7 @@ SWFShape_drawScaledCurve(SWFShape shape,
 
 #define STYLE_INCREMENT 4
 
-static inline void growLineArray(SWFShape shape)
+static void growLineArray(SWFShape shape)
 {
 	int size;
 
@@ -792,10 +792,10 @@ static inline void growLineArray(SWFShape shape)
 		return;
 
 	size = (shape->nLines+STYLE_INCREMENT) * sizeof(SWFLineStyle);
-	shape->lines = (SWFLineStyle*)realloc(shape->lines, size);	
+	shape->lines = (SWFLineStyle*)realloc(shape->lines, size);
 }
 
-static int 
+static int
 SWFShape_addLineStyle2filled(SWFShape shape, unsigned short width,
                              SWFFillStyle fill,
                              int flags, float miterLimit)
@@ -862,12 +862,12 @@ SWFShape_hideLine(SWFShape shape)
 static void finishSetLine(SWFShape shape, int line, unsigned short width)
 {
 	ShapeRecord record;
-	
+
 	if ( width == 0 )
 		shape->lineWidth = 0;
 	else
 		shape->lineWidth = (SWFLineStyle_getWidth(shape->lines[line-1]) + 1) / 2;
-	
+
 	if ( shape->isMorph )
 		return;
 
@@ -879,7 +879,7 @@ static void finishSetLine(SWFShape shape, int line, unsigned short width)
 
 /*
  * set filled Linestyle2 introduce with SWF 8.
- * 
+ *
  * set line width in TWIPS
  *
  * WARNING: this is an internal interface
@@ -887,28 +887,28 @@ static void finishSetLine(SWFShape shape, int line, unsigned short width)
  *
  * Instead of providing a fill color, a FillStyle can be applied
  * to a line.
- * 
+ *
  * Linestyle2 also extends Linestyle1 with some extra flags:
  *
  * Line cap style: select one of the following flags (default is round cap style)
- * SWF_LINESTYLE_CAP_ROUND 
+ * SWF_LINESTYLE_CAP_ROUND
  * SWF_LINESTYLE_CAP_NONE
- * SWF_LINESTYLE_CAP_SQUARE 
+ * SWF_LINESTYLE_CAP_SQUARE
  *
  * Line join style: select one of the following flags (default is round join style)
  * SWF_LINESTYLE_JOIN_ROUND
- * SWF_LINESTYLE_JOIN_BEVEL 
- * SWF_LINESTYLE_JOIN_MITER  
+ * SWF_LINESTYLE_JOIN_BEVEL
+ * SWF_LINESTYLE_JOIN_MITER
  *
  * Scaling flags: disable horizontal / vertical scaling
  * SWF_LINESTYLE_FLAG_NOHSCALE
- * SWF_LINESTYLE_FLAG_NOVSCALE 
+ * SWF_LINESTYLE_FLAG_NOVSCALE
  *
  * Enable pixel hinting to correct blurry vertical / horizontal lines
  * -> all anchors will be aligned to full pixels
- * SWF_LINESTYLE_FLAG_HINTING  
+ * SWF_LINESTYLE_FLAG_HINTING
  *
- * Disable stroke closure: if no-close flag is set caps will be applied 
+ * Disable stroke closure: if no-close flag is set caps will be applied
  * instead of joins
  * SWF_LINESTYLE_FLAG_NOCLOSE
  *
@@ -917,12 +917,12 @@ static void finishSetLine(SWFShape shape, int line, unsigned short width)
  * SWF_LINESTYLE_FLAG_ENDCAP_NONE
  * SWF_LINESTYLE_FLAG_ENDCAP_SQUARE
  *
- * If join style is SWF_LINESTYLE_JOIN_MITER a miter limit factor 
+ * If join style is SWF_LINESTYLE_JOIN_MITER a miter limit factor
  * must be set. Miter max length is then calculated as:
  * max miter len = miter limit * width.
  * If join style is not miter, this value will be ignored.
  */
-void 
+void
 SWFShape_setLineStyle2filled_internal(SWFShape shape, unsigned short width,
                        SWFFillStyle fill,
                        int flags, float miterLimit)
@@ -958,24 +958,24 @@ SWFShape_setLineStyle2filled_internal(SWFShape shape, unsigned short width,
  * Linestyle2 extends Linestyle1 with some extra flags:
  *
  * Line cap style: select one of the following flags (default is round cap style)
- * SWF_LINESTYLE_CAP_ROUND 
+ * SWF_LINESTYLE_CAP_ROUND
  * SWF_LINESTYLE_CAP_NONE
- * SWF_LINESTYLE_CAP_SQUARE 
+ * SWF_LINESTYLE_CAP_SQUARE
  *
  * Line join style: select one of the following flags (default is round join style)
  * SWF_LINESTYLE_JOIN_ROUND
- * SWF_LINESTYLE_JOIN_BEVEL 
- * SWF_LINESTYLE_JOIN_MITER  
+ * SWF_LINESTYLE_JOIN_BEVEL
+ * SWF_LINESTYLE_JOIN_MITER
  *
  * Scaling flags: disable horizontal / vertical scaling
  * SWF_LINESTYLE_FLAG_NOHSCALE
- * SWF_LINESTYLE_FLAG_NOVSCALE 
+ * SWF_LINESTYLE_FLAG_NOVSCALE
  *
  * Enable pixel hinting to correct blurry vertical / horizontal lines
  * -> all anchors will be aligned to full pixels
- * SWF_LINESTYLE_FLAG_HINTING  
+ * SWF_LINESTYLE_FLAG_HINTING
  *
- * Disable stroke closure: if no-close flag is set caps will be applied 
+ * Disable stroke closure: if no-close flag is set caps will be applied
  * instead of joins
  * SWF_LINESTYLE_FLAG_NOCLOSE
  *
@@ -984,12 +984,12 @@ SWFShape_setLineStyle2filled_internal(SWFShape shape, unsigned short width,
  * SWF_LINESTYLE_FLAG_ENDCAP_NONE
  * SWF_LINESTYLE_FLAG_ENDCAP_SQUARE
  *
- * If join style is SWF_LINESTYLE_JOIN_MITER a miter limit factor 
+ * If join style is SWF_LINESTYLE_JOIN_MITER a miter limit factor
  * must be set. Miter max length is then calculated as:
  * max miter len = miter limit * width.
  * If join style is not miter, this value will be ignored.
  */
-void 
+void
 SWFShape_setLineStyle2_internal(SWFShape shape, unsigned short width,
                        byte r, byte g, byte b, byte a,
                        int flags, float miterLimit)
@@ -1021,17 +1021,17 @@ SWFShape_setLineStyle2_internal(SWFShape shape, unsigned short width,
  * set line color as {r, g, b, a}
  *
  * WARNING: this is an internal interface.
- * external use is deprecated! use setLine instead ! 
+ * external use is deprecated! use setLine instead !
  */
 void
 SWFShape_setLineStyle_internal(SWFShape shape, unsigned short width,
                       byte r, byte g, byte b, byte a)
 {
 	int line;
-		
+
 	if ( shape->isEnded )
 		return;
-	
+
 	for ( line=0; line<shape->nLines; ++line )
 	{
 		if ( SWFLineStyle_equals(shape->lines[line], width, r, g, b, a, 0) )
@@ -1042,7 +1042,7 @@ SWFShape_setLineStyle_internal(SWFShape shape, unsigned short width,
 		line = SWFShape_addLineStyle(shape, width, r, g, b, a);
 	else
 		++line;
-	
+
 	finishSetLine(shape, line, width);
 }
 
@@ -1057,13 +1057,13 @@ static int getFillIdx(SWFShape shape, SWFFillStyle fill)
 		if ( SWFFillStyle_equals(fill, shape->fills[i]) )
 			return (i+1);
 	}
-	return 0; // no fill
+	return 0; /* no fill */
 }
 
 static int addFillStyle(SWFShape shape, SWFFillStyle fill)
 {
 	int i;
-	
+
 	for ( i=0; i<shape->nFills; ++i )
 	{
 		if ( SWFFillStyle_equals(fill, shape->fills[i]) )
@@ -1091,7 +1091,7 @@ SWFShape_addSolidFillStyle(SWFShape shape, byte r, byte g, byte b, byte a)
 	int  ret;
 
 	SWFFillStyle fill = newSWFSolidFillStyle(r, g, b, a);
-	
+
 	ret = addFillStyle(shape, fill);
 	if(ret < 0) /* error */
 	{
@@ -1102,7 +1102,7 @@ SWFShape_addSolidFillStyle(SWFShape shape, byte r, byte g, byte b, byte a)
 	{
 		return fill;
 	}
-	else /* fill is known */ 
+	else /* fill is known */
 	{
 		destroySWFFillStyle(fill);
 		return shape->fills[ret];
@@ -1119,7 +1119,7 @@ SWFShape_addGradientFillStyle(SWFShape shape, SWFGradient gradient, byte flags)
 		destroySWFFillStyle(fill);
 		return NULL;
 	}
-	return fill;		
+	return fill;
 }
 
 
@@ -1152,7 +1152,7 @@ SWFShape_setLeftFillStyle(SWFShape shape, SWFFillStyle fill)
 
 	if ( shape->isEnded || shape->isMorph )
 		return;
-	
+
 	if(fill == NOFILL)
 	{
 		record = addStyleRecord(shape);
@@ -1162,14 +1162,14 @@ SWFShape_setLeftFillStyle(SWFShape shape, SWFFillStyle fill)
 	}
 
 	idx = getFillIdx(shape, fill);
-	if(idx == 0) // fill not present in array
+	if(idx == 0) /* fill not present in array */
 	{
 		SWFFillStyle_addDependency(fill, (SWFCharacter)shape);
 		if(addFillStyle(shape, fill) < 0)
-			return;		
+			return;
 		idx = getFillIdx(shape, fill);
 	}
-				
+
 	record = addStyleRecord(shape);
 	record.record.stateChange->leftFill = idx;
 	record.record.stateChange->flags |= SWF_SHAPE_FILLSTYLE0FLAG;
@@ -1184,7 +1184,7 @@ SWFShape_setRightFillStyle(SWFShape shape, SWFFillStyle fill)
 
 	if ( shape->isEnded || shape->isMorph )
 		return;
-	
+
 	if(fill == NOFILL)
 	{
 		record = addStyleRecord(shape);
@@ -1194,19 +1194,19 @@ SWFShape_setRightFillStyle(SWFShape shape, SWFFillStyle fill)
 	}
 
 	idx = getFillIdx(shape, fill);
-	if(idx == 0) // fill not present in array
+	if(idx == 0) /* fill not present in array */
 	{
 		SWFFillStyle_addDependency(fill, (SWFCharacter)shape);
 		if(addFillStyle(shape, fill) < 0)
-			return;		
+			return;
 		idx = getFillIdx(shape, fill);
 	}
 	else if (idx >= 255 && shape->useVersion == SWF_SHAPE1)
 	{
-		SWF_error("Too many fills for SWFShape V1.\n" 
+		SWF_error("Too many fills for SWFShape V1.\n"
 			  "Use a higher SWFShape version\n");
 	}
-				
+
 	record = addStyleRecord(shape);
 	record.record.stateChange->rightFill = idx;
 	record.record.stateChange->flags |= SWF_SHAPE_FILLSTYLE1FLAG;
@@ -1265,7 +1265,7 @@ SWFShape_drawScaledGlyph(SWFShape shape,
 	int i, vx, vy;
 	if(font == NULL)
 		return;
-	
+
 	glyph = SWFFont_getGlyph(font, c);
 	if(glyph == NULL)
 	{
@@ -1282,8 +1282,8 @@ SWFShape_drawScaledGlyph(SWFShape shape,
 /*
  * set shape version manualy
  * This function allows to set the shapes version information. The
- * version is only a hint. if necessary the version is upgraded. 
- * valid values: SWF_SHAPE3 and SWF_SHAPE4 
+ * version is only a hint. if necessary the version is upgraded.
+ * valid values: SWF_SHAPE3 and SWF_SHAPE4
  * 3 is default
  * 4 if linestyle2 is used
  */
@@ -1298,17 +1298,17 @@ void SWFShape_useVersion(SWFShape shape, int version)
 
 /*
  * get shape version
- * possible values SWF_SHAPE3 and SWF_SHAPE4 
+ * possible values SWF_SHAPE3 and SWF_SHAPE4
  */
 int SWFShape_getVersion(SWFShape shape)
 {
 	return shape->useVersion;
 }
 
-/* 
+/*
  * set render hinting flags
  * possible values:
- * SWF_SHAPE_USESCALINGSTROKES 	SWF_SHAPE_USENONSCALINGSTROKES	
+ * SWF_SHAPE_USESCALINGSTROKES 	SWF_SHAPE_USENONSCALINGSTROKES
  */
 void SWFShape_setRenderHintingFlags(SWFShape shape, int flags)
 {
@@ -1333,39 +1333,39 @@ int SWFShape_getFlags(SWFShape shape)
 		return 0;
 }
 
-struct out 	 
-{       char *buf, *ptr; 	 
-	int len; 	 
-}; 	 
-	  	 
-static void oprintf(struct out *op, const char *fmt, ...) 	 
+struct out
+{       char *buf, *ptr;
+	int len;
+};
+
+static void oprintf(struct out *op, const char *fmt, ...)
 {
-	va_list ap; 	 
-	char buf[256]; 	 
-	int d, l; 	 
-	  	 
-	va_start(ap, fmt); 	 
-	l = vsprintf(buf, fmt, ap); 	 
-	while((d = op->ptr - op->buf) + l >= op->len-1) 	 
+	va_list ap;
+	char buf[256];
+	int d, l;
+
+	va_start(ap, fmt);
+	l = vsprintf(buf, fmt, ap);
+	while((d = op->ptr - op->buf) + l >= op->len-1)
 	{
-		op->buf = (char *) realloc(op->buf, op->len += 100); 	 
-		op->ptr = op->buf + d; 	 
-	} 	 
-	for(d = 0 ; d < l ; d++) 	 
-		*op->ptr++ = buf[d]; 	 
+		op->buf = (char *) realloc(op->buf, op->len += 100);
+		op->ptr = op->buf + d;
+	}
+	for(d = 0 ; d < l ; d++)
+		*op->ptr++ = buf[d];
 }
 
-char * SWFShape_dumpOutline(SWFShape s) 	 
-{ 	 
-	struct out o; 	 
+char * SWFShape_dumpOutline(SWFShape s)
+{
+	struct out o;
 	int i;
 	int x = 0, y = 0;
- 
-	o.len = 0; 	 
-	o.ptr = o.buf = (char *)malloc(1); 	 
-	*o.ptr = 0; 	 
-	  	 
-	for (i = 0; i < s->nRecords; i++) 	 
+
+	o.len = 0;
+	o.ptr = o.buf = (char *)malloc(1);
+	*o.ptr = 0;
+
+	for (i = 0; i < s->nRecords; i++)
 	{
 		ShapeRecord *record = s->records + i;
 		switch(record->type)
@@ -1384,29 +1384,29 @@ char * SWFShape_dumpOutline(SWFShape s)
 			x += record->record.lineTo->dx;
 			y += record->record.lineTo->dy;
 			oprintf(&o, "lineto %d,%d\n", x, y);
-			break; 	 
-		} 	 
-		case SHAPERECORD_CURVETO: 	 
-		{ 	 
+			break;
+		}
+		case SHAPERECORD_CURVETO:
+		{
 			int controlX = record->record.curveTo->controlx;
 			int controlY = record->record.curveTo->controly;
 			int anchorX = record->record.curveTo->anchorx;
 			int anchorY = record->record.curveTo->anchory;
 
-			oprintf(&o, "curveto %d,%d %d,%d\n", 	 
-				x+controlX, y+controlY, 	 
-				x+controlX+anchorX, y+controlY+anchorY); 	 
-	  	 
-				x += controlX + anchorX; 	 
+			oprintf(&o, "curveto %d,%d %d,%d\n",
+				x+controlX, y+controlY,
+				x+controlX+anchorX, y+controlY+anchorY);
+
+				x += controlX + anchorX;
 				y += controlY + anchorY;
-			break; 
+			break;
 		}
 		default: break;
 		}
-	} 	 
-	  	 
-	*o.ptr = 0; 	 
-	return o.buf; 	 
+	}
+
+	*o.ptr = 0;
+	return o.buf;
 }
 
 

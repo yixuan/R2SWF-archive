@@ -18,7 +18,7 @@
 */
 
 /* font.h
- * 
+ *
  * $Id$
  *
  * Notice: This header file contains declarations of functions and types that
@@ -63,7 +63,7 @@ struct SWFFont_s
 	/* this lets us call destroySWFBlock(font) */
 	struct SWFBlock_s block;
 
-	// 0 for SWF < 7
+	/* 0 for SWF < 7 */
 	byte langCode;
 
 	char *name;
@@ -72,7 +72,7 @@ struct SWFFont_s
 	int nGlyphs;
 
 	/* map from glyphs to char codes */
-	unsigned short* glyphToCode; 
+	unsigned short* glyphToCode;
 
 	/* shape table */
 	SWFShape* shapes;
@@ -84,7 +84,7 @@ struct SWFFont_s
 	short ascent;
 	short descent;
 	short leading;
-	
+
 	union
 	{
 		byte* charMap;
@@ -160,7 +160,7 @@ int SWFFontCharacter_getNGlyphs(SWFFontCharacter font);
 void SWFFontCharacter_addTextToList(SWFFontCharacter font, SWFTextRecord text);
 
 /* swf codetable: glyph --> char */
-unsigned short SWFFontCharacter_getGlyphCode(SWFFontCharacter font, 
+unsigned short SWFFontCharacter_getGlyphCode(SWFFontCharacter font,
 					     unsigned short c);
 
 /* swf codetable: char --> glyph */

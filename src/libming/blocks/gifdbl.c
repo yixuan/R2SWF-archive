@@ -5,7 +5,7 @@
 #include "libming.h"
 #include "error.h"
 
-#if !(USE_GIF) // {
+#if !(USE_GIF) /* { */
 
 SWFDBLBitmapData newSWFDBLBitmapData_fromGifInput(SWFInput input)
 {
@@ -19,7 +19,7 @@ SWFDBLBitmapData newSWFDBLBitmapData_fromGifFile(const char * fileName)
 	return NULL;
 }
 
-#else // def USE_GIF }{
+#else /* def USE_GIF }{ */
 
 #include "bitmap.h"
 #include "dbl.h"
@@ -49,12 +49,12 @@ int getTransparentColor(GifFileType * file)
 {
 	int i,returnvalue=-1;
 	ExtensionBlock * ext = file->SavedImages[0].ExtensionBlocks;
- 
+
 	for (i=0; i < file->SavedImages[0].ExtensionBlockCount; i++, ext++) {
 
 		if (ext->Function == GRAPHICS_EXT_FUNC_CODE) {
 			if (ext->Bytes[0] & 1){   /* there is a transparent color */
-				if (!ext->Bytes[3]) returnvalue=255; // exception
+				if (!ext->Bytes[3]) returnvalue=255; /* exception */
 				else returnvalue=ext->Bytes[3]&0xff;
 			}
 		}
@@ -64,7 +64,7 @@ int getTransparentColor(GifFileType * file)
 
 int
 readGif(GifFileType *file, dblData result)
-{	
+{
 	ColorMapObject *colorMap;
 	unsigned char *bits;
 	unsigned char *data;
@@ -73,7 +73,7 @@ readGif(GifFileType *file, dblData result)
 	unsigned long outsize;
 
 	if(DGifSlurp(file) != GIF_OK)
-	//	error("Error slurping file");
+	/*	error("Error slurping file"); */
 		return 0;
 
 	/* data should now be available */
@@ -109,7 +109,7 @@ readGif(GifFileType *file, dblData result)
 							 */
 		result->hasalpha = 1;
 	}
-	
+
 	/* Ah! The Flash specs says scanlines must be DWORD ALIGNED!
 	 * (but image width is the correct number of pixels)
 	 */
@@ -139,7 +139,7 @@ readGif(GifFileType *file, dblData result)
 #if 1				/* You would think that an alpha value of 0
 				 * would mean fully transparent, but Flash
 				 * player doesn't seem to think so.
-				 * So, we just set the transparency color 
+				 * So, we just set the transparency color
 				 * as 0,0,0,0
 				 */
 			if (i != alpha) {
@@ -165,7 +165,7 @@ readGif(GifFileType *file, dblData result)
 	bits = file->SavedImages[0].RasterBits;
 
 	if (alignedWidth == file->SWidth
-	  && file->Image.Width == file->SWidth 
+	  && file->Image.Width == file->SWidth
 	  && file->Image.Height == file->SHeight) {
 
 	/* we are all nicely aligned and don't need to move the bitmap around.
@@ -232,7 +232,7 @@ SWFDBLBitmapData newSWFDBLBitmapData_fromGifFile(const char *fileName)
 	if(!readGif(file, &gifdata))
 		return NULL;
 	ret = newSWFDBLBitmapData_fromData(&gifdata);
-	// ret->input = NULL;
+	/* ret->input = NULL; */
 	return ret;
 }
 
@@ -251,8 +251,8 @@ SWFDBLBitmapData newSWFDBLBitmapData_fromGifInput(SWFInput input)
 	if(!readGif(file, &gifdata))
 		return NULL;
 	ret = newSWFDBLBitmapData_fromData(&gifdata);
-	// ret->input = NULL;
+	/* ret->input = NULL; */
 	return ret;
 }
 
-#endif // def USE_GIF }
+#endif /* def USE_GIF } */

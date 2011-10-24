@@ -1,9 +1,9 @@
 /*
    Ming, an SWF output library
    Copyright (C) 2002  Opaque Industries - http://www.opaque.net/
-   
+
    2.2.2007 Klaus Rechert
-   
+
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
    License as published by the Free Software Foundation; either
@@ -27,7 +27,7 @@
 #include "error.h"
 #include "flv.h"
 
-static inline int readAudioHdr(FLVStream *flv, FLVTag *tag)
+static int readAudioHdr(FLVStream *flv, FLVTag *tag)
 {
 	int ichar;
 	ichar = SWFInput_getChar(flv->input);
@@ -40,13 +40,13 @@ static inline int readAudioHdr(FLVStream *flv, FLVTag *tag)
 	return 0;
 }
 
-static inline int readVideoHdr(FLVStream *flv, FLVTag *tag)
+static int readVideoHdr(FLVStream *flv, FLVTag *tag)
 {
 	int ichar;
 	ichar = SWFInput_getChar(flv->input);
 	if(ichar == EOF)
 		return -1;
-	
+
 	tag->hdr.video.frameType = (0xf0 & ichar);
 	tag->hdr.video.codec = 0x0f & ichar;
 	return 0;
@@ -56,9 +56,9 @@ long FLVStream_skipTagData(FLVStream *flv, FLVTag *tag)
 {
 	if(flv == NULL || tag == NULL)
 		return -1;
-		
+
 	SWFInput_seek(flv->input, tag->data + tag->dataSize + 4, SEEK_SET);
-	
+
 	return SWFInput_tell(flv->input);
 }
 
@@ -72,18 +72,18 @@ FLVStream *FLVStream_fromInput(SWFInput input)
 	int ichar;
 	unsigned long ulchar;
 	FLVStream *flv;
-	
+
 	if(!input)
 		return NULL;
 
 	ichar = SWFInput_getChar(input);
 	if(ichar == EOF || ichar != 'F')
 		return NULL;
-	
+
 	ichar = SWFInput_getChar(input);
 	if(ichar == EOF || ichar != 'L')
 		return NULL;
-	
+
 	ichar = SWFInput_getChar(input);
 	if(ichar == EOF || ichar != 'V')
 		return NULL;
@@ -92,11 +92,11 @@ FLVStream *FLVStream_fromInput(SWFInput input)
 	if(flv == NULL)
 		return  NULL;
 	flv->input = input;
-	
+
 	ichar = SWFInput_getChar(input);
 	if(ichar != EOF)
 		flv->version = ichar;
-	
+
 	flv->has_video = 0;
 	flv->has_audio = 0;
 	ichar = SWFInput_getChar(input);
@@ -120,11 +120,11 @@ void FLVStream_rewind(FLVStream *flv)
 	SWFInput_seek(flv->input, flv->offset, SEEK_SET);
 }
 
-int FLVStream_nextTag(FLVStream *flv, FLVTag *tag, FLVTag *prev) 
+int FLVStream_nextTag(FLVStream *flv, FLVTag *tag, FLVTag *prev)
 {
 	int ichar;
 	unsigned long ulchar;
-	
+
 	if(prev == NULL)
 		SWFInput_seek(flv->input, flv->offset, SEEK_SET);
 	else
@@ -132,11 +132,11 @@ int FLVStream_nextTag(FLVStream *flv, FLVTag *tag, FLVTag *prev)
 		unsigned long off;
 		if(prev->data < 0)
 			return -1;
-		
+
 		off = prev->data + prev->dataSize + 4;
 		SWFInput_seek(flv->input, off, SEEK_SET);
 	}
-	
+
 	tag->offset = SWFInput_tell(flv->input);
 
 	tag->stream = flv;
@@ -150,7 +150,7 @@ int FLVStream_nextTag(FLVStream *flv, FLVTag *tag, FLVTag *prev)
 		return -1;
 	}
 	tag->tagType = ichar;
-	
+
 	ulchar = SWFInput_getUInt24_BE(flv->input);
 	tag->dataSize = ulchar;
 
@@ -169,16 +169,16 @@ int FLVStream_nextTag(FLVStream *flv, FLVTag *tag, FLVTag *prev)
 		readVideoHdr(flv, tag);
 	else if(tag->tagType == FLV_AUDIOTAG)
 		readAudioHdr(flv, tag);
-	
+
 	return 0;
 }
 
 int FLVStream_nextTagType(FLVStream *flv, FLVTag *tag, FLVTag *prev, int type)
 {
-	
+
 	while(FLVStream_nextTag(flv, tag, prev) == 0)
 	{
-		if(tag->tagType == type) 
+		if(tag->tagType == type)
 			return 0;
 		prev = tag;
 	}
@@ -190,13 +190,13 @@ unsigned int FLVStream_getDuration(FLVStream *flv, int type)
 {
 	unsigned int duration = 0;
 	FLVTag tag, *p_tag = NULL;
-	
-	while(FLVStream_nextTag(flv, &tag, p_tag) == 0) 
+
+	while(FLVStream_nextTag(flv, &tag, p_tag) == 0)
 	{
 		if(tag.tagType == type)
 		{
 			/* optimistic approach */
-			duration = tag.timeStamp; 
+			duration = tag.timeStamp;
 		}
 		p_tag = &tag;
 	}
@@ -207,8 +207,8 @@ int FLVStream_getNumFrames(FLVStream *flv, int type)
 {
 	int numFrames = 0;
 	FLVTag tag, *p_tag = NULL;
-	
-	while(FLVStream_nextTag(flv, &tag, p_tag) == 0) 
+
+	while(FLVStream_nextTag(flv, &tag, p_tag) == 0)
 	{
 		if(tag.tagType == type)
 			numFrames++;
@@ -223,11 +223,11 @@ SWFInput FLVTag_getPayloadInput(FLVTag *tag)
 	SWFInput input;
 	if(tag == NULL || tag->stream == NULL)
 		return NULL;
-	
+
 	input = tag->stream->input;
 
 	/* screen video needs this extra byte undocumented! */
-	if(tag->tagType == FLV_VIDEOTAG 
+	if(tag->tagType == FLV_VIDEOTAG
 		&& tag->hdr.video.codec == VIDEO_CODEC_SCREEN)
 	{
 		length = tag->dataSize;
@@ -251,11 +251,11 @@ SWFInput FLVTag_getPayloadInput(FLVTag *tag)
 int FLVStream_setStreamOffset(FLVStream *flv, unsigned int msecs)
 {
 	FLVTag tag, *p_tag = NULL;
-	
+
 	/* reset stream offset */
-	flv->offset = flv->stream_start;	
-	
-	while(FLVStream_nextTag(flv, &tag, p_tag) == 0) 
+	flv->offset = flv->stream_start;
+
+	while(FLVStream_nextTag(flv, &tag, p_tag) == 0)
 	{
 		if(tag.timeStamp >= msecs)
 		{

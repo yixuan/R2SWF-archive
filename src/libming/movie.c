@@ -341,7 +341,7 @@ SWFMovie_addFont(SWFMovie movie, SWFFont font)
 static void
 SWFMovie_resolveTextFonts(SWFMovie movie, SWFText text)
 {
-	// translate text object font references to movie-specific fontchars
+	/* translate text object font references to movie-specific fontchars */
 
 	SWFTextRecord record = SWFText_getInitialRecord(text);
 	SWFFontCharacter fontchar;
@@ -362,7 +362,7 @@ SWFMovie_resolveTextFonts(SWFMovie movie, SWFText text)
 static void
 SWFMovie_resolveTextfieldFont(SWFMovie movie, SWFTextField field)
 {
-	// given a font used for a text field, add it to the movie
+	/* given a font used for a text field, add it to the movie */
 	SWFFontCharacter fontchar;
 	SWFFont font = SWFTextField_getUnresolvedFont(field);
 
@@ -597,7 +597,7 @@ SWFMovie_add_internal(SWFMovie movie /* movie to which the block will be added *
 		SWFMovie_resolveTextfieldFont(movie, (SWFTextField)block);
 	}
 
-	// not nice but has to be done!
+	/* not nice but has to be done! */
 	if ( SWFBlock_getType(block) == SWF_INITACTION)
 	{
 		/* Yixuan */
@@ -692,7 +692,7 @@ SWFMovie_stopSound(SWFMovie movie, SWFSound sound)
 {
 	SWFSoundInstance inst = newSWFSoundInstance_stop(sound);
 
-	// XXX - ???
+	/* XXX - ??? */
 	if ( !SWFBlock_isDefined((SWFBlock)sound) )
 		SWFMovie_addBlock(movie, (SWFBlock)sound);
 
@@ -754,7 +754,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 		if ( movie->metadata != NULL)
 		{
 			SWFMovie_addBlock(movie, (SWFBlock)movie->metadata);
-			// do not destroy with movie if added as block
+			/* do not destroy with movie if added as block */
 			movie->metadata = NULL;
 		}
 
@@ -778,7 +778,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 		SWFMovie_addBlock(movie, newSWFEndBlock());
 	}
 
-	// add five for the setbackground block..
+	/* add five for the setbackground block.. */
 	swflength = SWFBlockList_completeBlocks(movie->blockList, movie->version);
 
 	/* XXX - hack */
@@ -802,7 +802,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 	SWFOutput_byteAlign(header);
 	swflength += 8 + SWFOutput_getLength(header);
 
-	// compression level check
+	/* compression level check */
 #if USE_ZLIB
 	if (level < -1) level = -1;
 	if (level >  9) level = 9;
@@ -815,9 +815,9 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 	}
 #endif
 
-	// reserve output buffer
+	/* reserve output buffer */
 	if(level >= 0)
-	{	// a little bit more than the uncompressed data
+	{	/* a little bit more than the uncompressed data */
 		compresslength = swflength + (swflength/1000) + 15 + 1;
 		swfbuffer    = newSizedSWFOutput( compresslength + 8 );
 	}
@@ -831,7 +831,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 
 	SWFOutput_writeUInt8 (swfbuffer, movie->version);
 
-	// Movie length
+	/* Movie length */
 	SWFOutput_writeUInt32(swfbuffer, swflength);
 
 	if(level >= 0)
@@ -843,7 +843,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 
 	destroySWFOutput(header);
 
-	// fill swfbuffer with blocklist
+	/* fill swfbuffer with blocklist */
 	SWFBlockList_writeBlocksToMethod(movie->blockList, SWFOutputMethod, buffer);
 
 #if USE_ZLIB
@@ -855,7 +855,7 @@ SWFMovie_toOutput(SWFMovie movie, int level)
 			destroySWFOutput(tempbuffer);
 		} else SWF_error("compression failed");
 	}
-#endif // ndef USE_ZLIB
+#endif /* ndef USE_ZLIB */
 	return swfbuffer;
 }
 

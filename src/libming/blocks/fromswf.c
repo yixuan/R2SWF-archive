@@ -44,7 +44,7 @@ writeSWFPrebuiltClipToMethod(SWFBlock block, SWFByteOutputMethod method, void *d
 	SWFPrebuiltClip clip = (SWFPrebuiltClip) block;
 	methodWriteUInt16(CHARACTERID(clip), method, data);
 	methodWriteUInt16(clip->frames, method, data);
-	
+
 	SWFOutput_writeToMethod(clip->display, method, data);
 }
 
@@ -80,7 +80,7 @@ newSWFPrebuiltClip()
 	BLOCK(clip)->writeBlock = writeSWFPrebuiltClipToMethod;
 	BLOCK(clip)->complete = completeSWFPrebuiltClip;
 	BLOCK(clip)->dtor = (destroySWFBlockMethod) destroySWFPrebuiltClip;
-	
+
 	clip->frames = 0;
 	clip->display = newSWFOutput();
 	return clip;
@@ -90,7 +90,7 @@ static void
 writeSWFPrebuiltToMethod(SWFBlock block, SWFByteOutputMethod method, void *data)
 {
 	SWFPrebuilt defines = (SWFPrebuilt) block;
-	
+
 	SWFOutput_writeToMethod(defines->defines, method, data);
 }
 
@@ -111,7 +111,7 @@ SWFPrebuilt
 newSWFPrebuilt()
 {
 	SWFPrebuilt data = (SWFPrebuilt)malloc(sizeof(struct SWFPrebuilt_s));
-	
+
 	SWFBlockInit((SWFBlock)data);
 	BLOCK(data)->type = SWF_PREBUILT;
 	BLOCK(data)->writeBlock = writeSWFPrebuiltToMethod;
@@ -122,7 +122,7 @@ newSWFPrebuilt()
 	return data;
 }
 
-// functions to read swf
+/* functions to read swf */
 
 static int verbose = {0};
 
@@ -245,10 +245,10 @@ struct swfile
 	char bitoff;
 	unsigned char (*readc)(struct swfile *);
 
-	char *name;	
+	char *name;
 	unsigned char vers[4];
 	int fsize;
-	
+
 	char rect[9];
 	unsigned short rectlen;
 	SWFInput input;
@@ -283,8 +283,8 @@ static struct swfile *openswf(SWFInput input)
 
 		z.next_in = (unsigned char *)malloc(z.avail_in = len - 8);
 		SWFInput_read(input, z.next_in, z.avail_in);
-		// caller will do, leave it here for double memory consumption
-		//destroySWFInput(input);
+		/* caller will do, leave it here for double memory consumption */
+		/* destroySWFInput(input); */
 		zbuf = z.next_out = (unsigned char *)malloc(z.avail_out = res->fsize - 8);
 		inflateInit(&z);
 		inflate(&z, Z_FINISH);
@@ -296,13 +296,13 @@ static struct swfile *openswf(SWFInput input)
 #endif
 	}
 	res->input = input;
-	// setup to read that rect...
+	/* setup to read that rect... */
 	alignbits(res);
 	res->rectlen = 0;
 	res->readc = r_readc;
 	rect((BITS) res);
 	res->readc = freadc;
-	readint2((BITS) res);	// movie rate
+	readint2((BITS) res);	/* movie rate */
 	res->frames = readint2((BITS) res);
 	return res;
 }
@@ -373,7 +373,7 @@ static int change_id(TAG tp)
 	return val;
 }
 
-// processing functions for handle()
+/* processing functions for handle() */
 static void defineshape(TAG tp, int lev);
 static void definetext(TAG tp, int lev);
 static void placeobject(TAG tp, int lv);
@@ -395,7 +395,7 @@ static int drop_tag(TAG tp)
 	{
 		case SWF_FILEATTRIBUTES:
 		case SWF_METADATA:
-		case SWF_DEFINESCENEANDFRAMEDATA: // only allowed in main timeline -> merge ?
+		case SWF_DEFINESCENEANDFRAMEDATA: /* only allowed in main timeline -> merge ? */
 			return 1;
 		default:
 			return 0;
@@ -497,7 +497,7 @@ static int handle_tag(TAG tp)
 				tagnam = "stagDefineFontAlignZones"; break;
 			case SWF_EXPORTASSETS:
 				tagnam = "stagExportAssets"; break;
-			/*case stagClipInit:	
+			/*case stagClipInit:
 				tagnam = "stagClipInit"; break;*/
 			/*case stagNewFontInfo:
 				tagnam = "stagNewFontInfo"; break;*/
@@ -655,10 +655,10 @@ static void shaperecord(TAG tp, int nfillbits, int nlinebits, int lev)
 	int statemoveto, movebits, movex, movey, fill0style, fill1style, linestyle;
 	int edgeflag, nbits, genlineflag, dx, dy, vertlineflag;
 	int cdx, cdy, adx, ady;
-	
+
 	while(1)
 	{	type = getbits((BITS) tp, 1);
-		
+
 		if(!type)
 		{	statenewstyles = getbits((BITS) tp, 1);
 			statelinestyle = getbits((BITS) tp, 1);
@@ -731,7 +731,7 @@ static void shaperecord(TAG tp, int nfillbits, int nlinebits, int lev)
 
 static void gradient(TAG tp, int alpha, int cod)
 {	int n, ngrad, r1;
-	
+
 	alignbits(tp);
 	ngrad = tp->readc(tp);
 	for(n = 0 ; n < ngrad ; n++)
@@ -786,7 +786,7 @@ static void fillstyle(TAG tp, int lev)
 
 static void morphgradient(TAG tp)
 {	int n, ngrad, r1, r2;
-	
+
 	alignbits(tp);
 	ngrad = tp->readc(tp);
 	for(n = 0 ; n < ngrad ; n++)
@@ -853,7 +853,7 @@ static void fillandlinestyles(TAG tp, int lev)
 	nfill = tp->readc(tp);
 	if(nfill == 0xff)
 		nfill = readint2((BITS) tp);
-	if(verbose)	
+	if(verbose)
 		printf ("%d fill styles\n", nfill);
 	for(n = 0 ; n < nfill ; n++)
 		fillstyle(tp, lev);
@@ -950,10 +950,10 @@ static void shape(TAG tp, int lev)
 
 static void definemorphshape(TAG tp, int lev)
 {	unsigned short id, fcnt, lcnt;
-	unsigned long loff;
+
+	/* unsigned long loff; */
 	/* unsigned char *endp; */
 	/* Commented by Yixuan Qiu */
-    unsigned char *endp = NULL;
 
 	int n;
 
@@ -968,8 +968,11 @@ static void definemorphshape(TAG tp, int lev)
 		rect((BITS) tp);
 		tp->readc(tp);
 	}
-	loff = readint4((BITS) tp);
-	endp = tp->datptr + loff;
+
+	/* loff = readint4((BITS) tp); */
+	/* endp = tp->datptr + loff; */
+	/* Commented by Yixuan Qiu */
+
 	fcnt = tp->readc(tp);
 	if(fcnt == 0xff)
 		fcnt = readint2((BITS) tp);
@@ -1009,7 +1012,7 @@ static void definetext(TAG tp, int lev)
 	int hasfont, hascolor, hasyoffset, hasxoffset;
 	unsigned short font=0, height;
 	signed short xoffs, yoffs;
-			
+
 	textid = change_id(tp);
 	if(verbose) printf("text %d\n", textid);
 	rect((BITS) tp);
@@ -1060,31 +1063,46 @@ static void definetext(TAG tp, int lev)
 }
 
 static void placeobject(TAG tp, int lv)
-{	
+{
 	/*
 	int hasname, hasratio, hascxform, hasmatrix, haschar, hasmove, hasactions, hasmask;
 	short depth, charid;
 	int hasfilters, hasbitmapcaching, hasblendmode;
 	*/
 	/* Commented by Yixuan Qiu */
-	int hasname = 0, hasratio = 0, hascxform = 0, hasmatrix = 0, haschar = 0, hasmove = 0, hasactions = 0, hasmask = 0;
-	short depth = 0, charid = 0;
-	int hasfilters = 0, hasbitmapcaching = 0, hasblendmode = 0;
+	int haschar;
+	short depth, charid;
 
 	if (lv == 3) {
 		getbits((BITS)tp, 5);
-		hasbitmapcaching = getbits((BITS)tp, 1);
+
+		/* hasbitmapcaching = getbits((BITS)tp, 1);
 		hasblendmode = getbits((BITS)tp, 1);
-		hasfilters = getbits((BITS)tp, 1);
+		hasfilters = getbits((BITS)tp, 1); */
+		/* Commented by Yixuan Qiu */
+		getbits((BITS)tp, 1);
+		getbits((BITS)tp, 1);
+		getbits((BITS)tp, 1);
 	}
-	hasactions = getbits((BITS)tp, 1);
+
+	/* hasactions = getbits((BITS)tp, 1);
 	hasmask = getbits((BITS)tp, 1);
 	hasname = getbits((BITS)tp, 1);
 	hasratio = getbits((BITS)tp, 1);
 	hascxform = getbits((BITS)tp, 1);
 	hasmatrix = getbits((BITS)tp, 1);
 	haschar = getbits((BITS)tp, 1);
-	hasmove = getbits((BITS)tp, 1);
+	hasmove = getbits((BITS)tp, 1); */
+	/* Commented by Yixuan Qiu */
+	getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+	haschar = getbits((BITS)tp, 1);
+	getbits((BITS)tp, 1);
+
 	depth = readint2((BITS) tp);
 	if(haschar)
 	{	charid = change_id(tp);
@@ -1121,7 +1139,7 @@ static void cxform(TAG tp, int alpha)
 {	int hasadd, hasmult, nbits;
 	/* int ra, ga, ba, aa, rm, gm, bm, am=0; */
 	/* Commented by Yixuan Qiu */
-	int ra, ga, ba, aa = 0, rm, gm, bm, am = 0;
+	int ra, ga, ba, rm, gm, bm, am = 0;
 
 	hasadd = getbits((BITS) tp, 1);
 	hasmult = getbits((BITS) tp, 1);
@@ -1139,7 +1157,11 @@ static void cxform(TAG tp, int alpha)
 	{	ra = getsbits((BITS) tp, nbits);
 		ga = getsbits((BITS) tp, nbits);
 		ba = getsbits((BITS) tp, nbits);
-		if(alpha) aa = getsbits((BITS) tp, nbits);
+
+		/* if(alpha) aa = getsbits((BITS) tp, nbits); */
+		/* Commented by Yixuan Qiu */
+		if(alpha) getsbits((BITS) tp, nbits);
+
 		if(verbose) printf("add %d %d %d", ra, ga, ba);
 		if(verbose) if(alpha) printf(" %d", am);
 	}
@@ -1181,23 +1203,35 @@ static void definetextfield(TAG tp)
 	/* int haslength, noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
 	int hascolor, haslayout, hastext, hasfont; */
 	/* Commented by Yixuan Qiu */
-    int haslength = 0, noedit = 0, password = 0, multiline = 0, wordwrap = 0, drawbox = 0, noselect = 0, html = 0, usefont = 0;
-	int hascolor = 0, haslayout = 0, hastext = 0, hasfont = 0;
-	
+    int noedit, password, multiline, wordwrap, drawbox, noselect, html, usefont;
+	int hascolor, hasfont;
+
 	textid = change_id(tp);
 	if(verbose) printf("textfield %d\n", textid);
 	rect((BITS) tp);
 	alignbits(tp);
-	hastext = getbits((BITS) tp, 1);
+
+	/* hastext = getbits((BITS) tp, 1); */
+	/* Commented by Yixuan Qiu */
+	getbits((BITS) tp, 1);
+
 	wordwrap = getbits((BITS) tp, 1);
 	multiline = getbits((BITS) tp, 1);
 	password = getbits((BITS) tp, 1);
 	noedit = getbits((BITS) tp, 1);
 	hascolor = getbits((BITS) tp, 1);
-	haslength = getbits((BITS) tp, 1);
+
+	/* haslength = getbits((BITS) tp, 1); */
+	/* Commented by Yixuan Qiu */
+	getbits((BITS) tp, 1);
+
 	hasfont = getbits((BITS) tp, 1);
 	getbits((BITS) tp, 2);
-	haslayout = getbits((BITS) tp, 1);
+
+	/* haslayout = getbits((BITS) tp, 1); */
+	/* Commented by Yixuan Qiu */
+	getbits((BITS) tp, 1);
+
 	noselect = getbits((BITS) tp, 1);
 	drawbox = getbits((BITS) tp, 1);
 	getbits((BITS) tp, 1);
@@ -1288,8 +1322,8 @@ static void definebuttonsound(TAG tp)
 
 extern int SWF_gNumCharacters;
 
-/* 
- * load and create a SWF File as MovieClip 
+/*
+ * load and create a SWF File as MovieClip
  */
 SWFPrebuiltClip
 newSWFPrebuiltClip_fromInput(SWFInput input)
@@ -1299,7 +1333,7 @@ newSWFPrebuiltClip_fromInput(SWFInput input)
 	TAG tp;
 	struct swfile *swf;
 	int type = 0, todisplay;
-	
+
 	swf = openswf(input);
 	if ( ! swf ) return NULL;
 	clip = newSWFPrebuiltClip();
@@ -1310,7 +1344,7 @@ newSWFPrebuiltClip_fromInput(SWFInput input)
 	defines = deps->defines;
 	idoffset = SWF_gNumCharacters;
 	maxid = SWF_gNumCharacters;
-	// read the swf file here
+	/* read the swf file here */
 	tp = readtag_file(swf);
 		if(tp->type != SWF_SETBACKGROUNDCOLOR)
 			swfseek(swf, -(tp->hdrlen + tp->size));
@@ -1343,7 +1377,7 @@ newSWFPrebuiltClip_fromInput(SWFInput input)
 	return clip;
 }
 
-/* 
+/*
  * load SWF file which can be used as a MovieClip
  */
 SWFPrebuiltClip

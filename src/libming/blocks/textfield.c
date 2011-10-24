@@ -256,7 +256,7 @@ newSWFTextField()
 	return field;
 }
 
-static inline int checkSWFFontCharacter(SWFFontCharacter fc)
+static int checkSWFFontCharacter(SWFFontCharacter fc)
 {
 	int font_flags;
 	int nGlyphs;

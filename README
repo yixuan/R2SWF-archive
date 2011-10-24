@@ -7,7 +7,7 @@ R2SWF depends on the following libraries:
     libpng       http://www.libpng.org/
     libming      http://www.libming.org/
 
-However, the source code of the dependent libraries are included in the package,
+However, the source code of the dependent libraries (with minor modifications) are included in the package,
 so you don't need to install them by yourself.
 
 To install the 'package' here:

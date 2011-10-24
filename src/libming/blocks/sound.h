@@ -20,7 +20,7 @@
 /* sound.h
  *
  * $Id$
- * 
+ *
  * Notice: This header file contains declarations of functions and types that
  * are just used internally. All library functions and types that are supposed
  * to be publicly accessable are defined in ./src/ming.h.
@@ -40,8 +40,8 @@
 
 SWFBlock newDefineSWFSoundBlock(SWFSound sound);
 
-static inline int SWFSound_getSampleRate(int flags)
-{
+int SWFSound_getSampleRate(int flags);
+/* {
 	switch ( flags & SWF_SOUND_RATE)
 	{
 		case SWF_SOUND_44KHZ:
@@ -49,10 +49,11 @@ static inline int SWFSound_getSampleRate(int flags)
 		case SWF_SOUND_22KHZ:
 			return 22050;
 		case SWF_SOUND_11KHZ:
-			return 11025; 
+			return 11025;
 		default:
 			return 0;
 	}
-}
+} */
+/* Commented by Yixuan Qiu */
 
 #endif /* SWF_SOUND_H_INCLUDED */

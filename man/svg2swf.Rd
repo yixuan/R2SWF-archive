@@ -39,6 +39,7 @@ svg2swf(filenames, outdir = getwd(), output = "movie.swf",
   the SVG file once at a time. See the example.
 }
 \examples{
+\dontrun{
 if (require("Cairo")) {
     filenames = sprintf("Rplot\%03d.svg", 1:9)
     for (fn in filenames) {
@@ -48,6 +49,7 @@ if (require("Cairo")) {
     }
     output = svg2swf(filenames)
     swf2html(output)
+}
 }
 }
 \author{

@@ -55,7 +55,7 @@ struct SWFTextRecord_s
 	struct SWFTextRecord_s *next;
 
 	byte flags;
-	// if it's not a browser font, is it a font or a fontchar?
+	/* if it's not a browser font, is it a font or a fontchar? */
 	BOOL isResolved;
 
 	union
@@ -64,17 +64,17 @@ struct SWFTextRecord_s
 		SWFFontCharacter fontchar;
 	} font;
 
-	// color
+	/* color */
 	byte r;
 	byte g;
 	byte b;
 	byte a;
 
-	// position
+	/* position */
 	int x;
 	int y;
 
-	// metrics
+	/* metrics */
 	int height;
 	int spacing;
 
@@ -327,7 +327,7 @@ SWFTextRecord_getUnresolvedFont(SWFTextRecord record)
 {
 	if ( !record->isResolved )
 		return record->font.font;
-	
+
 	return NULL;
 }
 
@@ -349,7 +349,7 @@ SWFText_getScaledStringWidth(SWFText text, const char *string)
 	unsigned short* widestr;
 	int len = strlen(string);
 	int n, ret;
-	
+
 	if(text->currentRecord == NULL)
 		return -1;
 
@@ -405,7 +405,7 @@ SWFText_getScaledWideStringWidth(SWFText text, const unsigned short *string)
 
 	if(text->currentRecord == NULL)
 		return -1;
-	
+
 	height = text->currentRecord->height;
 
 	for(len = 0 ; *(string + len); len++)
@@ -458,7 +458,7 @@ SWFText_getScaledLeading(SWFText text)
 	return SWFFont_getScaledLeading(font) * height / 1024;
 }
 
-void 
+void
 SWFText_setFont(SWFText text, SWFFont font)
 {
 	SWFTextRecord textRecord = text->currentRecord;
@@ -646,7 +646,7 @@ SWFTextRecord_computeAdvances(SWFTextRecord textRecord)
 	SWFFontCharacter fontchar = textRecord->font.fontchar;
 	SWFFont font = SWFFontCharacter_getFont(fontchar);
 
-	if(!len) return;	// do not try to calculate 1st char of null string
+	if(!len) return;	/* do not try to calculate 1st char of null string */
 
 	/* compute advances (spacing) from spacing, advance and kern table */
 	if ( textRecord->advance == NULL )
@@ -705,7 +705,7 @@ SWFText_resolveCodes(SWFText text)
 		text->nAdvanceBits = max(text->nAdvanceBits, textRecord->nAdvanceBits);
 
 		if ( textRecord->flags & SWF_TEXT_HAS_FONT )
-		{	
+		{
 			int fontGlyphs = SWFFontCharacter_getNGlyphs(textRecord->font.fontchar);
 			nGlyphBits = max(nGlyphBits, SWFOutput_numBits(fontGlyphs-1));
 		}
@@ -788,11 +788,11 @@ SWFText_resolveCodes(SWFText text)
 
 			unsigned short font_glyphcode =
 				SWFFont_findGlyphCode(font, textRecord->string[i]);
+            int fontchar_glyphcode =
+				SWFFontCharacter_findGlyphCode(fontchar, textRecord->string[i]);
 			glyphBounds = SWFFont_getGlyphBounds(font,font_glyphcode);
 			SWFRect_getBounds(glyphBounds, &minX, &maxX, &minY, &maxY);
 
-			int fontchar_glyphcode =
-				SWFFontCharacter_findGlyphCode(fontchar, textRecord->string[i]);
 			if (fontchar_glyphcode < 0) {
 				SWF_error("SWFText_resolveCodes: no suitable glyph available (in dumped font)");
 			}
@@ -801,15 +801,15 @@ SWFText_resolveCodes(SWFText text)
 
 			if ( CHARACTER(text)->bounds )
 			{
-				SWFRect_includePoint(CHARACTER(text)->bounds, curX + minX * curH / 1024, 
+				SWFRect_includePoint(CHARACTER(text)->bounds, curX + minX * curH / 1024,
 				                     curY + minY * curH / 1024, 0);
-				SWFRect_includePoint(CHARACTER(text)->bounds, curX + maxX * curH / 1024, 
+				SWFRect_includePoint(CHARACTER(text)->bounds, curX + maxX * curH / 1024,
 				                     curY + maxY * curH / 1024, 0);
 			}
 			else
 			{
-				CHARACTER(text)->bounds = newSWFRect(curX + minX * curH /1024, 
-					curX + maxX * curH /1024, curY + minY * curH /1024, 
+				CHARACTER(text)->bounds = newSWFRect(curX + minX * curH /1024,
+					curX + maxX * curH /1024, curY + minY * curH /1024,
 					curY + maxY * curH /1024);
 			}
 

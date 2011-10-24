@@ -54,7 +54,7 @@ void writeSWFSoundInstanceToMethod(SWFBlock block,
 	byte flags;
 	int i;
 
-	// block may be null if we're calling from button.c:
+	/* block may be null if we're calling from button.c: */
 
 	if ( block == NULL )
 	{
@@ -102,7 +102,7 @@ int completeSWFSoundInstance(SWFBlock block)
 	SWFSoundInstance sound;
 	byte flags;
 
-	// block may be null if we're calling from button.c:
+	/* block may be null if we're calling from button.c: */
 
 	if ( block == NULL )
 		return 3;
@@ -121,12 +121,12 @@ int completeSWFSoundInstance(SWFBlock block)
  * adds a SoundEnvelope to event sound
  */
 void SWFSoundInstance_addEnvelope(SWFSoundInstance inst,
-                                  unsigned int mark44 /* position in 44khz samples */, 
-                                  short left /* volume left channel */, 
+                                  unsigned int mark44 /* position in 44khz samples */,
+                                  short left /* volume left channel */,
                                   short right /* volume right channel */)
 {
 	inst->flags |= SWF_SOUNDINFO_HASENVELOPE;
-	inst->envPoints = (envPoint*) realloc(inst->envPoints, 
+	inst->envPoints = (envPoint*) realloc(inst->envPoints,
 		(inst->numEnvPoints + 1) * sizeof(envPoint));
 	inst->envPoints[inst->numEnvPoints].mark44 = mark44;
 	inst->envPoints[inst->numEnvPoints].level0 = left;
@@ -134,7 +134,7 @@ void SWFSoundInstance_addEnvelope(SWFSoundInstance inst,
 	inst->numEnvPoints++;
 }
 
-/* 
+/*
  * private constructor
  * see SWFMove[Clip]_startSound()
  */
@@ -162,7 +162,7 @@ SWFSoundInstance newSWFSoundInstance(SWFSound sound)
 	return instance;
 }
 
-/* 
+/*
  * destroys a SWFSounInstance object
  */
 void
@@ -187,33 +187,33 @@ SWFSoundInstance newSWFSoundInstance_startNoMultiple(SWFSound sound)
 }
 
 /*
- * don't start sound if already playing 
+ * don't start sound if already playing
  */
 void SWFSoundInstance_setNoMultiple(SWFSoundInstance instance)
 {
 	instance->flags |= SWF_SOUNDINFO_SYNCNOMULTIPLE;
 }
 
-/* 
+/*
  * set loop start point
  * Sets the loop start point counted in samples
  */
-void SWFSoundInstance_setLoopInPoint(SWFSoundInstance instance, 
+void SWFSoundInstance_setLoopInPoint(SWFSoundInstance instance,
                                      unsigned int point /* number of samples */)
 {
 	instance->flags |= SWF_SOUNDINFO_HASINPOINT;
-	instance->inPoint = point;	
+	instance->inPoint = point;
 }
 
-/* 
+/*
  * set loop stop point
  * Sets the loop's last sample to play
  */
-void SWFSoundInstance_setLoopOutPoint(SWFSoundInstance instance, 
+void SWFSoundInstance_setLoopOutPoint(SWFSoundInstance instance,
                                       unsigned int point /* number of samples */)
 {
 	instance->flags |= SWF_SOUNDINFO_HASOUTPOINT;
-	instance->outPoint = point;	
+	instance->outPoint = point;
 }
 
 /*

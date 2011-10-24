@@ -58,7 +58,7 @@ completeSWFMorphBlock(SWFBlock block)
 
 	SWFShape_end(shape1);
 	SWFShape_end(shape2);
-	
+
 	/* determine shape version
  	 * if SWF_SHAPE4 -> write SWF_DEFINEMORPHSHAPE2
  	 */
@@ -76,7 +76,7 @@ completeSWFMorphBlock(SWFBlock block)
 	SWFOutput_writeRect(out, CHARACTER(shape2)->bounds);
 	SWFOutput_byteAlign(out);
 
-	// edge bounds
+	/* edge bounds */
 	if(shape_version == SWF_SHAPE4)
 	{
 		int flags;
@@ -85,7 +85,7 @@ completeSWFMorphBlock(SWFBlock block)
 		SWFOutput_byteAlign(out);
 		SWFOutput_writeRect(out, SWFShape_getEdgeBounds(shape2));
 		SWFOutput_byteAlign(out);
-		
+
 		flags = SWFShape_getFlags(shape1);
 		if(flags != SWFShape_getFlags(shape2))
 			SWF_warn("SWFMorph: shape flags do not match. Using flags of first shape\n");
@@ -99,8 +99,8 @@ completeSWFMorphBlock(SWFBlock block)
 	SWFShape_getFills(shape1, &fills1, &nFills1);
 	SWFShape_getFills(shape2, &fills2, &nFills2);
 
-	SWFOutput_writeMorphFillStyles(out, 
-		fills1, nFills1, SWFShape_getEdgeBounds(shape1), 
+	SWFOutput_writeMorphFillStyles(out,
+		fills1, nFills1, SWFShape_getEdgeBounds(shape1),
 		fills2, nFills2, SWFShape_getEdgeBounds(shape2));
 	SWFOutput_byteAlign(out);
 	SWFShape_getLines(shape1, &lines1, &nLines1);
@@ -108,7 +108,7 @@ completeSWFMorphBlock(SWFBlock block)
 
 	if(shape_version == SWF_SHAPE4)
 		SWFOutput_writeMorphLineStyles2(out, lines1, nLines1, lines2, nLines2);
-	else 
+	else
 		SWFOutput_writeMorphLineStyles(out, lines1, nLines1, lines2, nLines2);
 
 	SWFOutput_byteAlign(out);
@@ -116,7 +116,7 @@ completeSWFMorphBlock(SWFBlock block)
 	offset =
 		SWFOutput_getCurPos(out) - patch +
 		SWFOutput_getLength(SWFShape_getOutput(shape1)) - 4;
-	
+
 	*(patch++) = offset & 0xff;
 	offset >>= 8;
 	*(patch++) = offset & 0xff;

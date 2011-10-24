@@ -8,9 +8,7 @@ RM = rm -f
 LD = $(CC)
 AR_RC = $(AR) rcs
 
-CRELEASE = -O3
 LDRELEASE = -s
-CFLAGS = -std=gnu99 $(CRELEASE) -Wall $(CPICFLAGS)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
@@ -23,10 +21,11 @@ OBJS =  png$(O) pngerror$(O) pngget$(O) pngmem$(O) pngpread$(O) \
 
 all: libpng$(A)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -c -o $@ $<
+.c.o:
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -c $< -o $@
 
 libpng$(A): $(OBJS)
+	@$(RM) $@
 	$(AR_RC) $@ $(OBJS)
 
 

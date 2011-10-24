@@ -69,7 +69,7 @@ completeSWFBlock(SWFBlock block)
 	default:
 		break;
 	}
-		
+
 	if ( !block->completed )
 	{
 		if ( block->complete )
@@ -143,7 +143,7 @@ writeSWFBlockToMethod(SWFBlock block, SWFByteOutputMethod method, void *data)
 void
 SWFBlockInit(SWFBlock block)
 {
-	block->type = SWF_END; // XXX - ???
+	block->type = SWF_END; /* XXX - ??? */
 	block->writeBlock = NULL;
 	block->complete = NULL;
 	block->dtor = NULL;
@@ -151,7 +151,7 @@ SWFBlockInit(SWFBlock block)
 	block->length = 0;
 	block->isDefined = FALSE;
 	block->completed = FALSE;
-	
+
 	block->swfVersion = 0;
 }
 

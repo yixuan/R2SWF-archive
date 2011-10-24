@@ -35,7 +35,9 @@
 #include "libming.h"
 #include "shape.h"
 #include "fdbfont.h"
-#include "ttffont.h"
+/* #include "ttffont.h" */
+/* Commented by Yixuan Qiu */
+
 #include "ming_config.h"
 
 struct textList
@@ -50,16 +52,16 @@ struct SWFFontCharacter_s
 
 	SWFFont font;
 	byte flags;
-	
+
 	/* add all font charactes. usefull for textfield */
 	byte dump;
 
-	// list of text records that reference this font
+	/* list of text records that reference this font */
 	struct textList* textList;
 	struct textList* currentList;
 
-	// list of chars used in text objects that reference this font-
-	// idx into this table is stored in text records
+	/* list of chars used in text objects that reference this font- */
+	/* idx into this table is stored in text records */
 	int nGlyphs;
 	unsigned short* codeTable;
 
@@ -127,7 +129,7 @@ completeSWFFontCharacter(SWFBlock block)
 		SWFFontCharacter_dumpTable(inst);
 	else
 		SWFFontCharacter_resolveTextCodes(inst);
-	
+
 	SWF_assert(!inst->out);
 	inst->out = newSWFOutput();
 	SWFOutput_writeUInt16(inst->out, CHARACTERID(inst));
@@ -140,8 +142,8 @@ completeSWFFontCharacter(SWFBlock block)
 		SWFOutput_writeUInt8(inst->out, c);
 
 	SWFOutput_writeUInt16(inst->out, inst->nGlyphs);
-	
-	tablen = (inst->nGlyphs+1) * 
+
+	tablen = (inst->nGlyphs+1) *
 		(inst->flags & SWF_FONT_WIDEOFFSETS ? 4 : 2);
 	buffer = newSWFOutput();
 	for (i = 0; i < inst->nGlyphs; ++i)
@@ -152,10 +154,10 @@ completeSWFFontCharacter(SWFBlock block)
 		SWFOutput_writeGlyphShape(buffer, shape);
 		if(inst->flags & SWF_FONT_WIDEOFFSETS)
 			SWFOutput_writeUInt32(inst->out, offset);
-		else 
+		else
 			SWFOutput_writeUInt16(inst->out, offset);
 	}
-	// codeTableOffset
+	/* codeTableOffset */
 	offset = SWFOutput_getLength(buffer) + tablen;
 	if(inst->flags & SWF_FONT_WIDEOFFSETS)
 		SWFOutput_writeUInt32(inst->out, offset);
@@ -164,7 +166,7 @@ completeSWFFontCharacter(SWFBlock block)
 
 	/* user buffer from here! */
 	SWFOutput_setNext(inst->out, buffer);
-	
+
 	for (i = 0; i < inst->nGlyphs; ++i)
 	{
 		unsigned short code = inst->codeTable[i];
@@ -173,7 +175,7 @@ completeSWFFontCharacter(SWFBlock block)
 		else
 			SWFOutput_writeUInt8(buffer, code);
 	}
-	
+
 	/* write font layout */
 	if (inst->flags & SWF_FONT_HASLAYOUT )
 	{	SWFOutput_writeUInt16(buffer, font->ascent);
@@ -205,7 +207,7 @@ writeSWFFontCharacterToMethod(SWFBlock block,
 
 void
 destroySWFFont(SWFFont font)
-{	
+{
 	if(font->shapes)
 	{
 		int i = 0;
@@ -238,7 +240,7 @@ destroySWFFont(SWFFont font)
 	if ( font->name != NULL )
 		free(font->name);
 
-	if ( font->kernTable.k != NULL )	// union of pointers ...
+	if ( font->kernTable.k != NULL )	/* union of pointers ... */
 		free(font->kernTable.k);
 
 	if ( font->glyphToCode != NULL )
@@ -262,7 +264,7 @@ destroySWFFontCharacter(SWFFontCharacter font)
 		free(text);
 		text = next;
 	}
-	
+
 	if ( font->codeTable != NULL )
 		free(font->codeTable);
 	if( font->out != NULL)
@@ -289,7 +291,7 @@ newSWFFont()
 
 	font->nGlyphs = 0;
 	font->glyphToCode = NULL;
-	
+
 	font->advances = NULL;
 
 	font->ascent = 0;
@@ -305,21 +307,21 @@ newSWFFont()
 	return font;
 }
 
-// file magic: fonts:0 string  \000\001\000\000\000    TrueType font data
-static inline int true_type_check(char *header)
+/* file magic: fonts:0 string  \000\001\000\000\000    TrueType font data */
+static int true_type_check(char *header)
 {
-	if(header[0] == 0 && 
-		header[1] == 1 && 
-		header[2] == 0 && 
+	if(header[0] == 0 &&
+		header[1] == 1 &&
+		header[2] == 0 &&
 		header[3] == 0 &&
 		header[4] == 0)
 		return 1;
 	return 0;
 }
 
-static inline int fdb_check(char *header)
+static int fdb_check(char *header)
 {
-	if(header[0] == 'f' && 
+	if(header[0] == 'f' &&
 		header[1] == 'd' &&
 		header[2] == 'b' &&
 		header[3] == '0')
@@ -327,10 +329,10 @@ static inline int fdb_check(char *header)
 	return 0;
 }
 
-static inline int ttc_check(char *header)
+static int ttc_check(char *header)
 {
-	if(header[0] == 't' && 
-		header[1] == 't' && 
+	if(header[0] == 't' &&
+		header[1] == 't' &&
 		header[2] == 'c')
 		return 1;
 	return 0;
@@ -343,13 +345,13 @@ SWFFontCollection newSWFFontCollection_fromFile(const char *filename /* filename
 {
 	FILE *file;
 	char header[5];
-	file = fopen(filename, "rb");	
+	file = fopen(filename, "rb");
 	if(file == NULL)
-	{	
+	{
 		SWF_warn("open font file failed\n");
 		return NULL;
 	}
-	
+
 	if(fread(header, 5, 1, file) < 1)
 	{
 		fclose(file);
@@ -362,9 +364,9 @@ SWFFontCollection newSWFFontCollection_fromFile(const char *filename /* filename
 		fclose(file);
 #if USE_FREETYPE
 		return loadTTFCollection(filename);
-#else 
+#else
 		SWF_warn("SWFFont:: new SWFFont (ttf): "
-		         "freetype is not available.\n"); 
+		         "freetype is not available.\n");
 		return NULL;
 #endif
 	}
@@ -378,21 +380,21 @@ SWFFontCollection newSWFFontCollection_fromFile(const char *filename /* filename
 
 
 /* load a font from file
- * This function creates a new SWFFont object from a font file. It accepts 
+ * This function creates a new SWFFont object from a font file. It accepts
  * and autodetects FDB and TTF fonts.
- * returns a SWFFont object if a valid fontfile is found, NULL otherwise 
+ * returns a SWFFont object if a valid fontfile is found, NULL otherwise
  */
 SWFFont newSWFFont_fromFile(const char *filename /* filename for fontfile */)
 {
 	FILE *file;
 	char header[5];
-	file = fopen(filename, "rb");	
+	file = fopen(filename, "rb");
 	if(file == NULL)
-	{	
+	{
 		SWF_warn("open font file failed\n");
 		return NULL;
 	}
-	
+
 	if(fread(header, 5, 1, file) < 1)
 	{
 		fclose(file);
@@ -404,10 +406,10 @@ SWFFont newSWFFont_fromFile(const char *filename /* filename for fontfile */)
 	{
 		fclose(file);
 #if USE_FREETYPE
-		return loadSWFFontTTF(filename);	
+		return loadSWFFontTTF(filename);
 #else
 		SWF_warn("SWFFont:: new SWFFont (ttf): "
-		         "freetype is not available.\n"); 
+		         "freetype is not available.\n");
 		return NULL;
 #endif
 	}
@@ -441,14 +443,14 @@ newSWFFontCharacter(SWFFont font)
 
 	CHARACTERID(inst) = ++SWF_gNumCharacters;
 	inst->font = font;
-	inst->flags = font->flags; // (unsigned char)(font->flags & /*(~SWF_FONT_HASLAYOUT) &*/ (~SWF_FONT_WIDEOFFSETS));
+	inst->flags = font->flags; /* (unsigned char)(font->flags & (~SWF_FONT_HASLAYOUT) & (~SWF_FONT_WIDEOFFSETS)); */
 
 	inst->nGlyphs = 0;
 	inst->codeTable = NULL;
 	inst->dump = 0;
 	inst->textList = NULL;
 	inst->currentList = NULL;
-	
+
 	inst->out = NULL;
 
 	return inst;
@@ -463,15 +465,15 @@ newSWFDummyFontCharacter()
 	BLOCK(ret)->writeBlock = NULL;
 	BLOCK(ret)->dtor = NULL;
 	CHARACTERID(ret) = ++SWF_gNumCharacters;
-	
+
 	ret->flags = SWF_FONT_HASLAYOUT;
 	ret->nGlyphs = 1;
 	ret->codeTable = NULL;
 	ret->out = NULL;
-	
+
 	return ret;
 }
-	
+
 int
 SWFFont_findGlyphCode(SWFFont font, unsigned short c)
 {
@@ -533,7 +535,7 @@ findCodeValue(unsigned short c, unsigned short* list, int start, int end)
 void
 SWFFontCharacter_addCharToTable(SWFFontCharacter font, unsigned short c)
 {
-	// insert the char into font's codeTable if it isn't already there
+	/* insert the char into font's codeTable if it isn't already there */
 
 	int p;
 
@@ -551,14 +553,14 @@ SWFFontCharacter_addCharToTable(SWFFontCharacter font, unsigned short c)
 			CODETABLE_INCREMENT*sizeof(unsigned short));
 	}
 
-	// keep list sorted
+	/* keep list sorted */
 
 	if ( p < font->nGlyphs )
 	{
 		memmove(&font->codeTable[p + 1], &font->codeTable[p],
 						(font->nGlyphs - p) * sizeof(*font->codeTable));
 	}
-	
+
 	font->codeTable[p] = c;
 	++font->nGlyphs;
 }
@@ -572,7 +574,7 @@ SWFFontCharacter_addWideChars(SWFFontCharacter font, unsigned short *string, int
 
 /*
  * add all utf-8 characters in the given string to the SWF file.
- * The font-block in the resulting SWF file will include all the 
+ * The font-block in the resulting SWF file will include all the
  * utf-8 characters in the given string.
  */
 void
@@ -587,7 +589,7 @@ SWFFontCharacter_addUTF8Chars(SWFFontCharacter font, const char *string)
 
 /*
  * add all characters in the given string to the SWF file.
- * The font-block in the resulting SWF file will include all the 
+ * The font-block in the resulting SWF file will include all the
  * characters in the given string.
  */
 void
@@ -608,19 +610,19 @@ void
 SWFFontCharacter_exportCharacterRange(SWFFontCharacter font,
 						 unsigned short start, unsigned short end)
 {
-	// insert the char into font's codeTable if it isn't already there
+	/* insert the char into font's codeTable if it isn't already there */
 
-	//int p = findCodeValue(start, font->codeTable, 0, font->nGlyphs);
-	//int q = findCodeValue(end, font->codeTable, 0, font->nGlyphs);
-	
-	// XXX
+	/* int p = findCodeValue(start, font->codeTable, 0, font->nGlyphs); */
+	/* int q = findCodeValue(end, font->codeTable, 0, font->nGlyphs); */
+
+	/* XXX */
 }
 
 
 int
 SWFFontCharacter_findGlyphCode(SWFFontCharacter font, unsigned short c)
 {
-	// return the index in font->codeTable for the given character
+	/* return the index in font->codeTable for the given character */
 
 	int p = findCodeValue(c, font->codeTable, 0, font->nGlyphs);
 
@@ -630,7 +632,7 @@ SWFFontCharacter_findGlyphCode(SWFFontCharacter font, unsigned short c)
 	return -1;
 }
 
-static void 
+static void
 SWFFontCharacter_dumpTable(SWFFontCharacter fc)
 {
 	int i;
@@ -649,7 +651,7 @@ SWFFontCharacter_resolveTextCodes(SWFFontCharacter font)
 	unsigned short* string;
 	int len, i;
 
-	// find out which characters from this font are being used
+	/* find out which characters from this font are being used */
 
 	while ( text != NULL )
 	{
@@ -661,7 +663,7 @@ SWFFontCharacter_resolveTextCodes(SWFFontCharacter font)
 		text = text->next;
 	}
 
-	// check availability of a font glyph for each fontchar codetable entry
+	/* check availability of a font glyph for each fontchar codetable entry */
 
 	for ( i=0; i<font->nGlyphs; ++i )
 	{
@@ -669,7 +671,7 @@ SWFFontCharacter_resolveTextCodes(SWFFontCharacter font)
 		code = SWFFont_findGlyphCode(font->font, font->codeTable[i]);
 		if(code < 0)
 		{
-			SWF_warn("SWFFontCharacter_resolveTextCodes: Character not found %i\n", 
+			SWF_warn("SWFFontCharacter_resolveTextCodes: Character not found %i\n",
 				font->codeTable[i]);
 			SWF_warn("This is either an encoding error (likely)");
 			SWF_warn("or the used font does not provide all characters (unlikely)\n");
@@ -679,7 +681,7 @@ SWFFontCharacter_resolveTextCodes(SWFFontCharacter font)
 }
 
 /*
- * adds all characters/glyphs to the SWF 
+ * adds all characters/glyphs to the SWF
  * This function is usefull if an full export of the font is intended.
  */
 void
@@ -727,12 +729,12 @@ SWFFont_getScaledWideStringWidth(SWFFont font,const unsigned short* string, int 
 		glyph = SWFFont_findGlyphCode(font, string[i]);
 
 		if ( glyph == -1 )
-			continue; // XXX - ???
+			continue; /* XXX - ??? */
 
 		if ( font->advances )
 			width += font->advances[glyph];
 
-		// looking in kernTable
+		/* looking in kernTable */
 
 		if ( i < len-1 ) {
 			width += SWFFont_getCharacterKern(font, string[i], string[i+1]);
@@ -816,8 +818,8 @@ SWFFont_getGlyphBounds(SWFFont font, unsigned short glyphcode)
 	if ( glyphcode >= font->nGlyphs )
 		SWF_error("SWFFont_getGlyphBounds: glyphcode >= nGlyphs");
 
-	// return &font->bounds[glyphcode];
-	return SWFCharacter_getBounds(CHARACTER(font->shapes[glyphcode])); // &font->bounds[glyphcode];
+	/* return &font->bounds[glyphcode]; */
+	return SWFCharacter_getBounds(CHARACTER(font->shapes[glyphcode])); /* &font->bounds[glyphcode]; */
 }
 
 
@@ -841,7 +843,7 @@ SWFFont_getCharacterKern(SWFFont font, unsigned short code1, unsigned short code
 {
 	int j = font->kernCount;
 
-	// XXX - kernTable should be sorted to make this faster
+	/* XXX - kernTable should be sorted to make this faster */
 
 	if(font->flags & SWF_FONT_WIDECODES) {
 		if( !font->kernTable.w ) {
@@ -879,7 +881,7 @@ SWFShape SWFFont_getGlyph(SWFFont font, unsigned short c)
 	if(index < 0)
 		return NULL;
 
-	return font->shapes[index];	
+	return font->shapes[index];
 }
 
 void SWFFontCollection_addFont(SWFFontCollection collection, SWFFont font)
@@ -887,7 +889,7 @@ void SWFFontCollection_addFont(SWFFontCollection collection, SWFFont font)
 	if(!collection || !font)
 		return;
 
-	collection->fontList = (SWFFont*)realloc(collection->fontList, 
+	collection->fontList = (SWFFont*)realloc(collection->fontList,
 		(collection->numFonts + 1) * sizeof(SWFFont));
 	collection->fontList[collection->numFonts] = font;
 	collection->numFonts++;

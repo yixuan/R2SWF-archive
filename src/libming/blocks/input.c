@@ -87,9 +87,9 @@ SWFInput_readBits(SWFInput input, int number)
 			ret += SWFInput_getChar(input);
 			number -= 8;
 		}
-		
+
 		input->buffer = SWFInput_getChar(input);
-		
+
 		if ( number > 0 )
 		{
 			ret <<= number;
@@ -104,11 +104,11 @@ SWFInput_readBits(SWFInput input, int number)
 	ret = input->buffer >> (input->bufbits-number);
 	input->bufbits -= number;
 	input->buffer &= (1<<input->bufbits)-1;
-//	printf("done: readBits(%i) numer < bufbits %i\n", number, ret);
+/*	printf("done: readBits(%i) numer < bufbits %i\n", number, ret); */
 	return ret;
 }
 
-int 
+int
 SWFInput_readSBits(SWFInput input, int number)
 {
 	int num = SWFInput_readBits(input, number);
@@ -153,7 +153,7 @@ SWFInput_getSInt16(SWFInput input)
 }
 
 
-unsigned long 
+unsigned long
 SWFInput_getUInt24_BE(SWFInput input)
 {
 	unsigned long num = SWFInput_getChar(input) << 16;
@@ -312,7 +312,7 @@ newSWFInput_file(FILE *f)
 		return newSWFInput_stream(f);
 
 	if ( fstat(fileno(f), &buf) == -1 )
-		SWF_error("Couldn't fstat filehandle in newSWFInput_file");;
+		SWF_error("Couldn't fstat filehandle in newSWFInput_file");
 
 	input = (SWFInput) malloc(sizeof(struct SWFInput_s));
 
@@ -350,7 +350,7 @@ newSWFInput_filename(const char *filename)
 {
 	FILE *file;
 	SWFInput input;
-	
+
 	file = fopen(filename, "rb");
 	if(file == NULL)
 	{
@@ -494,7 +494,7 @@ newSWFInput_bufferCopy(unsigned char *buffer, int length)
 /* SWFInput_stream */
 
 #define INPUTSTREAM_INCREMENT 32768
-#define MAX_INPUTSTREAM (32*1024*1024) // 32 mb
+#define MAX_INPUTSTREAM (32*1024*1024) /* 32 mb */
 
 struct SWFInputStreamData
 {
@@ -609,7 +609,7 @@ SWFInput_stream_read(SWFInput input, unsigned char* buffer, int count)
 			(unsigned char*) realloc(data->buffer,
 							sizeof(unsigned char) * INPUTSTREAM_INCREMENT *
 							(((input->offset + count) / INPUTSTREAM_INCREMENT) + 1));
-		
+
 		num = fread(data->buffer + input->length,
 								sizeof(unsigned char), need, data->file);
 
@@ -699,10 +699,10 @@ SWFInput_input_getChar(SWFInput input)
 
 	if ( input->offset >= input->length )
 		return EOF;
-		
+
 	ptr = (struct SWFInputPtr *)input->data;
 	old_offset = SWFInput_tell(ptr->input);
- 
+
 	SWFInput_seek(ptr->input, ptr->offset + input->offset, SEEK_SET);
 	result = SWFInput_getChar(ptr->input);
 	input->offset++;

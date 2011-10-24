@@ -12,9 +12,7 @@ RM = rm -f
 LD = $(CC)
 AR_RC = $(AR) rcs
 
-CRELEASE = -O3
 LDRELEASE = -s
-CFLAGS = -std=gnu99 $(CRELEASE) -Wall $(CPICFLAGS)
 LDFLAGS = $(LDRELEASE)
 
 O=.o
@@ -27,7 +25,7 @@ OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
 	blocks/browserfont$(O) blocks/character$(O) blocks/cxform$(O) \
 	blocks/dbl$(O) blocks/error$(O) blocks/fdbfont$(O) blocks/fileattrs$(O) \
 	blocks/fillstyle$(O) blocks/filter$(O) blocks/flv$(O) \
-	blocks/font$(O) blocks/fontinfo$(O) blocks/fromswf$(O) \
+	blocks/font$(O) blocks/fromswf$(O) \
 	blocks/gifdbl$(O) blocks/gradient$(O) blocks/imports$(O) \
 	blocks/input$(O) blocks/jpeg$(O) blocks/linestyle$(O) \
 	blocks/matrix$(O) blocks/metadata$(O) blocks/method$(O) \
@@ -37,23 +35,25 @@ OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
 	blocks/scenedata$(O) blocks/scriptlimits$(O) blocks/shape$(O) \
 	blocks/sound$(O) blocks/soundinstance$(O) blocks/soundstream$(O) \
 	blocks/sprite$(O) blocks/symbolclass$(O) blocks/tabindex$(O) \
-	blocks/text$(O) blocks/textfield$(O) blocks/ttffont$(O) \
+	blocks/text$(O) blocks/textfield$(O) \
 	blocks/utf8$(O) blocks/videostream$(O)
 
 
+.PHONY: all blocks clean
+
 all: libming$(A)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c -o $@ $<
+.c.o:
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c $< -o $@
 
-blocks/%.o: blocks/%.c
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c -o $@ $<
 
-libming$(A): $(OBJS)
+libming$(A): blocks $(OBJS)
+	@$(RM) $@
 	$(AR_RC) $@ $(OBJS)
 
+blocks:
+	cd blocks && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)"
 
-.PHONY: install clean
 
 clean:
 	-$(RM) libming$(A)

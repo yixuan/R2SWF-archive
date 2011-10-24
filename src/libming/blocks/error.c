@@ -20,7 +20,7 @@
 /* $Id$ */
 
 #include <stdio.h>
-#include <stdlib.h> // for exit()
+#include <stdlib.h> /* for exit() */
 #include <stdarg.h>
 #include "error.h"
 #include "libming.h"
@@ -49,7 +49,7 @@ error_default(const char *msg, ...)
 }
 
 
-SWFMsgFunc _SWF_warn = warn_default; //NULL;
+SWFMsgFunc _SWF_warn = warn_default; /* NULL; */
 SWFMsgFunc _SWF_error = error_default;
 
 SWFMsgFunc

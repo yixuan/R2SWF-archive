@@ -3,8 +3,8 @@
 
 #include "output.h"
 
-static inline int SWFFilter_testBlockType(int type)
-{
+int SWFFilter_testBlockType(int type);
+/* {
 	switch(type)
 	{
 		case SWF_DEFINEBUTTON:
@@ -15,7 +15,8 @@ static inline int SWFFilter_testBlockType(int type)
 			return 1;
 		default: return 0;
 	}
-}
+} */
+/* Commented by Yixuan Qiu */
 
 void
 SWFOutput_writeSWFFilter(SWFOutput out, SWFFilter filter);
