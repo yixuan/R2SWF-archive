@@ -20,7 +20,7 @@ A=.a
 
 OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
 	gc$(O) ming$(O) movie$(O) movieclip$(O) position$(O) \
-	shape_cubic$(O) shape_util$(O) text_util$(O) \
+	shape_cubic$(O) shape_util$(O) text_util$(O) libming$(O) \
 	blocks/binary$(O) blocks/bitmap$(O) blocks/block$(O) \
 	blocks/browserfont$(O) blocks/character$(O) blocks/cxform$(O) \
 	blocks/dbl$(O) blocks/error$(O) blocks/fdbfont$(O) blocks/fileattrs$(O) \

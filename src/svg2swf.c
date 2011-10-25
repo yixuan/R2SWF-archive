@@ -55,10 +55,19 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
 {
     const char *stroke_width = CHAR(STRING_ELT(style, STYIND_STROKE_WIDTH));
     double lwd = atof(stroke_width);
-	sstyle->lwd = (unsigned short) floor(lwd > 255 ? 255 : lwd);
-
 	int cap, endcap; 
 	const char *stroke_linecap;
+	int join;
+	const char *stroke_linejoin;
+	const char *stroke_miterlimit;
+	const char *stroke_opacity;
+	float r, g, b;
+	const char *stroke;
+	const char *fill_opacity;
+	const char *fill;
+
+	sstyle->lwd = (unsigned short) floor(lwd > 255 ? 255 : lwd);
+
     stroke_linecap = CHAR(STRING_ELT(style, STYIND_STROKE_LINECAP));
     if(!strcmp("round", stroke_linecap))
 	{
@@ -71,9 +80,7 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
 		cap = SWF_LINESTYLE_CAP_NONE;
 		endcap = SWF_LINESTYLE_FLAG_ENDCAP_NONE;
 	}
-    
-	int join;
-	const char *stroke_linejoin;
+	
    	stroke_linejoin = CHAR(STRING_ELT(style, STYIND_STROKE_LINEJOIN));
 	if(!strcmp("round", stroke_linejoin))
 	{
@@ -84,17 +91,14 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
 		join = SWF_LINESTYLE_JOIN_MITER;
 	}
 	sstyle->lineType = cap | endcap | join;
-
-	const char *stroke_miterlimit;
+	
     stroke_miterlimit = CHAR(STRING_ELT(style, STYIND_STROKE_MITERLIMIT));
 	sstyle->miterLimit = (float) atof(stroke_miterlimit);
-
-	const char *stroke_opacity;
+	
     stroke_opacity = CHAR(STRING_ELT(style, STYIND_STROKE_OPACITY));
 	sstyle->alpha = (byte) floor(atof(stroke_opacity) * 255 + 0.5);
 
-	float r, g, b;
-	const char *stroke = CHAR(STRING_ELT(style, STYIND_STROKE));
+	stroke = CHAR(STRING_ELT(style, STYIND_STROKE));
 	if(!strcmp("none", stroke))
 	{
         sstyle->alpha = 0;
@@ -107,10 +111,10 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
 		sstyle->red = sstyle->green = sstyle->blue = 0;
 	}
 
-	const char *fill_opacity = CHAR(STRING_ELT(style, STYIND_FILL_OPACITY));
+	fill_opacity = CHAR(STRING_ELT(style, STYIND_FILL_OPACITY));
 	fstyle->alpha = (byte) floor(atof(fill_opacity) * 255 + 0.5);
 
-	const char *fill = CHAR(STRING_ELT(style, STYIND_FILL));
+	fill = CHAR(STRING_ELT(style, STYIND_FILL));
 	if(!strcmp("none", fill))
 	{
         fstyle->alpha = 0;
@@ -164,8 +168,8 @@ void SWFShape_drawFromData(SWFShape s, SEXP data, SEXP xy)
 void SWFShape_drawBlankRect(SWFShape s, double x1, double y1,
 		                    double x2, double y2)
 {
-	SWFShape_setLine(s, 1, 0, 0, 0, 0);
 	FillStyle fillStyle = {255, 255, 255, 255};
+	SWFShape_setLine(s, 1, 0, 0, 0, 0);	
 	SWFShape_setFillStyle(s, &fillStyle);
     SWFShape_movePenTo(s, x1, y1);
     SWFShape_drawLineTo(s, x1, y2);
@@ -177,11 +181,6 @@ void SWFShape_drawBlankRect(SWFShape s, double x1, double y1,
 SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 {
     SWFMovie m = newSWFMovieWithVersion(8);
-    SWFMovie_setDimension(m, (float) REAL(size)[2], (float) REAL(size)[3]);
-    SWFMovie_setBackground(m, 255, 255, 255);
-
-    Ming_setCubicThreshold(1);
-
 	StrokeStyle strokeStyle;
 	FillStyle fillStyle;
 
@@ -190,16 +189,22 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 	int pathsListLen;
 	SEXP pathsList, path, style, data, xy;
 	SWFShape s;
+	SWFMovieBlockType ublock;
 
-    SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
+    SWFMovie_setDimension(m, (float) REAL(size)[2], (float) REAL(size)[3]);
+    SWFMovie_setBackground(m, 255, 255, 255);
+	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
 	SWFMovie_setNumberOfFrames(m, nFiles);
 
+    Ming_setCubicThreshold(1);
+ 
 	for(i = 0; i < nFiles; i++)
 	{
 		s = newSWFShape();
         SWFShape_drawBlankRect(s, REAL(size)[0], REAL(size)[1],
 				               REAL(size)[2], REAL(size)[3]);
-		SWFMovie_add(m, (SWFBlock) s);
+		ublock.shape = s;
+		SWFMovie_add_internal(m, ublock);
 
 		pathsList = VECTOR_ELT(filesData, i);
 		pathsListLen = LENGTH(pathsList);
@@ -212,7 +217,8 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 	        xy = VECTOR_ELT(path, 2);
     		SWFShape_setStyleFromData(s, style, &strokeStyle, &fillStyle);
 	    	SWFShape_drawFromData(s, data, xy);
-		    SWFMovie_add(m, (SWFBlock) s);
+		    ublock.shape = s;
+		    SWFMovie_add_internal(m, ublock);
 		}
 		SWFMovie_nextFrame(m);
 	}

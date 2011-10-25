@@ -10,15 +10,17 @@
 SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
 {
     SWFMovie m = newSWFMovieWithVersion(8);
-    SWFMovie_setBackground(m, 255, 255, 255);
-	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
-
     int nFiles = LENGTH(fileNames);
 	int i;
 	int dimNotSet = 1;
 	int swfHeight, swfWidth;
 	SWFBitmap image = NULL;
 	const char *filename;
+	SWFMovieBlockType ublock;
+
+	SWFMovie_setBackground(m, 255, 255, 255);
+	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
+
     for(i = 0; i < nFiles; i++)
 	{
 		filename = CHAR(STRING_ELT(fileNames, i));
@@ -49,11 +51,16 @@ SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
 		    swfWidth = SWFBitmap_getWidth(image);
 			SWFMovie_setDimension(m, swfHeight, swfWidth);
 			dimNotSet = 0;
+		}
 
-			SWFMovie_add(m, (SWFBlock) image);
+		if(INTEGER(format)[i] == 1)
+		{
+			ublock.dblbmp_data = (SWFDBLBitmapData) image;
+			SWFMovie_add_internal(m, ublock);
 			SWFMovie_nextFrame(m);
-		} else {
-			SWFMovie_add(m, (SWFBlock) image);
+		} else if(INTEGER(format)[i] == 2) {
+			ublock.jpegbmp = (SWFJpegBitmap) image;
+			SWFMovie_add_internal(m, ublock);
 			SWFMovie_nextFrame(m);
 		}
 	}
