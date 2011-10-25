@@ -2,6 +2,16 @@
 
 BUG FIXES
 
+    o fix Makefile errors
+
+
+
+
+
+		  CHANGES IN R2SWF VERSION 0.2-1
+
+BUG FIXES
+
     o fix compilation errors in Windows
 
 
