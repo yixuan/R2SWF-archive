@@ -37,7 +37,8 @@
  * Windows/Visual Studio) there is no effect; the OS specific tests below are
  * still required (as of 2011-05-02.)
  */
-#define _POSIX_SOURCE 1 /* Just the POSIX 1003.1 and C89 APIs */
+/* #define _POSIX_SOURCE 1 */ /* Just the POSIX 1003.1 and C89 APIs */
+/* Commented by Yixuan Qiu, thanks Prof. Ripley */
 
 /* This is required for the definition of abort(), used as a last ditch
  * error handler when all else fails.

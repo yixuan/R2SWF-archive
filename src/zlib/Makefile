@@ -12,7 +12,7 @@ RM = rm -f
 
 
 OBJS = adler32.o compress.o crc32.o deflate.o gzclose.o gzlib.o gzread.o \
-       gzwrite.o infback.o inffast.o inflate.o inftrees.o trees.o uncompr.o zutil.o
+  gzwrite.o infback.o inffast.o inflate.o inftrees.o trees.o uncompr.o zutil.o
 
 
 all: $(STATICLIB)
