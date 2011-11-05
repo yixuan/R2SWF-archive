@@ -1,0 +1,3 @@
+*.c -crlf
+*.cpp -crlf
+*.h -crlf
