@@ -7,7 +7,8 @@
 #include <Rinternals.h>
 
 
-SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
+SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName,
+		       SEXP bgColor, SEXP interval)
 {
     SWFMovie m = newSWFMovieWithVersion(8);
     int nFiles = LENGTH(fileNames);
@@ -18,7 +19,10 @@ SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName, SEXP interval)
 	const char *filename;
 	SWFMovieBlockType ublock;
 
-	SWFMovie_setBackground(m, 255, 255, 255);
+    SWFMovie_setBackground(m,
+			               INTEGER(bgColor)[0],
+						   INTEGER(bgColor)[1],
+						   INTEGER(bgColor)[2]);
 	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
 
     for(i = 0; i < nFiles; i++)
