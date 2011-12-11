@@ -165,7 +165,8 @@ void SWFShape_drawFromR(SWFShape s, SEXP data, SEXP xy)
     rsvg_bpath_def_free(bpd);
 }
 
-SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
+SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size,
+		     SEXP bgColor, SEXP interval)
 {
     SWFMovie mainMovie = newSWFMovieWithVersion(8);
 	SWFMovieClip mcFrame = NULL;
@@ -182,7 +183,10 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 	SEXP pathsList, path, style, data, xyOffset;
 
     SWFMovie_setDimension(mainMovie, (float) REAL(size)[2], (float) REAL(size)[3]);
-    SWFMovie_setBackground(mainMovie, 255, 255, 255);
+    SWFMovie_setBackground(mainMovie,
+			               INTEGER(bgColor)[0],
+						   INTEGER(bgColor)[1],
+						   INTEGER(bgColor)[2]);
 	SWFMovie_setRate(mainMovie, (float) 1.0 / REAL(interval)[0]);
 	SWFMovie_setNumberOfFrames(mainMovie, nFiles);
 
