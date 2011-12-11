@@ -130,6 +130,7 @@ parseSVG = function(file.name)
 ##'
 ##' @param input the file names of the SVG files to be converted.
 ##' @param output the name of the output SWF file.
+##' @param bgColor background color of the output SWF file.
 ##' @param interval the time interval (in seconds) between animation frames.
 ##' @return The path of the generated SWF file if successful.
 ##' @note Currently there is no function in R that could auto-generate
