@@ -1,9 +1,18 @@
+# Currently this function could only parse svg file created by
+# CairoSVG() in Cairo package
 parseSVG = function(file.name)
 {
+	# Use XML package
     svgFile = xmlParse(file.name);
+	# Don't forget the name space!
     newXMLNamespace(xmlRoot(svgFile), "http://www.w3.org/2000/svg", "svg");
-    pathRoot = getNodeSet(svgFile, "/svg:svg/svg:g")[[1]];
+	# Find the first <g> child of <svg>
+    pathRoot = getNodeSet(svgFile, "/svg:svg/svg:g");
+	if(!length(pathRoot)) stop(sprintf("Failed in parsing file '%s'",
+									   file.name));
+	pathRoot = pathRoot[[1]];
     
+	# Default style for a <path> node
     defaultStyle = c("stroke" = "none",
                     "stroke-width" = "1",
                     "stroke-linecap" = "butt",
@@ -14,7 +23,7 @@ parseSVG = function(file.name)
                     "fill-rule" = "nonzero",
                     "fill-opacity" = "1");
     
-    # Handle path style in named vector
+    # Handle <path> style in named vector
     parseStyle = function(style)
     {
         if(is.null(style)) return(NULL);
@@ -24,7 +33,7 @@ parseSVG = function(file.name)
         names(result) = sapply(val, function(x) x[1]);
         return(result);
     }
-    # Update the attributes in old node that also appear in new node
+    # Update the attributes in "old" style with the values in "new"
     # "old" must contain "new"
     updateStyle = function(old, new)
     {
@@ -33,7 +42,7 @@ parseSVG = function(file.name)
         result[names(new)] = new;
         return(result);
     }
-    # Combine the style with those of parent nodes
+    # Iteratively update the style from parent nodes
     updateStyleUpward = function(node)
     {
         style = xmlAttrs(node)["style"];
@@ -52,7 +61,14 @@ parseSVG = function(file.name)
         }
         return(style);
     }
-    # Parse nodes into structured lists
+    # Parse <path> and <use> nodes into structured lists
+	#
+	# <path style="" d="">   =====>   style=..., d=..., x=0, y=0
+	#
+	# <use xlink:href="#glyph0-0" x="63.046875" y="385.921875"/>
+	# =====>
+	# style=..., d=..., x=63.046875, y=385.921875
+	#
     parseNode = function(node)
     {
         if(xmlName(node) == "use")
@@ -69,13 +85,24 @@ parseSVG = function(file.name)
             style = updateStyleUpward(node);
             d = xmlAttrs(node)["d"];
             x = y = 0;
-        } else stop("Wrong node!");
+        } else stop("Unknown child node of '/svg/g'");
         xy = as.numeric(c(x, y));
         names(d) = NULL;
         names(xy) = NULL;
         return(list(style = style, d = d, xy = xy));
     }
     # Flatten nodes
+	# <g>
+	#   <use />
+	#   <use />
+	#   <use />
+	# </g>
+	#
+	# =====>
+	#
+	# <use />
+	# <use />
+	# <use />
     expandNode = function(node)
     {
         children = xmlChildren(node);
@@ -91,7 +118,7 @@ parseSVG = function(file.name)
 
 ##' Convert a sequence of SVG files to SWF file
 ##'
-##' Given the file names of a sequence of SVG file, this function could
+##' Given the file names of a sequence of SVG files, this function could
 ##' convert them into a Flash file (.swf).
 ##'
 ##' This function uses the XML package in R and a subset of librsvg
