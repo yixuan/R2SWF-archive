@@ -22,7 +22,7 @@ OBJS =  png$(O) pngerror$(O) pngget$(O) pngmem$(O) pngpread$(O) \
 all: libpng$(A)
 
 .c.o:
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -c $< -o $@
+	$(CC) $(CFLAGS) -I$(ZLIBINC) $(CPPFLAGS) -c $< -o $@
 
 libpng$(A): $(OBJS)
 	@$(RM) $@

@@ -18,7 +18,7 @@ OBJS = adler32.o compress.o crc32.o deflate.o gzclose.o gzlib.o gzread.o \
 all: $(STATICLIB)
 
 .c.o:
-	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(STATICLIB): $(OBJS)
 	@$(RM) $@

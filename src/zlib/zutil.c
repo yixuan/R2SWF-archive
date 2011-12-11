@@ -6,6 +6,9 @@
 /* @(#) $Id$ */
 
 #include "zutil.h"
+/* Added by Yixuan Qiu */
+/* Use error handler in R */
+#include <R_ext/Error.h>
 
 #ifndef NO_DUMMY_DECL
 struct internal_state      {int dummy;}; /* for buggy compilers */
@@ -122,8 +125,11 @@ int ZLIB_INTERNAL z_verbose = verbose;
 void ZLIB_INTERNAL z_error (m)
     char *m;
 {
+    /* Commented by Yixuan Qiu
     fprintf(stderr, "%s\n", m);
     exit(1);
+    */
+    Rf_error(m);
 }
 #endif
 

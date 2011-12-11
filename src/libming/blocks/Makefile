@@ -29,5 +29,5 @@ OBJS = binary.o bitmap.o block.o \
 all: $(OBJS)
 
 .c.o:
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -I.. -c $< -o $@
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) $(CPPFLAGS) -I. -I.. -c $< -o $@
 

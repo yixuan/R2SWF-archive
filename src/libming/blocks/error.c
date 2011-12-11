@@ -22,14 +22,18 @@
 #include <stdio.h>
 #include <stdlib.h> /* for exit() */
 #include <stdarg.h>
+/* Added by Yixuan Qiu */
+/* Use error handler in R */
+#include <R_ext/Error.h>
+
 #include "error.h"
 #include "libming.h"
 
-
+/* Commented by Yixuan Qiu
 void
 warn_default(const char *msg, ...)
 {
-	va_list args;
+  va_list args;
 
 	va_start(args, msg);
 	vfprintf(stderr, msg, args);
@@ -47,10 +51,14 @@ error_default(const char *msg, ...)
 	va_end(args);
 	exit(EXIT_FAILURE);
 }
+*/
 
-
-SWFMsgFunc _SWF_warn = warn_default; /* NULL; */
+/* Commented by Yixuan Qiu
+SWFMsgFunc _SWF_warn = warn_default;
 SWFMsgFunc _SWF_error = error_default;
+*/
+SWFMsgFunc _SWF_warn = Rf_warning;
+SWFMsgFunc _SWF_error = Rf_error;
 
 SWFMsgFunc
 setSWFWarnFunction(SWFMsgFunc warnfunc)

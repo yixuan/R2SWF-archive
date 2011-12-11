@@ -44,7 +44,7 @@ OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
 all: libming$(A)
 
 .c.o:
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) -I. -c $< -o $@
+	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) $(CPPFLAGS) -I. -c $< -o $@
 
 
 libming$(A): blocks $(OBJS)
