@@ -31,7 +31,6 @@
 
 #include "libming.h"
 
-
 int SWFFilter_testBlockType(int type)
 {
 	switch(type)

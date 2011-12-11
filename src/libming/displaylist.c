@@ -28,6 +28,8 @@
 #include "position.h"
 #include "blocks/soundstream.h"
 #include "blocks/outputblock.h"
+/* Commented by Yixuan Qiu */
+/* #include "blocks/button.h" */
 #include "blocks/videostream.h"
 #include "blocks/blocktypes.h"
 #include "blocks/filter.h"

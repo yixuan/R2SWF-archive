@@ -44,8 +44,8 @@ extern "C" {
 
 #include <stdio.h>
 
-#define MING_VERSION       0.4.3
-#define MING_VERSION_TEXT  "0.4.3"
+#define MING_VERSION       0.4.4
+#define MING_VERSION_TEXT  "0.4.4"
 
 /***** Type definitions - avoid cyclic dependencies ****/
 
@@ -999,7 +999,7 @@ SWFSoundInstance SWFMovieClip_startSound(SWFMovieClip clip, SWFSound sound);
 void SWFMovieClip_stopSound(SWFMovieClip clip, SWFSound sound);
 void SWFMovieClip_setScalingGrid(SWFMovieClip clip, int x, int y, int w, int h);
 void SWFMovieClip_removeScalingGrid(SWFMovieClip clip);
-/* Yixuan */
+/* Commented by Yixuan Qiu*/
 /*
 void SWFMovieClip_addInitAction(SWFMovieClip, SWFAction);
 */

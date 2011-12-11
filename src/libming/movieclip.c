@@ -28,6 +28,8 @@
 #include "blocks/sprite.h"
 #include "blocks/shape.h"
 #include "blocks/morph.h"
+/* Commented by Yixuan Qiu */
+/* #include "blocks/button.h" */
 #include "blocks/text.h"
 #include "blocks/scalinggrid.h"
 #include "libming.h"
@@ -285,7 +287,7 @@ SWFMovieClip_removeScalingGrid(SWFMovieClip clip)
 void
 SWFMovieClip_addInitAction(SWFMovieClip clip, SWFAction action)
 {
-	/* Yixuan */
+	/* Commented by Yixuan Qiu */
 	/*
 	if(clip->sprite.initAction)
 		destroySWFInitAction(clip->sprite.initAction);

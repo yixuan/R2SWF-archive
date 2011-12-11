@@ -34,6 +34,8 @@
 #include "matrix.h"
 #include "cxform.h"
 #include "filter.h"
+/* Commented by Yixuan Qiu */
+/* #include "action.h" */
 
 #include "libming.h"
 
@@ -77,7 +79,7 @@ struct SWFPlaceObject2Block_s
 };
 
 
-/* Yixuan */
+/* Commented by Yixuan Qiu */
 /* static void writeActions(SWFPlaceObject2Block place)
 {
 	int i;
@@ -181,7 +183,7 @@ completeSWFPlaceObject2Block(SWFBlock block)
 		SWFOutput_writeUInt8(out, place->blendMode);
 
 	place->out = out;
-	/* Yixuan */
+	/* Commented by Yixuan Qiu */
 	/*
 	writeActions(place);
 	*/

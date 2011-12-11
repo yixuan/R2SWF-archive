@@ -972,6 +972,7 @@ static void definemorphshape(TAG tp, int lev)
 	/* loff = readint4((BITS) tp); */
 	/* endp = tp->datptr + loff; */
 	/* Commented by Yixuan Qiu */
+  readint4((BITS) tp);
 
 	fcnt = tp->readc(tp);
 	if(fcnt == 0xff)

@@ -32,6 +32,8 @@
 #include "ming.h"
 #include "character.h"
 #include "scalinggrid.h"
+/* Commented by Yixuan Qiu */
+/* #include "action.h" */
 
 /* movie clip extends sprite, so we need a public definition */
 
