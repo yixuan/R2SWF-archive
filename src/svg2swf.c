@@ -50,8 +50,8 @@ void SWFShape_setFillStyle(SWFShape s, FillStyle *ty)
 	destroySWFFill(f);
 }
 
-void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
-		                       FillStyle *fstyle)
+void SWFShape_setStyleFromR(SWFShape s, SEXP style, StrokeStyle *sstyle,
+		                    FillStyle *fstyle)
 {
     const char *stroke_width = CHAR(STRING_ELT(style, STYIND_STROKE_WIDTH));
     double lwd = atof(stroke_width);
@@ -131,7 +131,7 @@ void SWFShape_setStyleFromData(SWFShape s, SEXP style, StrokeStyle *sstyle,
     SWFShape_setFillStyle(s, fstyle);
 }
 
-void SWFShape_drawFromData(SWFShape s, SEXP data, SEXP xy)
+void SWFShape_drawFromR(SWFShape s, SEXP data, SEXP xy)
 {
 	const char *d = CHAR(STRING_ELT(data, 0));
 	double transX = REAL(xy)[0];
@@ -165,65 +165,57 @@ void SWFShape_drawFromData(SWFShape s, SEXP data, SEXP xy)
     rsvg_bpath_def_free(bpd);
 }
 
-void SWFShape_drawBlankRect(SWFShape s, double x1, double y1,
-		                    double x2, double y2)
-{
-	FillStyle fillStyle = {255, 255, 255, 255};
-	SWFShape_setLine(s, 1, 0, 0, 0, 0);	
-	SWFShape_setFillStyle(s, &fillStyle);
-    SWFShape_movePenTo(s, x1, y1);
-    SWFShape_drawLineTo(s, x1, y2);
-    SWFShape_drawLineTo(s, x2, y2);
-	SWFShape_drawLineTo(s, x2, y1);
-	SWFShape_drawLineTo(s, x1, y1);
-}
-
 SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size, SEXP interval)
 {
-    SWFMovie m = newSWFMovieWithVersion(8);
+    SWFMovie mainMovie = newSWFMovieWithVersion(8);
+	SWFMovieClip mcFrame = NULL;
+	SWFShape shapeInMcFrame = NULL;
+	SWFDisplayItem dispItem = NULL;
+	SWFMovieBlockType ublock;
+
 	StrokeStyle strokeStyle;
 	FillStyle fillStyle;
 
 	int nFiles = LENGTH(filesData);
     int i, j;
 	int pathsListLen;
-	SEXP pathsList, path, style, data, xy;
-	SWFShape s;
-	SWFMovieBlockType ublock;
+	SEXP pathsList, path, style, data, xyOffset;
 
-    SWFMovie_setDimension(m, (float) REAL(size)[2], (float) REAL(size)[3]);
-    SWFMovie_setBackground(m, 255, 255, 255);
-	SWFMovie_setRate(m, (float) 1.0 / REAL(interval)[0]);
-	SWFMovie_setNumberOfFrames(m, nFiles);
+    SWFMovie_setDimension(mainMovie, (float) REAL(size)[2], (float) REAL(size)[3]);
+    SWFMovie_setBackground(mainMovie, 255, 255, 255);
+	SWFMovie_setRate(mainMovie, (float) 1.0 / REAL(interval)[0]);
+	SWFMovie_setNumberOfFrames(mainMovie, nFiles);
 
     Ming_setCubicThreshold(1);
  
 	for(i = 0; i < nFiles; i++)
 	{
-		s = newSWFShape();
-        SWFShape_drawBlankRect(s, REAL(size)[0], REAL(size)[1],
-				               REAL(size)[2], REAL(size)[3]);
-		ublock.shape = s;
-		SWFMovie_add_internal(m, ublock);
-
 		pathsList = VECTOR_ELT(filesData, i);
 		pathsListLen = LENGTH(pathsList);
+
+		mcFrame = newSWFMovieClip();
+		SWFMovieClip_setNumberOfFrames(mcFrame, 1);
+		
 		for(j = 0; j < pathsListLen; j++)
 		{
-            s = newSWFShape();
 		    path = VECTOR_ELT(pathsList, j);
     		style = VECTOR_ELT(path, 0);
 	        data = VECTOR_ELT(path, 1);
-	        xy = VECTOR_ELT(path, 2);
-    		SWFShape_setStyleFromData(s, style, &strokeStyle, &fillStyle);
-	    	SWFShape_drawFromData(s, data, xy);
-		    ublock.shape = s;
-		    SWFMovie_add_internal(m, ublock);
+	        xyOffset = VECTOR_ELT(path, 2);
+
+			shapeInMcFrame = newSWFShape();
+    		SWFShape_setStyleFromR(shapeInMcFrame, style, &strokeStyle, &fillStyle);
+	    	SWFShape_drawFromR(shapeInMcFrame, data, xyOffset);
+		    SWFMovieClip_add(mcFrame, (SWFBlock) shapeInMcFrame);
 		}
-		SWFMovie_nextFrame(m);
+		SWFMovieClip_nextFrame(mcFrame);
+		if(dispItem) SWFMovie_remove(mainMovie, dispItem);
+		ublock.mc = mcFrame;
+		dispItem = SWFMovie_add_internal(mainMovie, ublock);
+		SWFMovie_nextFrame(mainMovie);
 	}
-    SWFMovie_save(m, CHAR(STRING_ELT(outName, 0)));
-	destroySWFMovie(m);
+    SWFMovie_save(mainMovie, CHAR(STRING_ELT(outName, 0)));
+	destroySWFMovie(mainMovie);
 
     return R_NilValue;
 }
