@@ -2,25 +2,25 @@
 \alias{svg2swf}
 \title{Convert a sequence of SVG files to SWF file}
 \usage{
-svg2swf(filenames, outdir = getwd(), output = "movie.swf", 
+svg2swf(input, output = "./movie.swf", bgColor = "white", 
     interval = 1)
 }
 \arguments{
-  \item{filenames}{the file names of the SVG files to be
+  \item{input}{the file names of the SVG files to be
   converted.}
 
-  \item{outdir}{the output directory}
+  \item{output}{the name of the output SWF file.}
 
-  \item{output}{the name of the output swf file.}
+  \item{bgColor}{background color of the output SWF file.}
 
-  \item{interval}{the time interval between animation
-  frames.}
+  \item{interval}{the time interval (in seconds) between
+  animation frames.}
 }
 \value{
-  The path of the generated swf file if successful.
+  The path of the generated SWF file if successful.
 }
 \description{
-  Given the file names of a sequence of SVG file, this
+  Given the file names of a sequence of SVG files, this
   function could convert them into a Flash file (.swf).
 }
 \details{
@@ -35,20 +35,22 @@ svg2swf(filenames, outdir = getwd(), output = "movie.swf",
 }
 \note{
   Currently there is no function in R that could
-  auto-generate a sequence of SVG file, so you may create
-  the SVG file once at a time. See the example.
+  auto-generate a sequence of SVG files, so you may create
+  the them once at a time. See the example.
 }
 \examples{
 \dontrun{
 if (require("Cairo")) {
+    olddir = setwd(tempdir())
     filenames = sprintf("Rplot\%03d.svg", 1:9)
     for (fn in filenames) {
         CairoSVG(fn)
         plot(runif(20), ylim = c(0, 1))
         dev.off()
     }
-    output = svg2swf(filenames)
+    output = svg2swf(filenames, bgColor = "steelblue")
     swf2html(output)
+    setwd(olddir)
 }
 }
 }

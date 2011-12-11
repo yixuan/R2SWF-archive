@@ -1,20 +1,20 @@
 \name{image2swf}
 \alias{image2swf}
-\title{Convert a sequence of images to SWF file}
+\title{Convert a sequence of images to a SWF file}
 \usage{
-image2swf(filenames, outdir = getwd(), output = "movie.swf", 
+image2swf(input, output = "./movie.swf", bgColor = "white", 
     interval = 1)
 }
 \arguments{
-  \item{filenames}{the file names of the images to be
+  \item{input}{the file names of the images to be
   converted.}
 
-  \item{outdir}{the output directory}
+  \item{output}{the name of the output SWF file.}
 
-  \item{output}{the name of the output swf file.}
+  \item{bgColor}{background color of the output SWF file.}
 
-  \item{interval}{the time interval between animation
-  frames.}
+  \item{interval}{the time interval (in seconds) between
+  animation frames.}
 }
 \value{
   The path of the generated swf file if successful, or NULL
@@ -22,7 +22,7 @@ image2swf(filenames, outdir = getwd(), output = "movie.swf",
 }
 \description{
   Given the file names of a sequence of images, this
-  function can convert them to a Flash file (.swf).
+  function can convert them into a Flash file (.swf).
   Supported input formats are jpg/jpeg and png. The two
   formats are allowed to appear in the same sequence.
 }
@@ -34,11 +34,13 @@ image2swf(filenames, outdir = getwd(), output = "movie.swf",
 }
 \examples{
 if (capabilities("png")) {
+    olddir = setwd(tempdir())
     png("Rplot\%03d.png")
     for (i in 1:9) plot(runif(20), ylim = c(0, 1))
     dev.off()
     output = image2swf(sprintf("Rplot\%03d.png", 1:9))
     print(output)
+    setwd(olddir)
 }
 }
 \author{

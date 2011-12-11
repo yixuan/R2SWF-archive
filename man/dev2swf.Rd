@@ -3,8 +3,8 @@
 \title{Convert R graphics to SWF using different graphics devices}
 \usage{
 dev2swf(expr, outdir = tempdir(), output = "movie.swf", 
-    interval = 1, dev = "png", file.ext = "png", img.name = "Rplot", 
-    ...)
+    bgColor = "white", interval = 1, dev = "png", file.ext = "png", 
+    img.name = "Rplot", ...)
 }
 \arguments{
   \item{expr}{an expression to generate a sequence of
