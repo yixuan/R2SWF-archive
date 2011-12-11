@@ -1,18 +1,35 @@
+		  CHANGES IN R2SWF VERSION 0.3-0
+
+NEW FEATURES
+
+    o Allow users to set the background color of the output SWF file
+
+    o Re-design the arguments list of image2swf() and svg2swf()
+      for ease of use
+
+BUG FIXES
+
+    o (Internal) Use a more appropriate way to insert frames in a SWF file
+
+
+
+
+
+		  CHANGES IN R2SWF VERSION 0.2-2
+
+BUG FIXES
+
+    o Fix Makefile errors
+
+
+
+
+
 		  CHANGES IN R2SWF VERSION 0.2-1
 
 BUG FIXES
 
-    o fix Makefile errors
-
-
-
-
-
-		  CHANGES IN R2SWF VERSION 0.2-1
-
-BUG FIXES
-
-    o fix compilation errors in Windows
+    o Fix compilation errors in Windows
 
 
 
