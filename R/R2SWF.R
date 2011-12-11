@@ -9,10 +9,10 @@
 ##' implement the conversion. If you want to create a Flash file
 ##' consisting of vector graphics, use \code{\link{svg2swf}()} instead.
 ##'
-##' @param input the file names of the images to be converted.
-##' @param output the name of the output SWF file.
-##' @param bgColor background color of the output SWF file.
-##' @param interval the time interval (in seconds) between animation frames.
+##' @param input the file names of the images to be converted
+##' @param output the name of the output SWF file
+##' @param bgColor background color of the output SWF file
+##' @param interval the time interval (in seconds) between animation frames
 ##' @return The path of the generated swf file if successful, or NULL is
 ##' returned.
 ##' @export
@@ -70,6 +70,7 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
 ##' @param expr an expression to generate a sequence of images
 ##' @param outdir the output directory
 ##' @param output the name of the output swf file
+##' @param bgColor background color of the output SWF file
 ##' @param interval the time interval between animation frames
 ##' @param dev the name of the graphics device to use
 ##' (e.g. \code{'png'} or \code{'jpeg'})

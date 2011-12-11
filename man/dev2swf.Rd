@@ -14,6 +14,8 @@ dev2swf(expr, outdir = tempdir(), output = "movie.swf",
 
   \item{output}{the name of the output swf file}
 
+  \item{bgColor}{background color of the output SWF file}
+
   \item{interval}{the time interval between animation
   frames}
 

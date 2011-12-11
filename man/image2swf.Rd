@@ -7,14 +7,14 @@ image2swf(input, output = "./movie.swf", bgColor = "white",
 }
 \arguments{
   \item{input}{the file names of the images to be
-  converted.}
+  converted}
 
-  \item{output}{the name of the output SWF file.}
+  \item{output}{the name of the output SWF file}
 
-  \item{bgColor}{background color of the output SWF file.}
+  \item{bgColor}{background color of the output SWF file}
 
   \item{interval}{the time interval (in seconds) between
-  animation frames.}
+  animation frames}
 }
 \value{
   The path of the generated swf file if successful, or NULL
