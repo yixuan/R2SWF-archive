@@ -6,6 +6,7 @@
 #include <Rdefines.h>
 #include <Rinternals.h>
 
+/* Struct of stroke styles */
 typedef struct {
     unsigned short lwd;
     byte red;
@@ -16,6 +17,7 @@ typedef struct {
     float miterLimit;
 } StrokeStyle;
 
+/* Struct of fill styles */
 typedef struct {
     byte red;
     byte green;
@@ -23,6 +25,8 @@ typedef struct {
     byte alpha;
 } FillStyle;
 
+/* (SEXP style) is a character vector recording style values.
+ * We use "named" indices to extract value. */
 typedef enum {
     STYIND_STROKE = 0,
     STYIND_STROKE_WIDTH,
@@ -35,13 +39,14 @@ typedef enum {
     STYIND_FILL_OPACITY
 } StyleIndex;
 
-
+/* Set the stroke style of a shape object */
 void SWFShape_setStrokeStyle(SWFShape s, StrokeStyle *ty)
 {
     SWFShape_setLine2(s, ty->lwd, ty->red, ty->green, ty->blue,
                       ty->alpha, ty->lineType, ty->miterLimit);
 }
 
+/* Set the fill style of a shape object */
 void SWFShape_setFillStyle(SWFShape s, FillStyle *ty)
 {
     SWFFill f = SWFShape_addSolidFill(s, ty->red, ty->green,
@@ -50,6 +55,8 @@ void SWFShape_setFillStyle(SWFShape s, FillStyle *ty)
     destroySWFFill(f);
 }
 
+/* Set the stroke and fill style of a shape object
+ * from an R character vector representing the style values. */
 void SWFShape_setStyleFromR(SWFShape s, SEXP style, StrokeStyle *sstyle,
                             FillStyle *fstyle)
 {
@@ -81,7 +88,7 @@ void SWFShape_setStyleFromR(SWFShape s, SEXP style, StrokeStyle *sstyle,
         endcap = SWF_LINESTYLE_FLAG_ENDCAP_NONE;
     }
     
-       stroke_linejoin = CHAR(STRING_ELT(style, STYIND_STROKE_LINEJOIN));
+    stroke_linejoin = CHAR(STRING_ELT(style, STYIND_STROKE_LINEJOIN));
     if(!strcmp("round", stroke_linejoin))
     {
         join = SWF_LINESTYLE_JOIN_ROUND;
@@ -131,6 +138,7 @@ void SWFShape_setStyleFromR(SWFShape s, SEXP style, StrokeStyle *sstyle,
     SWFShape_setFillStyle(s, fstyle);
 }
 
+/* Given a string of the path data and a vector of xy, draw a shape */
 void SWFShape_drawFromR(SWFShape s, SEXP data, SEXP xy)
 {
     const char *d = CHAR(STRING_ELT(data, 0));
@@ -164,6 +172,62 @@ void SWFShape_drawFromR(SWFShape s, SEXP data, SEXP xy)
     }
     rsvg_bpath_def_free(bpd);
 }
+
+/*
+===== First file =====
+filesData[[1]]:
+
+===== First path =====
+[[1]]
+[[1]]$style
+           stroke      stroke-width    stroke-linecap   stroke-linejoin 
+  "rgb(0%,0%,0%)"            "0.75"           "round"           "round" 
+stroke-miterlimit    stroke-opacity              fill         fill-rule 
+             "10"               "1"            "none"         "nonzero" 
+     fill-opacity 
+              "1" 
+
+[[1]]$d
+[1] "M 77.101563 72.800781 C 77.101563 76.398438 71.699219 76.398438
+71.699219 72.800781 C 71.699219 69.199219 77.101563 69.199219 77.101563 72.800781 "
+
+[[1]]$xy
+[1] 0 0
+
+===== Second path =====
+[[2]]
+[[2]]$style
+           stroke      stroke-width    stroke-linecap   stroke-linejoin 
+  "rgb(0%,0%,0%)"            "0.75"           "round"           "round" 
+stroke-miterlimit    stroke-opacity              fill         fill-rule 
+             "10"               "1"            "none"         "nonzero" 
+     fill-opacity 
+              "1" 
+
+[[2]]$d
+[1] "M 269.101563 210.894531 C 269.101563 214.496094 263.699219 214.496094
+263.699219 210.894531 C 263.699219 207.296875 269.101563 207.296875 269.101563 210.894531 "
+
+[[2]]$xy
+[1] 0 0
+*/
+
+/*
+mainMovie
+    mcFrame 1
+        shapeInMcFrame 1
+        shapeInMcFrame 2
+        ...
+    mcFrame 2
+        shapeInMcFrame 1
+        shapeInMcFrame 2
+        ...
+    mcFrame 3
+        shapeInMcFrame 1
+        shapeInMcFrame 2
+        ...
+    ...
+*/
 
 SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size,
              SEXP bgColor, SEXP interval)

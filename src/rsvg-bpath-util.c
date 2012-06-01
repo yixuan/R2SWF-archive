@@ -22,6 +22,7 @@
   
    Author: Raph Levien <raph@artofcode.com>
    Modification: Yixuan Qiu <yixuan.qiu@cos.name>
+                 Make this code do not depend on glib
 */
 
 #include "rsvg-bpath-util.h"
@@ -41,6 +42,7 @@ rsvg_bpath_def_new (void)
     RsvgBpathDef *bpd;
 
     /* bpd = g_new (RsvgBpathDef, 1); */
+    /* Commented by Yixuan Qiu */
     bpd = (RsvgBpathDef *) calloc(1, sizeof(RsvgBpathDef));
 
     bpd->n_bpath = 0;
@@ -48,6 +50,7 @@ rsvg_bpath_def_new (void)
     bpd->moveto_idx = -1;
 
     /* bpd->bpath = g_new (RsvgBpath, bpd->n_bpath_max); */
+    /* Commented by Yixuan Qiu */
     bpd->bpath = (RsvgBpath *) calloc(bpd->n_bpath_max, sizeof(RsvgBpath));
 
     return bpd;
@@ -60,6 +63,7 @@ rsvg_bpath_def_new_from (RsvgBpath * path)
     int i;
 
     /* g_return_val_if_fail (path != NULL, NULL); */
+    /* Commented by Yixuan Qiu */
     if(path == NULL) return NULL;
 
     for (i = 0; path[i].code != RSVG_END; i++);
@@ -67,6 +71,7 @@ rsvg_bpath_def_new_from (RsvgBpath * path)
         return rsvg_bpath_def_new ();
 
     /* bpd = g_new (RsvgBpathDef, 1); */
+    /* Commented by Yixuan Qiu */
     bpd = (RsvgBpathDef *) calloc(1, sizeof(RsvgBpathDef));
 
     bpd->n_bpath = i;
@@ -74,6 +79,7 @@ rsvg_bpath_def_new_from (RsvgBpath * path)
     bpd->moveto_idx = -1;
 
     /* bpd->bpath = g_new (RsvgBpath, i); */
+    /* Commented by Yixuan Qiu */
     bpd->bpath = (RsvgBpath *) calloc(i, sizeof(RsvgBpath));
 
     memcpy (bpd->bpath, path, i * sizeof (RsvgBpath));
@@ -84,12 +90,15 @@ void
 rsvg_bpath_def_free (RsvgBpathDef * bpd)
 {
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
 
     /* g_free (bpd->bpath); */
+    /* Commented by Yixuan Qiu */
     if(bpd->bpath != NULL) free(bpd->bpath);
 
     /* g_free (bpd); */
+    /* Commented by Yixuan Qiu */
     if(bpd != NULL) free(bpd);
 }
 
@@ -100,6 +109,7 @@ rsvg_bpath_def_moveto (RsvgBpathDef * bpd, double x, double y)
     int n_bpath;
 
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
 
     /* if the last command was a moveto then change that last moveto instead of
@@ -119,6 +129,7 @@ rsvg_bpath_def_moveto (RsvgBpathDef * bpd, double x, double y)
 
     if (n_bpath == bpd->n_bpath_max)
         /* bpd->bpath = g_realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath)); */
+        /* Commented by Yixuan Qiu */
         bpd->bpath = (RsvgBpath *) realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath));
     
     bpath = bpd->bpath;
@@ -135,15 +146,18 @@ rsvg_bpath_def_lineto (RsvgBpathDef * bpd, double x, double y)
     int n_bpath;
 
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
     
     /* g_return_if_fail (bpd->moveto_idx >= 0); */
+    /* Commented by Yixuan Qiu */
     if(bpd->moveto_idx < 0) return;
 
     n_bpath = bpd->n_bpath++;
 
     if (n_bpath == bpd->n_bpath_max)
         /* bpd->bpath = g_realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath)); */
+        /* Commented by Yixuan Qiu */
         bpd->bpath = (RsvgBpath *) realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath));
     bpath = bpd->bpath;
     bpath[n_bpath].code = RSVG_LINETO;
@@ -159,15 +173,18 @@ rsvg_bpath_def_curveto (RsvgBpathDef * bpd, double x1, double y1, double x2, dou
     int n_bpath;
 
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
     
     /* g_return_if_fail (bpd->moveto_idx >= 0); */
+    /* Commented by Yixuan Qiu */
     if(bpd->moveto_idx < 0) return;
 
     n_bpath = bpd->n_bpath++;
 
     if (n_bpath == bpd->n_bpath_max)
         /* bpd->bpath = g_realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath)); */
+        /* Commented by Yixuan Qiu */
         bpd->bpath = (RsvgBpath *) realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath));
     bpath = bpd->bpath;
     bpath[n_bpath].code = RSVG_CURVETO;
@@ -189,6 +206,7 @@ rsvg_bpath_def_replicate (RsvgBpathDef * bpd, int index)
 
     if (n_bpath == bpd->n_bpath_max)
         /* bpd->bpath = g_realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath)); */
+        /* Commented by Yixuan Qiu */
         bpd->bpath = (RsvgBpath *) realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath));
     bpath = bpd->bpath;
     bpath[n_bpath] = bpath[index];
@@ -200,11 +218,14 @@ rsvg_bpath_def_closepath (RsvgBpathDef * bpd)
     RsvgBpath *bpath;
 
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
     
     /* g_return_if_fail (bpd->moveto_idx >= 0); */
+    /* Commented by Yixuan Qiu */
     if(bpd->moveto_idx < 0) return;
     /* g_return_if_fail (bpd->n_bpath > 0); */
+    /* Commented by Yixuan Qiu */
     if(bpd->n_bpath <= 0) return;
 
     rsvg_bpath_def_replicate (bpd, bpd->moveto_idx);
@@ -220,12 +241,14 @@ rsvg_bpath_def_art_finish (RsvgBpathDef * bpd)
     int n_bpath;
 
     /* g_return_if_fail (bpd != NULL); */
+    /* Commented by Yixuan Qiu */
     if(bpd == NULL) return;
 
     n_bpath = bpd->n_bpath++;
 
     if (n_bpath == bpd->n_bpath_max)
         /* bpd->bpath = g_realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath)); */
+        /* Commented by Yixuan Qiu */
         bpd->bpath = (RsvgBpath *) realloc (bpd->bpath, (bpd->n_bpath_max <<= 1) * sizeof (RsvgBpath));
     bpd->bpath[n_bpath].code = RSVG_END;
 }

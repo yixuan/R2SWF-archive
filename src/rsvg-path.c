@@ -23,6 +23,7 @@
    Author: Raph Levien <raph@artofcode.com>
            F. Wang <fred.wang@free.fr> - fix drawing of arc
    Modification: Yixuan Qiu <yixuan.qiu@cos.name>
+                 Make this code do not depend on glib
 */
 
 /* This is adapted from svg-path in Gill. */
@@ -66,6 +67,7 @@ struct _RSVGParsePathCtx {
     char cmd;                   /* current command (lowercase) */
     int param;                  /* parameter number */
     /* gboolean rel; */
+    /* Commented by Yixuan Qiu */
     int rel;                    /* true if relative coords */
     double params[7];           /* parameters that have been parsed */
 };
@@ -260,6 +262,7 @@ rsvg_parse_path_default_xy (RSVGParsePathCtx * ctx, int n_params)
 
 static void
 /* rsvg_parse_path_do_cmd (RSVGParsePathCtx * ctx, gboolean final) */
+/* Commented by Yixuan Qiu */
 rsvg_parse_path_do_cmd (RSVGParsePathCtx * ctx, int final)
 {
     double x1, y1, x2, y2, x3, y3;
@@ -460,6 +463,7 @@ rsvg_path_end_of_number (RSVGParsePathCtx * ctx, double val, int sign, int exp_s
     }
     ctx->params[ctx->param++] = val;
     /* rsvg_parse_path_do_cmd (ctx, FALSE); */
+    /* Commented by Yixuan Qiu */
     rsvg_parse_path_do_cmd (ctx, 0);
 }
 
@@ -473,6 +477,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
     gboolean in_frac = FALSE;
     gboolean in_exp = FALSE;
     gboolean exp_wait_sign = FALSE; */
+    /* Commented by Yixuan Qiu */
     int in_num = 0;
     int in_frac = 0;
     int in_exp = 0;
@@ -484,6 +489,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
     double frac = 0.0;
 
     /* in_num = FALSE; */
+    /* Commented by Yixuan Qiu */
     in_num = 0;
 
     for (i = 0;; i++) {
@@ -504,6 +510,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
                 /* in_num = TRUE;
                 in_frac = FALSE;
                 in_exp = FALSE; */
+                /* Commented by Yixuan Qiu */
                 in_num = 1;
                 in_frac = 0;
                 in_exp = 0;
@@ -512,6 +519,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
                 exp_sign = 1;
 
                 /* exp_wait_sign = FALSE; */
+                /* Commented by Yixuan Qiu */
                 exp_wait_sign = 0;
 
                 val = c - '0';
@@ -521,6 +529,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
             if (!in_num) {
                 
                 /* in_frac = TRUE; */
+                /* Commented by Yixuan Qiu */
                 in_frac = 1;
 
                 val = 0;
@@ -529,12 +538,14 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
                 rsvg_path_end_of_number(ctx, val, sign, exp_sign, exp);
                 /* in_frac = FALSE;
                 in_exp = FALSE; */
+                /* Commented by Yixuan Qiu */
                 in_frac = 0;
                 in_exp = 0;
 
                 exp = 0;
                 exp_sign = 1;
                 /* exp_wait_sign = FALSE; */
+                /* Commented by Yixuan Qiu */
                 exp_wait_sign = 0;
 
                 val = 0;
@@ -542,15 +553,18 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
             }
             else {
                 /* in_frac = TRUE; */
+                /* Commented by Yixuan Qiu */
                 in_frac = 1;
             }
             /* in_num = TRUE; */
+            /* Commented by Yixuan Qiu */
             in_num = 1;
 
             frac = 1;
         } else if ((c == 'E' || c == 'e') && in_num) {
             /* in_exp = TRUE;
             exp_wait_sign = TRUE; */
+            /* Commented by Yixuan Qiu */
             in_exp = 1;
             exp_wait_sign = 1;
 
@@ -562,6 +576,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
             /* end of number */
             rsvg_path_end_of_number(ctx, val, sign, exp_sign, exp);
             /* in_num = FALSE; */
+            /* Commented by Yixuan Qiu */
             in_num = 0;
         }
 
@@ -573,6 +588,7 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
             /* in_num = TRUE;
             in_frac = FALSE;
             in_exp = FALSE; */
+            /* Commented by Yixuan Qiu */
             in_num = 1;
             in_frac = 0;
             in_exp = 0;
@@ -580,10 +596,12 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
             exp = 0;
             exp_sign = 1;
             /* exp_wait_sign = FALSE; */
+            /* Commented by Yixuan Qiu */
             exp_wait_sign = 0;
         } else if (c == 'z' || c == 'Z') {
             if (ctx->param)
                 /* rsvg_parse_path_do_cmd (ctx, TRUE); */
+                /* Commented by Yixuan Qiu */
                 rsvg_parse_path_do_cmd (ctx, 1);
             rsvg_bpath_def_closepath (ctx->bpath);
 
@@ -592,16 +610,20 @@ rsvg_parse_path_data (RSVGParsePathCtx * ctx, const char *data)
         } else if (c >= 'A' && c <= 'Z' && c != 'E') {
             if (ctx->param)
                 /* rsvg_parse_path_do_cmd (ctx, TRUE); */
+                /* Commented by Yixuan Qiu */
                 rsvg_parse_path_do_cmd (ctx, 1);
             ctx->cmd = c + 'a' - 'A';
             /* ctx->rel = FALSE; */
+            /* Commented by Yixuan Qiu */
             ctx->rel = 0;
         } else if (c >= 'a' && c <= 'z' && c != 'e') {
             if (ctx->param)
                 /* rsvg_parse_path_do_cmd (ctx, TRUE); */
+                /* Commented by Yixuan Qiu */
                 rsvg_parse_path_do_cmd (ctx, 1);
             ctx->cmd = c;
             /* ctx->rel = TRUE; */
+            /* Commented by Yixuan Qiu */
             ctx->rel = 1;
         }
         /* else c _should_ be whitespace or , */
@@ -623,6 +645,7 @@ rsvg_parse_path (const char *path_str)
 
     if (ctx.param)
         /* rsvg_parse_path_do_cmd (&ctx, TRUE); */
+        /* Commented by Yixuan Qiu */
         rsvg_parse_path_do_cmd (&ctx, 1);
 
     return ctx.bpath;
