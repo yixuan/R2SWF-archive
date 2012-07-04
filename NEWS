@@ -4,6 +4,8 @@ NEW FEATURES
 
     o Windows version of R supports svg() since 2.14.0.
       Now svg2swf() also accepts SVG files created by svg().
+    
+    o dev2swf() now supports svg() device
 
 
 
