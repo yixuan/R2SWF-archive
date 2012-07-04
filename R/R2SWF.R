@@ -28,30 +28,30 @@
 ##' }
 ##'
 image2swf <- function(input, output = "./movie.swf", bgColor = "white",
-					  interval = 1)
+                      interval = 1)
 {
     if(!inherits(input, "character")) 
         stop("'input' must be a character vector naming the input images");
-	
-	outDir = dirname(output);
-	outFile = basename(output);
-	bg = col2rgb(bgColor, alpha = FALSE);
-	bg = as.integer(bg);
+    
+    outDir = dirname(output);
+    outFile = basename(output);
+    bg = col2rgb(bgColor, alpha = FALSE);
+    bg = as.integer(bg);
 
-	# The formats of files. 1 for png, 2 for jpg/jpeg, and 0 for others.
-	fmt = rep(0, length(input));
-	fmt[grep("\\.[Pp][Nn][Gg]$", input)] = 1;
+    # The formats of files. 1 for png, 2 for jpg/jpeg, and 0 for others.
+    fmt = rep(0, length(input));
+    fmt[grep("\\.[Pp][Nn][Gg]$", input)] = 1;
     fmt[grep("\\.[Jj][Pp][Ee]?[Gg]$", input)] = 2;
-	
-	oldwd = setwd(outDir);
+    
+    oldwd = setwd(outDir);
     .Call("image2swf", as.character(input), as.integer(fmt),
-	      as.character(output), bg, as.numeric(interval),
-		  PACKAGE = "R2SWF");
-	setwd(oldwd);
+          as.character(output), bg, as.numeric(interval),
+          PACKAGE = "R2SWF");
+    setwd(oldwd);
 
-	output = normalizePath(output);
-	cat("SWF file created at ", output, ".\n", sep = "");
-	invisible(output);
+    output = normalizePath(output);
+    cat("SWF file created at ", output, ".\n", sep = "");
+    invisible(output);
 }
 
 ##' Convert R graphics to SWF using different graphics devices
@@ -91,26 +91,43 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
 ##' }, dev='jpeg', file.ext='jpg', output='movie-jpeg.swf')
 ##' print(output2)
 ##'
+##' if(capabilities("cairo")) {
+##'     output3 = dev2swf({
+##'         for(i in 1:10) plot(runif(20), ylim = c(0, 1))
+##'     }, dev='svg', file.ext='svg', output='movie-svg.swf')
+##'     print(output3)
+##' }
 dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
-					bgColor = "white", interval = 1, dev = "png",
-					file.ext = "png", img.name = "Rplot", ...)
+                    bgColor = "white", interval = 1, dev = "png",
+                    file.ext = "png", img.name = "Rplot", ...)
 {
     if (is.character(dev)) dev = get(dev)
 
-	tmp = sample(LETTERS, 10);
-	tmp = paste(tmp, collapse = "");
+    tmp = sample(LETTERS, 10);
+    tmp = paste(tmp, collapse = "");
     tmpfolder = file.path(tempdir(), tmp);
-	dir.create(tmpfolder);
+    dir.create(tmpfolder);
 
-	olddir = setwd(tmpfolder)
+    olddir = setwd(tmpfolder)
     dev(paste(img.name, "%04d.", file.ext, sep = ""), ...)
     eval(expr)
     dev.off()
 
     files = list.files(pattern = paste(img.name, "[0-9]*\\.", file.ext, '$', sep = ''))
-	files = file.path(tmpfolder, files)
-    output = image2swf(files, file.path(outdir, output), bgColor, interval)
-	setwd(olddir)
+    files = file.path(tmpfolder, files)
+    
+    if (grepl("^[Pp][Nn][Gg]$", file.ext) || grepl("^[Jj][Pp][Ee]?[Gg]$", file.ext))
+    {
+        # png or jpg/jpeg files
+        output = image2swf(files, file.path(outdir, output), bgColor, interval)
+    } else if (grepl("^[Ss][Vv][Gg]$", file.ext)) {
+        # svg files
+        output = svg2swf(files, file.path(outdir, output), bgColor, interval)
+    } else {
+        stop(sprintf("File format '%s' currently not supported.", file.ext))
+    }
+    
+    setwd(olddir)
 
     invisible(output)
 }

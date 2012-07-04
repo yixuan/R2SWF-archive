@@ -2,9 +2,8 @@
 \alias{dev2swf}
 \title{Convert R graphics to SWF using different graphics devices}
 \usage{
-dev2swf(expr, outdir = tempdir(), output = "movie.swf", 
-    bgColor = "white", interval = 1, dev = "png", file.ext = "png", 
-    img.name = "Rplot", ...)
+dev2swf(expr, outdir = tempdir(), output = "movie.swf", bgColor = "white", 
+    interval = 1, dev = "png", file.ext = "png", img.name = "Rplot", ...)
 }
 \arguments{
   \item{expr}{an expression to generate a sequence of
@@ -58,6 +57,13 @@ output2 = dev2swf({
     for (i in 1:10) plot(runif(20), ylim = c(0, 1))
 }, dev = "jpeg", file.ext = "jpg", output = "movie-jpeg.swf")
 print(output2)
+
+if (capabilities("cairo")) {
+    output3 = dev2swf({
+        for (i in 1:10) plot(runif(20), ylim = c(0, 1))
+    }, dev = "svg", file.ext = "svg", output = "movie-svg.swf")
+    print(output3)
+}
 }
 \author{
   Yihui Xie <\url{http://yihui.name}>
