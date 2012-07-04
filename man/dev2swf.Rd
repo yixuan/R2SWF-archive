@@ -53,16 +53,11 @@ output1 = dev2swf({
 }, dev = "png", file.ext = "png", output = "movie-png.swf")
 print(output1)
 
-output2 = dev2swf({
-    for (i in 1:10) plot(runif(20), ylim = c(0, 1))
-}, dev = "jpeg", file.ext = "jpg", output = "movie-jpeg.swf")
-print(output2)
-
 if (capabilities("cairo")) {
-    output3 = dev2swf({
+    output2 = dev2swf({
         for (i in 1:10) plot(runif(20), ylim = c(0, 1))
     }, dev = "svg", file.ext = "svg", output = "movie-svg.swf")
-    print(output3)
+    print(output2)
 }
 }
 \author{
