@@ -169,7 +169,7 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
   size = xmlAttrs(xmlRoot(firstFile))["viewBox"];
   size = as.numeric(unlist(strsplit(size, " ")));
 
-  .Call("svg2swf", filesData, as.character(outFile), size,
+  .Call("svg2swf", filesData, as.character(output), size,
         bg, as.numeric(interval), PACKAGE = "R2SWF");
 
   message("SWF file created at ", normalizePath(output));
