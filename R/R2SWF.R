@@ -85,11 +85,7 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
                     bgColor = "white", interval = 1, dev = "png",
                     file.ext = "png", img.name = "Rplot", ...) {
   if (is.character(dev)) dev = get(dev)
-
-  tmp = sample(LETTERS, 10);
-  tmp = paste(tmp, collapse = "");
-  tmpfolder = file.path(tempdir(), tmp);
-  dir.create(tmpfolder);
+  img.name = tempfile(img.name)
 
   dev(paste(img.name, "%04d.", file.ext, sep = ""), ...)
   eval(expr)
