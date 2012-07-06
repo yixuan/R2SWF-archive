@@ -16,7 +16,7 @@
 #'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
 #' }, output = 'test.swf')
 #' swf2html(output)
-swf2html = function(swf.file, output, width = NULL, height = NULL, fragment = FALSE) {
+swf2html = function(swf.file, output, width = 480, height = 480, fragment = FALSE) {
   if (missing(output)) output = sub('\\.swf$', '.html', swf.file)
   size = paste(c(sprintf('width="%s"', width), sprintf('height="%s"', height)), collapse = ' ')
   html = sprintf('<embed %s name="plugin" src="%s" type="application/x-shockwave-flash">',
