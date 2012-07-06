@@ -40,11 +40,10 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
   fmt[grep("\\.[Pp][Nn][Gg]$", input)] = 1;
   fmt[grep("\\.[Jj][Pp][Ee]?[Gg]$", input)] = 2;
 
-  oldwd = setwd(outDir);
+  oldwd = setwd(outDir); on.exit(setwd(oldwd))
   .Call("image2swf", as.character(input), as.integer(fmt),
         as.character(output), bg, as.numeric(interval),
         PACKAGE = "R2SWF");
-  setwd(oldwd);
 
   output = normalizePath(output);
   cat("SWF file created at ", output, ".\n", sep = "");
