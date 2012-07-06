@@ -42,8 +42,8 @@ if (capabilities("cairo")) {
     x = rnorm(5)
     y = rnorm(5)
     for (i in 1:100) {
-        plot(x <- x + 0.1 * rnorm(5), y <- y + 0.1 * rnorm(5), xlim = c(-3, 
-            3), ylim = c(-3, 3), col = "steelblue", pch = 16, cex = 2, xlab = "x", 
+        plot(x <- x + 0.1 * rnorm(5), y <- y + 0.1 * rnorm(5), xlim = c(-3, 3), 
+            ylim = c(-3, 3), col = "steelblue", pch = 16, cex = 2, xlab = "x", 
             ylab = "y")
     }
     dev.off()
