@@ -1,6 +1,6 @@
 \name{image2swf}
 \alias{image2swf}
-\title{Convert a sequence of images to a SWF file}
+\title{Convert bitmap images to SWF}
 \usage{
 image2swf(input, output = "./movie.swf", bgColor = "white", interval = 1)
 }
