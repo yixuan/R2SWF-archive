@@ -177,6 +177,6 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
   setwd(oldwd);
 
   output = normalizePath(output);
-  cat("SWF file created at ", output, ".\n", sep = "");
+  message("SWF file created at ", output);
   invisible(output);
 }
