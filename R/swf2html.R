@@ -2,10 +2,13 @@
 #'
 #' This function will generate an HTML file to display the Flash animation.
 #' @param swf.file the path of the SWF file
-#' @param output the output path of the HTML file
+#' @param output the output path of the HTML file; by default \file{foo.swf}
+#'   produces \code{foo.html} if not specified (set \code{FALSE} so that no file
+#'   will be written)
 #' @param width width of the Flash
 #' @param height height of the Flash
-#' @return The output path of the HTML file.
+#' @param fragment whether to produce an HTML fragment only
+#' @return The HTML code as a character string.
 #' @export
 #' @author Yihui Xie <\url{http://yihui.name}>
 #' @examples
