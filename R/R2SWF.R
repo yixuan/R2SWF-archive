@@ -1,4 +1,4 @@
-#' Convert a sequence of images to a SWF file
+#' Convert bitmap images to SWF
 #'
 #' Given the file names of a sequence of images, this function can convert them
 #' into a Flash file (.swf). Supported input formats are jpg/jpeg and png. The
