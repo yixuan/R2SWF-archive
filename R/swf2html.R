@@ -15,26 +15,23 @@
 #' swf2html(output)
 swf2html = function(swf.file, output, width = NULL, height = NULL, fragment = FALSE) {
     if (missing(output)) output = sub('\\.swf$', '.html', swf.file)
-    cat(sprintf('
+    size = paste(c(sprintf('width="%s"', width), sprintf('height="%s"', height)), collapse = ' ')
+    html = sprintf('<embed %s name="plugin" src="%s" type="application/x-shockwave-flash">',
+                   size, swf.file)
+    if (!fragment) html = paste( '
 <html>
 <head>
-  <title>%s</title>
+  <title>Flash animations made by the R2SWF package</title>
 </head>
 <body>
 <div align="center">
-', paste('Flash Animation by R2SWF', packageVersion('R2SWF'))), file = output)
-    cat(sprintf('<object style="width: %spx; height: %spx;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="%s" height="%s" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0">
-  <param name="src" value="file:///%s" />
-  <embed style="width: %spx; height: %spx;" type="application/x-shockwave-flash" width="%s" height="%s" src="file:///%s"></embed>
-</object>',
-            width, height, width, height, swf.file,
-            width, height, width, height, swf.file),
-        file = output, append = TRUE)
-    cat('
+', html, '
 </div>
 </body>
 </html>
-', file = output, append = TRUE)
-    if (interactive()) try(browseURL(output), silent = TRUE)
+')
+    if (!identical(output, FALSE)) cat(html, file = output)
+    if (interactive() && is.character(output) && file.exists(output))
+      try(browseURL(output), silent = TRUE)
     invisible(output)
 }
