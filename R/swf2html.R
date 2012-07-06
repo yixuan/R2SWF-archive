@@ -1,19 +1,18 @@
-##' Embed the SWF file into an HTML page
-##' 
-##' This function will generate an HTML file to display the Flash animation.
-##'
-##' @param swf.file the path of the SWF file
-##' @param output the output path of the HTML file
-##' @param width width of the Flash
-##' @param height height of the Flash
-##' @return The output path of the HTML file.
-##' @export 
-##' @author Yihui Xie <\url{http://yihui.name}>
-##' @examples
-##' output = dev2swf({
-##'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
-##' }, output = 'test.swf')
-##' swf2html(output)
+#' Embed the SWF file into an HTML page
+#'
+#' This function will generate an HTML file to display the Flash animation.
+#' @param swf.file the path of the SWF file
+#' @param output the output path of the HTML file
+#' @param width width of the Flash
+#' @param height height of the Flash
+#' @return The output path of the HTML file.
+#' @export
+#' @author Yihui Xie <\url{http://yihui.name}>
+#' @examples
+#' output = dev2swf({
+#'   for (i in 1:10) plot(runif(20), ylim = c(0, 1))
+#' }, output = 'test.swf')
+#' swf2html(output)
 swf2html = function(swf.file, output, width = 480, height = 480) {
     if (missing(output)) output = paste(sub('\\.swf$', '', swf.file), '.html', sep = '')
     cat(sprintf('
