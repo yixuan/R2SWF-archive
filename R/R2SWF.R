@@ -101,20 +101,16 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
   dev.off()
 
   files = list.files(pattern = paste(img.name, "[0-9]*\\.", file.ext, '$', sep = ''))
-  files = file.path(tmpfolder, files)
-
-  if (grepl("^[Pp][Nn][Gg]$", file.ext) || grepl("^[Jj][Pp][Ee]?[Gg]$", file.ext))
-  {
-    # png or jpg/jpeg files
-    output = image2swf(files, file.path(outdir, output), bgColor, interval)
-  } else if (grepl("^[Ss][Vv][Gg]$", file.ext)) {
-    # svg files
-    output = svg2swf(files, file.path(outdir, output), bgColor, interval)
-  } else {
-    stop(sprintf("File format '%s' currently not supported.", file.ext))
-  }
-
-  setwd(olddir)
+  file2swf(files, file.path(outdir, output))
 
   invisible(output)
+}
+file2swf = function(files, output, bgColor = 'white', interval = 1) {
+  (if (all(grepl('\\.(png|jpeg|jpg)$', files, ignore.case = TRUE))) {
+    image2swf
+  } else if (all(grepl('\\.svg$', files, ignore.case = TRUE))) {
+    svg2swf
+  } else {
+    stop("Image format currently not supported by R2SWF")
+  })(files, output, bgColor, interval)
 }
