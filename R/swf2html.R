@@ -33,5 +33,5 @@ swf2html = function(swf.file, output, width = NULL, height = NULL, fragment = FA
     if (!identical(output, FALSE)) cat(html, file = output)
     if (interactive() && is.character(output) && file.exists(output))
       try(browseURL(output), silent = TRUE)
-    invisible(output)
+    invisible(html)
 }
