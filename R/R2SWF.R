@@ -91,7 +91,9 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
   eval(expr)
   dev.off()
 
-  files = list.files(pattern = paste(img.name, "[0-9]*\\.", file.ext, '$', sep = ''))
+  files = list.files(dirname(img.name),
+                     paste(basename(img.name), "[0-9]+\\.", file.ext, '$', sep = ''),
+                     full.names = TRUE)
   file2swf(files, file.path(outdir, output))
 
   invisible(output)
