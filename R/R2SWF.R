@@ -30,8 +30,6 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
   if(!inherits(input, "character"))
     stop("'input' must be a character vector naming the input images");
 
-  outDir = dirname(output);
-  outFile = basename(output);
   bg = col2rgb(bgColor, alpha = FALSE);
   bg = as.integer(bg);
 
@@ -40,7 +38,6 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
   fmt[grep("\\.[Pp][Nn][Gg]$", input)] = 1L;
   fmt[grep("\\.[Jj][Pp][Ee]?[Gg]$", input)] = 2L;
 
-  oldwd = setwd(outDir); on.exit(setwd(oldwd))
   .Call("image2swf", as.character(input), fmt, as.character(output), bg,
         as.numeric(interval), PACKAGE = "R2SWF");
 
@@ -95,7 +92,6 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
   tmpfolder = file.path(tempdir(), tmp);
   dir.create(tmpfolder);
 
-  olddir = setwd(tmpfolder); on.exit(setwd(olddir))
   dev(paste(img.name, "%04d.", file.ext, sep = ""), ...)
   eval(expr)
   dev.off()

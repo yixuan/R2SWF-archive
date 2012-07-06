@@ -161,8 +161,6 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
   if(!inherits(input, "character"))
     stop("'input' must be a character vector naming the input SVG files");
 
-  outDir = dirname(output);
-  outFile = basename(output);
   bg = col2rgb(bgColor, alpha = FALSE);
   bg = as.integer(bg);
 
@@ -171,7 +169,6 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
   size = xmlAttrs(xmlRoot(firstFile))["viewBox"];
   size = as.numeric(unlist(strsplit(size, " ")));
 
-  oldwd = setwd(outDir); on.exit(setwd(oldwd))
   .Call("svg2swf", filesData, as.character(outFile), size,
         bg, as.numeric(interval), PACKAGE = "R2SWF");
 
