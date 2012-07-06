@@ -14,7 +14,7 @@
 #' }, output = 'test.swf')
 #' swf2html(output)
 swf2html = function(swf.file, output, width = NULL, height = NULL, fragment = FALSE) {
-    if (missing(output)) output = paste(sub('\\.swf$', '', swf.file), '.html', sep = '')
+    if (missing(output)) output = sub('\\.swf$', '.html', swf.file)
     cat(sprintf('
 <html>
 <head>
