@@ -1,3 +1,16 @@
+		  CHANGES IN R2SWF VERSION 0.4
+
+NEW FEATURES
+
+  o a new function file2swf() as a wrapper of image2swf() and
+  svg2swf()
+
+  o swf2html() uses a simple <embed> tag instead of the long ugly old
+  <object> tag to write the Flash file in HTML; it also gained a new
+  argument 'fragment' to decide whether to return an HTML fragment or
+  a complete HTML document
+
+
 		  CHANGES IN R2SWF VERSION 0.3-1
 
 NEW FEATURES
