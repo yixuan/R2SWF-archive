@@ -4,9 +4,8 @@ Title: Convert R Graphics to Flash Animations
 Date: 2012-07-04
 Author: Yixuan Qiu and Yihui Xie
 Maintainer: Yixuan Qiu <yixuan.qiu@cos.name>
-Depends:
-    XML
 Suggests:
+    XML,
     Cairo
 Description: This package uses the Ming library
     (http://www.libming.org/) to create Flash animations.

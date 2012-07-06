@@ -3,6 +3,7 @@
 # required for Windows OS), and CairoSVG() in the Cairo package.
 parseSVG = function(file.name) {
   # Use XML package
+  library(XML)
   svgFile = xmlParse(file.name);
   # Don't forget the name space!
   newXMLNamespace(xmlRoot(svgFile), "http://www.w3.org/2000/svg", "svg");
