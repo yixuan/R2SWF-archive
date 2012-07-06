@@ -105,6 +105,17 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
 
   invisible(output)
 }
+
+#' Convert image files to SWF
+#'
+#' This function converts a sequence of PNG/JPEG/SVG image files to SWF. Based
+#' on the image format, it calls \code{\link{image2swf}} or
+#' \code{\link{svg2swf}}.
+#' @inheritParams dev2swf
+#' @param files a character vector of input filenames
+#' @return The path of the SWF file.
+#' @author Yihui Xie <\url{http://yihui.name}>
+#' @export
 file2swf = function(files, output, bgColor = 'white', interval = 1) {
   (if (all(grepl('\\.(png|jpeg|jpg)$', files, ignore.case = TRUE))) {
     image2swf
