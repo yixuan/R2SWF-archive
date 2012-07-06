@@ -46,7 +46,7 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
         PACKAGE = "R2SWF");
 
   output = normalizePath(output);
-  cat("SWF file created at ", output, ".\n", sep = "");
+  message("SWF file created at ", output);
   invisible(output);
 }
 
