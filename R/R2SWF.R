@@ -95,7 +95,7 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
   tmpfolder = file.path(tempdir(), tmp);
   dir.create(tmpfolder);
 
-  olddir = setwd(tmpfolder)
+  olddir = setwd(tmpfolder); on.exit(setwd(olddir))
   dev(paste(img.name, "%04d.", file.ext, sep = ""), ...)
   eval(expr)
   dev.off()
