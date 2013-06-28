@@ -88,7 +88,7 @@ SEXP image2swf(SEXP fileNames, SEXP format, SEXP outName,
     /* Save movie to file */
     SWFMovie_save(m, CHAR(STRING_ELT(outName, 0)));
     /* Free resources */
-    destroySWFMovie(m);
+    Ming_collectGarbage();
 
     return R_NilValue;
 }
