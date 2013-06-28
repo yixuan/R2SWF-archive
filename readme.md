@@ -14,6 +14,6 @@ To install the package here:
 ## For users: 
 install.packages('devtools')
 library(devtools)
-install_github('R2SWF', 'yihui')
+install_github('R2SWF', 'yixuan')
 ```
 
