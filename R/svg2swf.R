@@ -173,5 +173,5 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
         bg, as.numeric(interval), PACKAGE = "R2SWF");
 
   message("SWF file created at ", normalizePath(output));
-  invisible(output);
+  invisible(normalizePath(output));
 }

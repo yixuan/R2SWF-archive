@@ -42,7 +42,7 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
         as.numeric(interval), PACKAGE = "R2SWF");
 
   message("SWF file created at ", normalizePath(output));
-  invisible(output);
+  invisible(normalizePath(output));
 }
 
 #' Convert R graphics to SWF using different graphics devices
