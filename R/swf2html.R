@@ -20,7 +20,7 @@ swf2html = function(swf.file, output, width = 480, height = 480, fragment = FALS
   if (missing(output)) output = sub('\\.swf$', '.html', swf.file)
   size = paste(c(sprintf('width="%s"', width), sprintf('height="%s"', height)), collapse = ' ')
   html = sprintf('<embed %s name="plugin" src="%s" type="application/x-shockwave-flash">',
-                 size, swf.file)
+                 size, basename(swf.file))
   if (!fragment) html = paste('
 <html>
 <head>
@@ -35,7 +35,8 @@ swf2html = function(swf.file, output, width = 480, height = 480, fragment = FALS
 ')
   if (!identical(output, FALSE)) cat(html, file = output)
   if (is.character(output) && file.exists(output)) {
-    message('output at ', normalizePath(output));
+    message('output at ', normalizePath(output))
+    file.copy(swf.file, file.path(dirname(output), basename(swf.file)))
     if (interactive()) try(browseURL(normalizePath(output)), silent = TRUE)
   }
   invisible(html)
