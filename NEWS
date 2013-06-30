@@ -1,14 +1,34 @@
+		  CHANGES IN R2SWF VERSION 0.4-1
+
+BUG FIXES
+
+    o Update zlib to 1.2.8
+    o Update libpng to 1.6.2
+    o Add freetype 2.5.0
+    o Update libming to 0.4.5
+    o Fix several memory leak problems
+    o Use absolute paths for dev2swf(), swf2html() etc.
+    o HTML file created by swf2html() will have a copy of the SWF file
+      in the same directory
+
+
+
+
+
 		  CHANGES IN R2SWF VERSION 0.4
 
 NEW FEATURES
 
-  o a new function file2swf() as a wrapper of image2swf() and
-  svg2swf()
+    o A new function file2swf() as a wrapper of image2swf() and
+      svg2swf()
 
-  o swf2html() uses a simple <embed> tag instead of the long ugly old
-  <object> tag to write the Flash file in HTML; it also gained a new
-  argument 'fragment' to decide whether to return an HTML fragment or
-  a complete HTML document
+    o swf2html() uses a simple <embed> tag instead of the long ugly old
+      <object> tag to write the Flash file in HTML; it also gained a new
+      argument 'fragment' to decide whether to return an HTML fragment or
+      a complete HTML document
+
+
+
 
 
 		  CHANGES IN R2SWF VERSION 0.3-1
