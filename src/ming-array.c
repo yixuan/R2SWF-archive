@@ -22,7 +22,7 @@ SWFArray newSWFArray(int initialSize)
 
 void SWFArray_append(SWFArray array, SWFObject obj)
 {
-  if(!array) return;
+    if(!array) return;
     if(array->len + 1 > array->alloc_len)
     {
         array->alloc_len *= 2;

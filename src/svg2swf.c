@@ -260,6 +260,8 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size,
     SWFMovie_setNumberOfFrames(mainMovie, nFiles);
 
     Ming_setCubicThreshold(1);
+    
+    resources = newSWFArray(100);
  
     for(i = 0; i < nFiles; i++)
     {
