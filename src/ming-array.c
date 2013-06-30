@@ -1,4 +1,4 @@
-#include "ming_array.h"
+#include "ming-array.h"
 
 SWFArray newSWFArray(int initialSize)
 {
