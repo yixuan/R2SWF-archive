@@ -1,12 +1,12 @@
-PKG_CPPFLAGS = -I./zlib -I./libpng -I./libming -I.
-PKG_LIBS = -L./libming -lming -L./libpng -lpng -L./zlib -lz
+PKG_CPPFLAGS = -I./libming -I.
+PKG_LIBS = -L./libming -lming -L./libpng -lpng -L./freetype -lfreetype -L./zlib -lz
 
 
-.PHONY: all zlib libpng libming clean
+.PHONY: all clean
 
 all: $(SHLIB)
 
-$(SHLIB): zlib/libz.a libpng/libpng.a libming/libming.a
+$(SHLIB): zlib/libz.a libpng/libpng.a freetype/libfreetype.a libming/libming.a
 
 zlib/libz.a:
 	cd zlib && $(MAKE) all CC="$(CC)" AR="$(AR)" CPPFLAGS="$(R_XTRA_CPPFLAGS)" CFLAGS="$(ALL_CFLAGS)"
@@ -14,13 +14,18 @@ zlib/libz.a:
 libpng/libpng.a:
 	cd libpng && $(MAKE) all CC="$(CC)" AR="$(AR)" CPPFLAGS="$(R_XTRA_CPPFLAGS)" CFLAGS="$(ALL_CFLAGS)"
 
+freetype/libfreetype.a:
+	cd freetype && $(MAKE) all CC="$(CC)" AR="$(AR)" CPPFLAGS="$(R_XTRA_CPPFLAGS)" CFLAGS="$(ALL_CFLAGS)"
+
 libming/libming.a:
 	cd libming && $(MAKE) all CC="$(CC)" AR="$(AR)" CPPFLAGS="$(R_XTRA_CPPFLAGS)" CFLAGS="$(ALL_CFLAGS)"
+
 clean:
 	$(RM) *.o
 	$(RM) *.dll
 	$(RM) *.so
 	cd zlib && $(MAKE) clean
 	cd libpng && $(MAKE) clean
+	cd freetype && $(MAKE) clean
 	cd libming && $(MAKE) clean
 
