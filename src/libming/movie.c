@@ -600,13 +600,10 @@ SWFMovie_add_internal(SWFMovie movie /* movie to which the block will be added *
 	/* not nice but has to be done! */
 	if ( SWFBlock_getType(block) == SWF_INITACTION)
 	{
-		/* Commented by Yixuan Qiu */
-		/*
 		SWFInitAction init = (SWFInitAction)block;
 		SWFMovieClip mc = SWFInitAction_getMovieClip(init);
 		if(mc != NULL)
 			SWFMovie_addBlock(movie, (SWFBlock)mc);
-        */
 	}
 
 	if ( SWFBlock_isCharacter(block) )

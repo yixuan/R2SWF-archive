@@ -131,7 +131,8 @@ typedef enum
 } SWFBlocktype;
 
 
-/* static int SWFBlocktype_swfVersion(int type)
+/* Defined but not used -- yixuan
+static int SWFBlocktype_swfVersion(int type)
 {
 	switch(type)
 	{
@@ -213,7 +214,7 @@ typedef enum
 			SWF_warn("unknown tag type %i\n", type);
 			return -1;
 	}
-} */
-/* Commented by Yixuan Qiu */
+}
+*/
 
 #endif /* SWF_BLOCKTYPES_H_INCLUDED */

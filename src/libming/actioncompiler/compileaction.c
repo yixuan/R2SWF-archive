@@ -1,6 +1,6 @@
 /*
     Ming, an SWF output library
-    Copyright (C) 2001  Opaque Industries - http://www.opaque.net/
+    Copyright (C) 2002  Opaque Industries - http://www.opaque.net/
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -17,29 +17,32 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* sound.h
- *
- * $Id$
- * 
- * Notice: This header file contains declarations of functions and types that
- * are just used internally. All library functions and types that are supposed
- * to be publicly accessable are defined in ./src/ming.h.
+#ifndef WIN32
+	#include <unistd.h>
+#endif
+
+#include <time.h>
+#include <stdio.h>
+
+#include <libming.h>
+#include <blocks/output.h>
+#include <blocks/action.h>
+#include <blocks/error.h>
+#include "compile.h"
+#include <actiontypes.h>
+
+
+SWFAction compileSWFActionCode(const char *script)
+{
+	SWF_warnOnce("Please do not use compileSWFActionCode() anymore\n"
+	"Use newSWFAction(script) instead\n");
+	return newSWFAction(script);
+}
+
+
+/*
+ * Local variables:
+ * tab-width: 2
+ * c-basic-offset: 2
+ * End:
  */
-
-#ifndef SWF_SOUND_H_INCLUDED
-#define SWF_SOUND_H_INCLUDED
-
-#include "ming.h"
-
-#define SWF_SOUNDINFO_SYNCSTOPSOUND  (1<<5)
-#define SWF_SOUNDINFO_SYNCNOMULTIPLE (1<<4)
-#define SWF_SOUNDINFO_HASENVELOPE    (1<<3)
-#define SWF_SOUNDINFO_HASLOOPS       (1<<2)
-#define SWF_SOUNDINFO_HASOUTPOINT    (1<<1)
-#define SWF_SOUNDINFO_HASINPOINT     (1<<0)
-
-SWFBlock newDefineSWFSoundBlock(SWFSound sound);
-
-int SWFSound_getSampleRate(int flags);
-
-#endif /* SWF_SOUND_H_INCLUDED */

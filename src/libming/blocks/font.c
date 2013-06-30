@@ -35,9 +35,7 @@
 #include "libming.h"
 #include "shape.h"
 #include "fdbfont.h"
-/* #include "ttffont.h" */
-/* Commented by Yixuan Qiu */
-
+#include "ttffont.h"
 #include "ming_config.h"
 
 struct textList

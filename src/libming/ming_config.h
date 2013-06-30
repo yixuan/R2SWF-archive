@@ -5,8 +5,14 @@
 #define __MING_CONFIG_H
 
 
+/* Define if building universal (internal helper macro) */
+/* #undef AC_APPLE_UNIVERSAL_BUILD */
+
+/* Use giflib with GifErrorString, introduced 4.2.0 */
+/* #undef GIFLIB_GIFERRORSTRING */
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
-/* #undef HAVE_DLFCN_H */
+#define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the `getopt' function. */
 #define HAVE_GETOPT 1
@@ -27,7 +33,7 @@
 #define HAVE_MEMORY_H 1
 
 /* Define to 1 if you have the `mkstemp' function. */
-/* #undef HAVE_MKSTEMP */
+#define HAVE_MKSTEMP 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -51,10 +57,14 @@
 #define HAVE_UNISTD_H 1
 
 /* Define to 1 if you have the `vasprintf' function. */
-/* #undef HAVE_VASPRINTF */
+#define HAVE_VASPRINTF 1
 
 /* Define to 1 if you have the <zlib.h> header file. */
 #define HAVE_ZLIB_H 1
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#define LT_OBJDIR ".libs/"
 
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */
@@ -69,13 +79,16 @@
 #define PACKAGE_NAME "ming"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "ming 0.4.4"
+#define PACKAGE_STRING "ming 0.4.5"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "ming"
 
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
+
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.4.4"
+#define PACKAGE_VERSION "0.4.5"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -89,9 +102,9 @@
 /* #undef USE_CXX */
 
 /* Use freetype library */
-/* #undef USE_FREETYPE */
+#define USE_FREETYPE 1
 
-/* Use gif library */
+/* Use a gif library */
 /* #undef USE_GIF */
 
 /* Use png library */
@@ -101,7 +114,19 @@
 #define USE_ZLIB 1
 
 /* Version number of package */
-#define VERSION "0.4.4"
+#define VERSION "0.4.5"
+
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+/* #  undef WORDS_BIGENDIAN */
+# endif
+#endif
 
 #endif
 

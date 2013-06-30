@@ -6,57 +6,63 @@ LIBPNGINC = ../libpng
 LIBPNGLIB = ../libpng
 LIBPNG = $(LIBPNGLIB)/libpng.a
 
+FTCONFINC = ../freetype/config
+FTINC = ../freetype/include
+FTLIB = ../freetype
+FT = $(FTLIB)/libfreetype.a
+
 CP = cp -fp
 RM = rm -f
 
-LD = $(CC)
 AR_RC = $(AR) rcs
 
-LDRELEASE = -s
-LDFLAGS = $(LDRELEASE)
+ACTCMP_OBJS = actioncompiler/assembler.o actioncompiler/compile.o \
+	actioncompiler/compileaction.o actioncompiler/lex.swf4.o \
+	actioncompiler/lex.swf5.o actioncompiler/listaction.o \
+	actioncompiler/swf4compiler.tab.o actioncompiler/swf5compiler.tab.o
 
-O=.o
-A=.a
+BLOCKS_OBJS = blocks/action.o blocks/binary.o blocks/bitmap.o \
+	blocks/block.o blocks/browserfont.o blocks/button.o \
+	blocks/character.o blocks/cxform.o blocks/dbl.o \
+	blocks/error.o blocks/fdbfont.o blocks/fileattrs.o \
+	blocks/fillstyle.o blocks/filter.o blocks/flv.o \
+	blocks/font.o blocks/fromswf.o blocks/gifdbl.o \
+	blocks/gradient.o blocks/imports.o blocks/input.o \
+	blocks/jpeg.o blocks/linestyle.o blocks/matrix.o \
+	blocks/metadata.o blocks/method.o blocks/morph.o \
+	blocks/mp3.o blocks/output.o blocks/outputblock.o \
+	blocks/placeobject.o blocks/pngdbl.o blocks/protect.o \
+	blocks/rect.o blocks/scalinggrid.o blocks/scenedata.o \
+	blocks/scriptlimits.o blocks/shape.o blocks/sound.o \
+	blocks/soundinstance.o blocks/soundstream.o blocks/sprite.o \
+	blocks/symbolclass.o blocks/tabindex.o blocks/text.o \
+	blocks/textfield.o blocks/ttffont.o blocks/utf8.o \
+	blocks/videostream.o
 
-OBJS =  blocklist$(O) compat$(O) displaylist$(O) fill$(O) font_util$(O) \
-	gc$(O) ming$(O) movie$(O) movieclip$(O) position$(O) \
-	shape_cubic$(O) shape_util$(O) text_util$(O) libming$(O) \
-	blocks/binary$(O) blocks/bitmap$(O) blocks/block$(O) \
-	blocks/browserfont$(O) blocks/character$(O) blocks/cxform$(O) \
-	blocks/dbl$(O) blocks/error$(O) blocks/fdbfont$(O) blocks/fileattrs$(O) \
-	blocks/fillstyle$(O) blocks/filter$(O) blocks/flv$(O) \
-	blocks/font$(O) blocks/fromswf$(O) \
-	blocks/gifdbl$(O) blocks/gradient$(O) blocks/imports$(O) \
-	blocks/input$(O) blocks/jpeg$(O) blocks/linestyle$(O) \
-	blocks/matrix$(O) blocks/metadata$(O) blocks/method$(O) \
-	blocks/morph$(O) blocks/mp3$(O) blocks/output$(O) \
-	blocks/outputblock$(O) blocks/placeobject$(O) blocks/pngdbl$(O) \
-	blocks/protect$(O) blocks/rect$(O) blocks/scalinggrid$(O) \
-	blocks/scenedata$(O) blocks/scriptlimits$(O) blocks/shape$(O) \
-	blocks/sound$(O) blocks/soundinstance$(O) blocks/soundstream$(O) \
-	blocks/sprite$(O) blocks/symbolclass$(O) blocks/tabindex$(O) \
-	blocks/text$(O) blocks/textfield$(O) \
-	blocks/utf8$(O) blocks/videostream$(O)
-
-
-.PHONY: all blocks clean
-
-all: libming$(A)
-
-.c.o:
-	$(CC) $(CFLAGS) -I$(ZLIBINC) -I$(LIBPNGINC) $(CPPFLAGS) -I. -c $< -o $@
+OBJS = blocklist.o compat.o displaylist.o fill.o font_util.o \
+	gc.o ming.o ming_def.o movie.o movieclip.o \
+	position.o shape_cubic.o shape_util.o text_util.o
 
 
-libming$(A): blocks $(OBJS)
+.PHONY: actcmp blocks all clean
+
+all: libming.a
+
+libming.a: actcmp blocks $(OBJS)
 	@$(RM) $@
-	$(AR_RC) $@ $(OBJS)
+	$(AR_RC) $@ $(ACTCMP_OBJS) $(BLOCKS_OBJS) $(OBJS)
+
+actcmp:
+	cd actioncompiler && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
 blocks:
-	cd blocks && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)"
+	cd blocks && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) -I$(ZLIBINC) -I. -c $< -o $@
 
 clean:
-	-$(RM) libming$(A)
-	-$(RM) *$(O)
-	-$(RM) blocks/*$(O)
-
+	cd actioncompiler && $(MAKE) clean
+	cd blocks && $(MAKE) clean
+	$(RM) *.a
+	$(RM) *.o

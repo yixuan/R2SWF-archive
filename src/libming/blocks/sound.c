@@ -31,21 +31,6 @@
 #include "libming.h"
 #include "mp3.h"
 
-int SWFSound_getSampleRate(int flags)
-{
-	switch ( flags & SWF_SOUND_RATE)
-	{
-		case SWF_SOUND_44KHZ:
-			return 44100;
-		case SWF_SOUND_22KHZ:
-			return 22050;
-		case SWF_SOUND_11KHZ:
-			return 11025;
-		default:
-			return 0;
-	}
-}
-
 struct SWFSound_s
 {
 	struct SWFCharacter_s character;
@@ -117,7 +102,7 @@ soundDataSize(SWFSound sound)
 		SWFInput_seek(sound->input, pos, SEEK_SET);
 		return samples;
 	}
-	else
+	else 
 	{
 		SWF_warn("SWFSound: can't determine sampleCount\n");
 		return 0;
@@ -139,7 +124,7 @@ writeSWFSoundToStream(SWFBlock block, SWFByteOutputMethod method, void *data)
 	methodWriteUInt32(soundDataSize(sound), method, data);
 
 	if ( (sound->flags & SWF_SOUND_COMPRESSION) == SWF_SOUND_MP3_COMPRESSED )
-		methodWriteUInt16(sound->seekSamples, method, data);
+		methodWriteUInt16(sound->seekSamples, method, data);	
 
 	/* write samples */
 	for ( i=0; i<l; ++i )
@@ -210,11 +195,11 @@ destroySWFSound(SWFSound sound)
  * The sound to be played is contained in a file and specified with flags.
  *
  * Flags must contain a sound format, sampling rate, size (in bits) and channels.
- * If the file contains mp3 data it is not necessary to specify sampling rate,
+ * If the file contains mp3 data it is not necessary to specify sampling rate, 
  * sound size and channels.
  *
  * Possible sound formats are:
- * - SWF_SOUND_NOT_COMPRESSED
+ * - SWF_SOUND_NOT_COMPRESSED 
  * - SWF_SOUND_ADPCM_COMPRESSED
  * - SWF_SOUND_MP3_COMPRESSED
  * - SWF_SOUND_NOT_COMPRESSED_LE
@@ -239,14 +224,12 @@ newSWFSound(FILE *f, byte flags)
 
 /* added by David McNab <david@rebirthing.co.nz> */
 /* required so that python can pass in file descriptors instead of FILE* streams */
-
-/* SWFSound
+SWFSound
 newSWFSoundFromFileno(int fd, byte flags)
 {
 	FILE *fp = fdopen(fd, "r");
 	return newSWFSound(fp, flags);
-} */
-/* Commented by Yixuan Qiu */
+}
 
 
 SWFSound
@@ -308,6 +291,21 @@ newSWFSound_fromSoundStream(SWFSoundStream stream)
 	sound->soundStream = stream;
 
 	return sound;
+}
+
+int SWFSound_getSampleRate(int flags)
+{
+	switch ( flags & SWF_SOUND_RATE)
+	{
+		case SWF_SOUND_44KHZ:
+			return 44100;
+		case SWF_SOUND_22KHZ:
+			return 22050;
+		case SWF_SOUND_11KHZ:
+			return 11025; 
+		default:
+			return 0;
+	}
 }
 
 /*

@@ -28,8 +28,7 @@
 #include "position.h"
 #include "blocks/soundstream.h"
 #include "blocks/outputblock.h"
-/* Commented by Yixuan Qiu */
-/* #include "blocks/button.h" */
+#include "blocks/button.h"
 #include "blocks/videostream.h"
 #include "blocks/blocktypes.h"
 #include "blocks/filter.h"
@@ -304,8 +303,8 @@ SWFDisplayItem_moveTo(SWFDisplayItem item,  double x, double y)
 void
 SWFDisplayItem_getPosition(SWFDisplayItem item, double *x, double *y)
 {
-	/* returns the current position of this display item into the provided */
-	/* pointers, respects NULL values */
+	/* returns the current position of this display item into the provided
+	   pointers, respects NULL values */
 
 	checkBlock(item);
 	SWFPosition_getXY(item->position, x, y);
@@ -333,8 +332,8 @@ SWFDisplayItem_rotateTo(SWFDisplayItem item, double degrees)
 void
 SWFDisplayItem_getRotation(SWFDisplayItem item, double *degrees)
 {
-	/* returns the current rotation of this display item into the given */
-	/* pointer, respects NULL value */
+	/* returns the current rotation of this display item into the given
+	   pointer, respects NULL value */
 
 	checkBlock(item);
 
@@ -364,8 +363,8 @@ SWFDisplayItem_scaleTo(SWFDisplayItem item, double xScale, double yScale)
 void
 SWFDisplayItem_getScale(SWFDisplayItem item, double *xScale, double *yScale)
 {
-	/* returns the current x- and y-scale of this display item into the given */
-	/* pointers, respects NULL values */
+	/* returns the current x- and y-scale of this display item into the given
+	   pointers, respects NULL values */
 
 	checkBlock(item);
 	SWFPosition_getXYScale(item->position, xScale, yScale);
@@ -411,8 +410,8 @@ SWFDisplayItem_skewYTo(SWFDisplayItem item, double y)
 void
 SWFDisplayItem_getSkew(SWFDisplayItem item, double *xSkew, double *ySkew)
 {
-	/* returns the current x- and y-skew of this display item into the given */
-	/* pointers, respects NULL values */
+	/* returns the current x- and y-skew of this display item into the given
+	   pointers, respects NULL values */
 
 	checkBlock(item);
 	SWFPosition_getXYSkew(item->position, xSkew, ySkew);
@@ -634,8 +633,8 @@ SWFDisplayList_writeBlocks(SWFDisplayList list, SWFBlockList blocklist)
 	{
 		character = item->character;
 
-		/*		if ( character != NULL ) */
-		/*			SWFBlockList_resolveCharacterDependencies(blocklist, character); */
+		/*		if ( character != NULL )
+					SWFBlockList_resolveCharacterDependencies(blocklist, character); */
 
 		if ( item->flags & ITEM_REMOVED )
 		{
@@ -673,10 +672,10 @@ SWFDisplayList_writeBlocks(SWFDisplayList list, SWFBlockList blocklist)
 /*
  * This function writes the item object immediately to the blocklist.
  * Usually MING waits with writing a display item until a frame is closed
- * through a nextFrame() call, because a display items state could be altered
- * for the current frame. By using SWFDisplayItem_flush() MING does not wait
+ * through a nextFrame() call, because a display items state could be altered 
+ * for the current frame. By using SWFDisplayItem_flush() MING does not wait 
  * and writes the frame immediately. Therefore a user can influence the
- * swf tag oder. Changing a display items state after calling flush() takes
+ * swf tag oder. Changing a display items state after calling flush() takes 
  * effect in the next frame.
  */
 void

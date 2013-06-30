@@ -17,8 +17,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* sprite.h
- * 
+/* fontinfo.h
+ *
  * $Id$
  *
  * Notice: This header file contains declarations of functions and types that
@@ -26,34 +26,13 @@
  * to be publicly accessable are defined in ./src/ming.h.
  */
 
-#ifndef SWF_SPRITE_H_INCLUDED
-#define SWF_SPRITE_H_INCLUDED
+#ifndef SWF_FONTINFO_H_INCLUDED
+#define SWF_FONTINFO_H_INCLUDED
 
 #include "ming.h"
-#include "character.h"
-#include "scalinggrid.h"
-#include "action.h"
 
-/* movie clip extends sprite, so we need a public definition */
+typedef struct SWFFontInfo_s *SWFFontInfo;
 
-struct SWFSprite_s
-{
-  struct SWFCharacter_s character;
+SWFFontInfo newDefineSWFFontInfo(SWFFont font);
 
-  int frames;
-  int totalFrames;
-
-  int nBlocks;
-  SWFBlock *blocks;
-
-  SWFScalingGrid grid;
-  SWFInitAction initAction;
-};
-
-void SWFSprite_setNumberOfFrames(SWFSprite sprite, int totalFrames);
-
-void SWFSprite_setBlocks(SWFSprite sprite, SWFBlock *blocks, int nBlocks);
-
-void SWFSprite_getDependencies(SWFSprite sprite, SWFCharacter** deps, int* nDeps);
-
-#endif /* SWF_SPRITE_H_INCLUDED */
+#endif /* SWF_FONTINFO_H_INCLUDED */

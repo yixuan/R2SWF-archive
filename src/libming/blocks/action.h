@@ -17,8 +17,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* sprite.h
- * 
+/* action.h
+ *
  * $Id$
  *
  * Notice: This header file contains declarations of functions and types that
@@ -26,34 +26,19 @@
  * to be publicly accessable are defined in ./src/ming.h.
  */
 
-#ifndef SWF_SPRITE_H_INCLUDED
-#define SWF_SPRITE_H_INCLUDED
+#ifndef SWF_ACTION_H_INCLUDED
+#define SWF_ACTION_H_INCLUDED
 
 #include "ming.h"
-#include "character.h"
-#include "scalinggrid.h"
-#include "action.h"
+#include "outputblock.h"
 
-/* movie clip extends sprite, so we need a public definition */
 
-struct SWFSprite_s
-{
-  struct SWFCharacter_s character;
+SWFInitAction newSWFInitAction_MovieClip(SWFMovieClip clip, SWFAction action);
 
-  int frames;
-  int totalFrames;
+void destroySWFAction(SWFAction action);
+void destroySWFInitAction(SWFInitAction action);
 
-  int nBlocks;
-  SWFBlock *blocks;
+void SWFOutput_writeAction(SWFOutput out, SWFAction action);
 
-  SWFScalingGrid grid;
-  SWFInitAction initAction;
-};
-
-void SWFSprite_setNumberOfFrames(SWFSprite sprite, int totalFrames);
-
-void SWFSprite_setBlocks(SWFSprite sprite, SWFBlock *blocks, int nBlocks);
-
-void SWFSprite_getDependencies(SWFSprite sprite, SWFCharacter** deps, int* nDeps);
-
-#endif /* SWF_SPRITE_H_INCLUDED */
+SWFMovieClip SWFInitAction_getMovieClip(SWFInitAction action);
+#endif /* SWF_ACTION_H_INCLUDED */

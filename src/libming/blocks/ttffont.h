@@ -17,29 +17,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* sound.h
- *
+/*
  * $Id$
- * 
- * Notice: This header file contains declarations of functions and types that
- * are just used internally. All library functions and types that are supposed
- * to be publicly accessable are defined in ./src/ming.h.
  */
 
-#ifndef SWF_SOUND_H_INCLUDED
-#define SWF_SOUND_H_INCLUDED
-
-#include "ming.h"
-
-#define SWF_SOUNDINFO_SYNCSTOPSOUND  (1<<5)
-#define SWF_SOUNDINFO_SYNCNOMULTIPLE (1<<4)
-#define SWF_SOUNDINFO_HASENVELOPE    (1<<3)
-#define SWF_SOUNDINFO_HASLOOPS       (1<<2)
-#define SWF_SOUNDINFO_HASOUTPOINT    (1<<1)
-#define SWF_SOUNDINFO_HASINPOINT     (1<<0)
-
-SWFBlock newDefineSWFSoundBlock(SWFSound sound);
-
-int SWFSound_getSampleRate(int flags);
-
-#endif /* SWF_SOUND_H_INCLUDED */
+#ifndef SWF_TTFFONT_H_INCLUDED
+#define SWF_TTFFONT_H_INCLUDED
+SWFFontCollection loadTTFCollection(const char *filename);
+SWFFont loadSWFFontTTF(const char *);
+#endif /* SWF_TTFFONT_H_INCLUDED */

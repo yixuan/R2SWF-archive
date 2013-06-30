@@ -1,3 +1,7 @@
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+/* #include <sys/socket.h> */
 
 #include "libming.h"
 #include "ming_config.h"
@@ -68,7 +72,7 @@ static int pngReadFunc(png_structp png, unsigned char *buf, int len)
 png_structp openPngFromInput(SWFInput input)
 {	unsigned char header[8];
 	png_structp result;
-
+	
 	if(SWFInput_read(input, header, 8) != 8)
 		return NULL;
 	if(png_sig_cmp(header, 0, 8))
@@ -218,7 +222,7 @@ static int readPNG(png_structp png_ptr, dblData result)
 		png.palette = (png_color*) malloc(sizeof(png_color) * png.num_palette);
 
 		for(i=0; i<(int)png.num_palette; ++i)
-			png.palette[i].red = png.palette[i].green = png.palette[i].blue =
+			png.palette[i].red = png.palette[i].green = png.palette[i].blue = 
 			 (i*255)/(png.num_palette-1);
 	}
 
@@ -271,7 +275,7 @@ static int readPNG(png_structp png_ptr, dblData result)
 	if(png.color_type == PNG_COLOR_TYPE_PALETTE)
 	{
 		int tablesize = png.num_palette * sizeof(png_color);
-
+  
 		result->format = 3;
 		result->format2 = png.num_palette-1;
 		data = (unsigned char*) malloc(tablesize + alignedsize);
@@ -289,7 +293,7 @@ static int readPNG(png_structp png_ptr, dblData result)
 /* at this point, can free */
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 	free(row_pointers);
-/*	fclose(fp); */
+/*	fclose(fp);	*/
 
 	result->hasalpha = png.color_type == PNG_COLOR_TYPE_GRAY_ALPHA ||
 						png.color_type == PNG_COLOR_TYPE_RGB_ALPHA;

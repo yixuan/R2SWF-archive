@@ -17,43 +17,28 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-/* sprite.h
- * 
- * $Id$
+/* button.h
  *
+ * $Id$
+ * 
  * Notice: This header file contains declarations of functions and types that
  * are just used internally. All library functions and types that are supposed
  * to be publicly accessable are defined in ./src/ming.h.
  */
 
-#ifndef SWF_SPRITE_H_INCLUDED
-#define SWF_SPRITE_H_INCLUDED
+#ifndef SWF_BUTTON_H_INCLUDED
+#define SWF_BUTTON_H_INCLUDED
 
 #include "ming.h"
-#include "character.h"
 #include "scalinggrid.h"
-#include "action.h"
+typedef struct SWFButtonSound_s *SWFButtonSound;
 
-/* movie clip extends sprite, so we need a public definition */
+#define SWF_BUTTON_TRACKASMENU  (1<<0)
 
-struct SWFSprite_s
-{
-  struct SWFCharacter_s character;
+SWFBlock newDefineSWFButtonBlock(SWFButton button);
 
-  int frames;
-  int totalFrames;
+SWFButtonSound newSWFButtonSound(SWFButton button);
 
-  int nBlocks;
-  SWFBlock *blocks;
+SWFSoundInstance SWFButtonSound_setSound(SWFButtonSound sounds, SWFSound sound, byte flags);
 
-  SWFScalingGrid grid;
-  SWFInitAction initAction;
-};
-
-void SWFSprite_setNumberOfFrames(SWFSprite sprite, int totalFrames);
-
-void SWFSprite_setBlocks(SWFSprite sprite, SWFBlock *blocks, int nBlocks);
-
-void SWFSprite_getDependencies(SWFSprite sprite, SWFCharacter** deps, int* nDeps);
-
-#endif /* SWF_SPRITE_H_INCLUDED */
+#endif /* SWF_BUTTON_H_INCLUDED */

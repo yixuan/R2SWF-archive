@@ -44,8 +44,8 @@ extern "C" {
 
 #include <stdio.h>
 
-#define MING_VERSION       0.4.4
-#define MING_VERSION_TEXT  "0.4.4"
+#define MING_VERSION       0.4.5
+#define MING_VERSION_TEXT  "0.4.5"
 
 /***** Type definitions - avoid cyclic dependencies ****/
 

@@ -166,7 +166,7 @@ typedef enum
   PROPERTY_QUALITY        = 0x13,
   PROPERTY_XMOUSE         = 0x14,
   PROPERTY_YMOUSE         = 0x15,
-  PROPERTY_WTHIT          = 0x16	// not documented ???
+  PROPERTY_WTHIT          = 0x16	/* not documented ??? */
 } Property;
 
 #define SWF_SETPROPERTY_X               0x0000

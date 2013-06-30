@@ -34,8 +34,7 @@
 #include "matrix.h"
 #include "cxform.h"
 #include "filter.h"
-/* Commented by Yixuan Qiu */
-/* #include "action.h" */
+#include "action.h"
 
 #include "libming.h"
 
@@ -48,7 +47,7 @@ struct SWFPlaceObject2Block_s
 	/* PlaceObject - version */
 	/* default is 2 */
 	/* 3 if with SWF_versiom >= 8 and V3 extensions were used */
-	int version;
+	int version;  
 
 	SWFCharacter character;
 	SWFMatrix matrix;
@@ -63,32 +62,31 @@ struct SWFPlaceObject2Block_s
 	int actionORFlags;
 	SWFAction *actions;
 	int *actionFlags;
-/*	char *actionChars; */
-
+/*	char *actionChars;	*/
+	
 	/* V3 extension SWF_version >= 8 */
 	char hasCacheFlag;
 	char hasBlendFlag;
 	char hasFilterFlag;
 
-	SWFFilterList filterList;
+	SWFFilterList filterList; 
 	int blendMode;
 
 #if TRACK_ALLOCS
 	mem_node *gcnode;
-#endif
-};
+#endif	
+}; 
 
 
-/* Commented by Yixuan Qiu */
-/* static void writeActions(SWFPlaceObject2Block place)
+static void writeActions(SWFPlaceObject2Block place)
 {
 	int i;
 	SWFBlock block = BLOCK(place);
-
+	
 	if ( place->nActions > 0 )
 	{
-		SWFOutput_writeUInt16(place->out, 0);
-
+		SWFOutput_writeUInt16(place->out, 0); 
+		
 		if(block->swfVersion >= 6)
 			SWFOutput_writeUInt32(place->out, place->actionORFlags);
 		else
@@ -102,26 +100,25 @@ struct SWFPlaceObject2Block_s
 				SWFOutput_writeUInt32(place->out, place->actionFlags[i]);
 			else
 				SWFOutput_writeUInt16(place->out, place->actionFlags[i]);
-
-			// SWF6: extra char if(place->actionFlags[i] & 0x20000)
+			
+			/* SWF6: extra char if(place->actionFlags[i] & 0x20000) */
 			if((block->swfVersion >= 6) && (place->actionFlags[i] & 0x20000)) {
 				SWFOutput_writeUInt32(place->out, length + 1);
 				SWFOutput_writeUInt8(place->out, 0);
-			}
-			else
+			} 
+			else 
 				SWFOutput_writeUInt32(place->out, length);
-
+			
 			SWFOutput_writeAction(place->out, place->actions[i]);
 		}
-
-		// trailing 0 for end of actions
+		
+		/* trailing 0 for end of actions */
 		if(block->swfVersion >= 6)
-			SWFOutput_writeUInt32(place->out, 0);
+			SWFOutput_writeUInt32(place->out, 0); 
 		else
-			SWFOutput_writeUInt16(place->out, 0);
+			SWFOutput_writeUInt16(place->out, 0); 
 	}
 }
-*/
 
 void
 writeSWFPlaceObject2BlockToStream(SWFBlock block, SWFByteOutputMethod method, void *data)
@@ -157,7 +154,7 @@ completeSWFPlaceObject2Block(SWFBlock block)
 		SWFOutput_writeUInt8(out, flags);
 	}
 	SWFOutput_writeUInt16(out, place->depth);
-
+	
 	if ( place->character != NULL )
 		SWFOutput_writeUInt16(out, CHARACTERID(place->character));
 
@@ -177,16 +174,13 @@ completeSWFPlaceObject2Block(SWFBlock block)
 		SWFOutput_writeUInt16(out, place->masklevel);
 
 	if( place->version == 3 && place->hasFilterFlag)
-		SWFOutput_writeFilterList(out, place->filterList);
+		SWFOutput_writeFilterList(out, place->filterList);		
 
 	if( place->version == 3 && place->hasBlendFlag)
 		SWFOutput_writeUInt8(out, place->blendMode);
 
 	place->out = out;
-	/* Commented by Yixuan Qiu */
-	/*
 	writeActions(place);
-	*/
 
 	return SWFOutput_getLength(out);
 }
@@ -199,12 +193,12 @@ destroySWFPlaceObject2Block(SWFPlaceObject2Block place)
 		free(place->actions);
 
 	if ( place->actionFlags != NULL )
-/*	{	free(place->actionChars); */
+/*	{	free(place->actionChars);	*/
 		free(place->actionFlags);
-/*	} */
+/*	}	*/
 
 	if( place->filterList != NULL )
-		destroySWFFilterList(place->filterList);
+		destroySWFFilterList(place->filterList);		
 
 	if ( place->name != NULL )
 		free(place->name);
@@ -231,7 +225,7 @@ setPlaceObjectVersion(SWFPlaceObject2Block block, int version)
 {
 	switch(version)
 	{
-		case 2:
+		case 2: 
 			block->version = version;
 			BLOCK(block)->type = SWF_PLACEOBJECT2;
 			break;
@@ -276,7 +270,7 @@ newSWFPlaceObject2Block(int depth)
 	place->nActions = 0;
 	place->actionORFlags = 0;
 	place->actionFlags = NULL;
-/*	place->actionChars = NULL; */
+/*	place->actionChars = NULL;	*/
 	place->actions = NULL;
 
 	place->hasCacheFlag = 0;
@@ -385,35 +379,35 @@ SWFPlaceObject2Block_addAction(SWFPlaceObject2Block block,
 	block->actionFlags =
 		(int*)realloc(block->actionFlags, (block->nActions+1) * sizeof(int));
 
-/*	block->actionChars = */
-/*		realloc(block->actionChars, (block->nActions+1)); */
+/*	block->actionChars =	*/
+/*		realloc(block->actionChars, (block->nActions+1));	*/
 
 	block->actions[block->nActions] = action;
 	block->actionFlags[block->nActions] = flags;
-/*	block->actionChars[block->nActions] = actChar; */
+/*	block->actionChars[block->nActions] = actChar;	*/
 	block->actionORFlags |= flags;
 
 	++block->nActions;
 }
 
 
-/*
- * set Cache as BitmapFlag
+/* 
+ * set Cache as BitmapFlag 
  * Only if SWF Version >= 8. Sets PlaceObject version to 3
  */
-void
+void 
 SWFPlaceObject2Block_setCacheFlag(SWFPlaceObject2Block block, int flag)
 {
 	setPlaceObjectVersion(block, 3);
 	block->hasCacheFlag = 1;
 }
 
-/*
- * set blend mode.
+/* 
+ * set blend mode. 
  * See ming.h for possible blend modes
  * Only if SWF Version >= 8. Sets PlaceObject version to 3
  */
-void
+void 
 SWFPlaceObject2Block_setBlendMode(SWFPlaceObject2Block block, int mode)
 {
 	if(mode < 0 || mode > 255)
@@ -421,7 +415,7 @@ SWFPlaceObject2Block_setBlendMode(SWFPlaceObject2Block block, int mode)
 		SWF_warn("SWFPlaceObject2Block_setBlendMode: mode must be in between [0...255]");
 		return;
 	}
-
+	
 	setPlaceObjectVersion(block, 3);
 	block->hasBlendFlag = 1;
 	block->blendMode = mode;
@@ -433,7 +427,7 @@ SWFPlaceObject2Block_setBlendMode(SWFPlaceObject2Block block, int mode)
  * see ming.h for filtertypes
  * Only if SWF Version >= 8. Sets PlaceObject version to 3
  */
-void
+void 
 SWFPlaceObject2Block_addFilter(SWFPlaceObject2Block block, SWFFilter filter)
 {
 	if(block->filterList == NULL)
