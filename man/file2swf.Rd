@@ -2,7 +2,7 @@
 \alias{file2swf}
 \title{Convert image files to SWF}
 \usage{
-file2swf(files, output, bgColor = "white", interval = 1)
+  file2swf(files, output, bgColor = "white", interval = 1)
 }
 \arguments{
   \item{files}{a character vector of input filenames}
@@ -25,3 +25,4 @@ file2swf(files, output, bgColor = "white", interval = 1)
 \author{
   Yihui Xie <\url{http://yihui.name}>
 }
+

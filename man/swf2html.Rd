@@ -2,7 +2,8 @@
 \alias{swf2html}
 \title{Embed the SWF file into an HTML page}
 \usage{
-swf2html(swf.file, output, width = 480, height = 480, fragment = FALSE)
+  swf2html(swf.file, output, width = 480, height = 480,
+    fragment = FALSE)
 }
 \arguments{
   \item{swf.file}{the path of the SWF file}
@@ -27,10 +28,11 @@ swf2html(swf.file, output, width = 480, height = 480, fragment = FALSE)
 }
 \examples{
 output = dev2swf({
-    for (i in 1:10) plot(runif(20), ylim = c(0, 1))
-}, output = "test.swf")
+  for (i in 1:10) plot(runif(20), ylim = c(0, 1))
+}, output = 'test.swf')
 swf2html(output)
 }
 \author{
   Yihui Xie <\url{http://yihui.name}>
 }
+
