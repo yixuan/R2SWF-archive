@@ -1,4 +1,4 @@
-PKG_CPPFLAGS = -I./libming -I.
+PKG_CPPFLAGS = -I./libming -I./freetype/config -I./freetype/include -I.
 PKG_LIBS = -L./libming -lming -L./libpng -lpng -L./freetype -lfreetype -L./zlib -lz
 
 
