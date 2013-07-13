@@ -55,6 +55,8 @@ void
 Ming_cleanupFonts()
 {
   int i;
+  
+  if(Ming_numFonts == 0) return;
 
   for ( i = 0; i < Ming_numFonts; ++i )
   {
@@ -64,4 +66,8 @@ Ming_cleanupFonts()
 
   if ( Ming_fontList != NULL )
     free(Ming_fontList);
+  
+  /* yixuan--If this function is called more than once, we must reset
+     Ming_numFonts */
+  Ming_numFonts = 0;
 }

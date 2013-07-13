@@ -102,6 +102,11 @@ Ming_collectGarbage()
 		ptr=firstnode;
 			
 	}
+  
+  /* yixuan--If this function is called more than once, we must reset
+     firstnode and lastnode */
+  firstnode = NULL;
+  lastnode = NULL;
 }
 
 #if DEBUG

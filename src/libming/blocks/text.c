@@ -209,7 +209,7 @@ newSWFText()
 	text->nAdvanceBits = 0;
 
 #if TRACK_ALLOCS
-	text->gcnode = ming_gc_add_node(text, (dtorfunctype) destroySWFBitmap);
+	text->gcnode = ming_gc_add_node(text, (dtorfunctype) destroySWFText);
 #endif
 
 	return text;
