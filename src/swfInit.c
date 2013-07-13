@@ -1,7 +1,4 @@
 #include <ming.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 #include <R.h>
 #include <Rdefines.h>
 #include <Rinternals.h>
@@ -12,7 +9,7 @@ SEXP swfInit()
 {
     /* Some global initializations */
     Ming_init();
-    /* Setting to small value leads to more accurate curves */
+    /* Setting small value leads to more accurate curves */
     Ming_setCubicThreshold(1);
     /* Setting the SWF version */
     Ming_useSWFVersion(8);

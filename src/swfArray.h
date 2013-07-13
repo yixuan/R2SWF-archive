@@ -3,8 +3,8 @@
   them after writing movie to file.
 */
 
-#ifndef MING_ARRAY_H
-#define MING_ARRAY_H
+#ifndef SWFARRAY_H_INCLUDED
+#define SWFARRAY_H_INCLUDED
 
 #include <ming.h>
 #include <blocks/error.h>
@@ -23,8 +23,11 @@ typedef struct SWFArray_s* SWFArray;
 
 SWFArray newSWFArray(int initialSize);
 void SWFArray_append(SWFArray array, SWFObject obj);
-void destroySWFShapeArray(SWFArray array);
+/* 
+    Most SWF objects can be destroyed automatically by calling
+    Ming_collectGarbage(), but SWFFillStyle has to be destroyed
+    manually.
+*/
 void destroySWFFillStyleArray(SWFArray array);
-void destroySWFMovieClipArray(SWFArray array);
 
-#endif /* MING_ARRAY_H */
+#endif /* SWFARRAY_H_INCLUDED */

@@ -1,4 +1,4 @@
-#include "ming-array.h"
+#include "swfArray.h"
 
 SWFArray newSWFArray(int initialSize)
 {
@@ -32,19 +32,6 @@ void SWFArray_append(SWFArray array, SWFObject obj)
     array->len++;
 }
 
-void destroySWFShapeArray(SWFArray array)
-{
-    int i;
-
-    if(!array) return;
-    for(i = 0; i < array->len; i++)
-    {
-        if(array->data[i]) destroySWFShape((SWFShape) array->data[i]);
-    }
-    if(array->data) free(array->data);
-    if(array) free(array);
-}
-
 void destroySWFFillStyleArray(SWFArray array)
 {
     int i;
@@ -53,19 +40,6 @@ void destroySWFFillStyleArray(SWFArray array)
     for(i = 0; i < array->len; i++)
     {
         if(array->data[i]) destroySWFFillStyle((SWFFillStyle) array->data[i]);
-    }
-    if(array->data) free(array->data);
-    if(array) free(array);
-}
-
-void destroySWFMovieClipArray(SWFArray array)
-{
-    int i;
-
-    if(!array) return;
-    for(i = 0; i < array->len; i++)
-    {
-        if(array->data[i]) destroySWFMovieClip((SWFMovieClip) array->data[i]);
     }
     if(array->data) free(array->data);
     if(array) free(array);

@@ -1,7 +1,7 @@
 #include <libming.h>
 #include <stdlib.h>
 #include "rsvg-path.h"
-#include "ming-array.h"
+#include "swfArray.h"
 
 #include <R.h>
 #include <Rdefines.h>
