@@ -292,7 +292,7 @@ SEXP svg2swf(SEXP filesData, SEXP outName, SEXP size,
         SWFMovie_nextFrame(mainMovie);
     }
     SWFMovie_save(mainMovie, CHAR(STRING_ELT(outName, 0)));
-    Ming_collectGarbage();
+    /* Ming_collectGarbage(); */
     destroySWFFillStyleArray(resources);
 
     return R_NilValue;
