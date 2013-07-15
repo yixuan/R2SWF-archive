@@ -21,3 +21,4 @@ SEXP swfLoadFont(SEXP fontPath);
 
 
 #endif /* SWFFONT_H_INCLUDED */
+

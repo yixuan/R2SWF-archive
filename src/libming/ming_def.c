@@ -7,3 +7,17 @@ char* __my__strdup (const char *s)
     return p;
 }
 
+SWFDisplayItem SWFMovie_add(SWFMovie movie, SWFBlock block)
+{
+	SWFMovieBlockType ublock;
+	ublock.block = block;
+	return SWFMovie_add_internal(movie, ublock);
+}
+
+int SWFMovie_replace(SWFMovie movie, SWFDisplayItem item, SWFBlock block)
+{
+	SWFMovieBlockType ublock;
+	ublock.block = block;
+	return SWFMovie_replace_internal(movie, item, ublock);
+}
+

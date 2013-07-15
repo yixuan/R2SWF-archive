@@ -749,6 +749,7 @@ png_longjmp,(png_const_structrp png_ptr, int val),PNG_NORETURN)
 
    /* Here if not setjmp support or if png_ptr is null. */
    PNG_ABORT();
+   PNG_UNREACHABLE;
 }
 
 #ifdef PNG_WARNINGS_SUPPORTED

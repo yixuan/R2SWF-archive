@@ -820,6 +820,7 @@ void swfTextUTF8(double x, double y, const char *str, double rot, double hadj, c
 #endif
     pswfDesc swfInfo = (pswfDesc) dd->deviceSpecific;
     SWFShape text = newSWFShape();
+    SWFDisplayItem text_display;
     /* Convert UTF-8 string to Unicode array */
     int maxLen = strlen(str);
     wchar_t *unicode = (wchar_t *) calloc(maxLen + 1, sizeof(wchar_t));
@@ -832,7 +833,7 @@ void swfTextUTF8(double x, double y, const char *str, double rot, double hadj, c
     SWFShape_addString(text, unicode, len, fontSize, face,
                        &(swfInfo->outlnFuns));
     
-    SWFDisplayItem text_display = SWFMovieClip_add(swfInfo->currentFrame, (SWFBlock) text);
+    text_display = SWFMovieClip_add(swfInfo->currentFrame, (SWFBlock) text);
     SWFDisplayItem_moveTo(text_display, x, y);
     SWFDisplayItem_rotate(text_display, rot);
 }

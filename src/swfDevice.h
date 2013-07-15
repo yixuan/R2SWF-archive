@@ -118,3 +118,4 @@ double swfStrWidthUTF8(const char *str, const pGEcontext gc, pDevDesc dd);
 
 
 #endif /* SWFDEVICE_H_INCLUDED */
+

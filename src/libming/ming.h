@@ -1036,6 +1036,10 @@ void SWFMovie_stopSound(SWFMovie movie, SWFSound sound);
 SWFFontCharacter SWFMovie_addFont(SWFMovie movie, SWFFont font);
 SWFFontCharacter SWFMovie_importFont(SWFMovie movie, const char *filename, const char *name);
 SWFDisplayItem SWFMovie_add_internal(SWFMovie movie, SWFMovieBlockType ublock);
+/* yixuan: the following is a GNU extension */
+/* #define __to_movie_block(x) (union SWFMovieBlockType_u)x */
+/* should avoid this for compatibility */
+/*
 #ifndef _MSC_VER
 #define SWFMovie_add(__movie, __block) \
 	SWFMovie_add_internal((__movie), __to_movie_block((__block)))
@@ -1047,8 +1051,12 @@ static SWFDisplayItem SWFMovie_add(SWFMovie movie, SWFBlock block)
 	return SWFMovie_add_internal(movie, ublock);
 }
 #endif
+*/
+/* Implementation in ming_def.c */
+SWFDisplayItem SWFMovie_add(SWFMovie movie, SWFBlock block);
 
 int SWFMovie_replace_internal(SWFMovie movie, SWFDisplayItem item, SWFMovieBlockType block);
+/*
 #ifndef _MSC_VER
 #define SWFMovie_replace(__movie, __item, __block) \
 	SWFMovie_replace_internal((__movie), (__item), __to_movie_block((__block)))
@@ -1060,6 +1068,9 @@ static int SWFMovie_replace(SWFMovie movie, SWFDisplayItem item, SWFBlock block)
 	return SWFMovie_replace_internal(movie, item, ublock);
 }
 #endif
+*/
+/* Implementation in ming_def.c */
+int SWFMovie_replace(SWFMovie movie, SWFDisplayItem item, SWFBlock block);
 
 void SWFMovie_remove(SWFMovie movie, SWFDisplayItem item);
 void SWFMovie_nextFrame(SWFMovie movie);

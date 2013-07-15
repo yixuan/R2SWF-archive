@@ -23,3 +23,4 @@ SEXP swfCleanFont(SEXP extPtr)
     
     return R_NilValue;
 }
+

@@ -32,3 +32,4 @@ void SWFShape_addString(SWFShape shape, const wchar_t* str, size_t nchar,
 
 
 #endif /* SWFTEXT_H_INCLUDED */
+

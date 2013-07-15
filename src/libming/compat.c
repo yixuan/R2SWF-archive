@@ -73,6 +73,8 @@ SWFDisplayItem SWFMovie_add(SWFMovie movie, SWFBlock block)
 
 #endif
 
+/* yixuan: SWFMovie_replace() is already defined in ming.h, not useful here,
+   and causes compiler warnings.
 #ifdef SWFMovie_replace
 #undef SWFMovie_replace
 static int SWFMovie_replace(SWFMovie movie, SWFDisplayItem item, SWFBlock block)
@@ -82,6 +84,7 @@ static int SWFMovie_replace(SWFMovie movie, SWFDisplayItem item, SWFBlock block)
 	return SWFMovie_replace_internal(movie, item, ublock);
 }
 #endif
+*/
 
 char *SWFFont_getShape(SWFFont font, unsigned short c)
 {
