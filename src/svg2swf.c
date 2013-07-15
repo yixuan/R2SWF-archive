@@ -1,5 +1,4 @@
-#include <libming.h>
-#include <stdlib.h>
+#include <ming.h>
 #include "rsvg-path.h"
 #include "swfArray.h"
 

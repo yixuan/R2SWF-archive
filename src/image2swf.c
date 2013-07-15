@@ -1,6 +1,4 @@
-#include <libming.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <ming.h>
 
 #include <R.h>
 #include <Rdefines.h>

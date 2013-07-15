@@ -3,10 +3,6 @@
 
 #include <ming.h>
 
-#include <R.h>
-#include <Rdefines.h>
-#include <Rinternals.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H

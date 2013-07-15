@@ -5,8 +5,6 @@
 #include "swfArray.h"
 #include "swfFont.h"
 #include "swfText.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 #include <R.h>
 #include <Rdefines.h>
@@ -16,18 +14,21 @@
 #include <R_ext/GraphicsEngine.h>
 #include <R_ext/GraphicsDevice.h>
 
-
+/* SWF device specific data */
 typedef struct swfDesc {
     char filename[1024]; /* swf filename */
-	SWFMovie m;          /* movie object */
+    SWFMovie m;          /* movie object */
     SWFMovieClip currentFrame;
                          /* current frame */
     SWFDisplayItem currentClip;
                          /* current mask/clip layer */
     SWFArray array;      /* store temporary objects */
-    SEXP pkgEnv;         /* environment storing objects in R */
+    SEXP pkgEnv;         /* environment storing objects in R,
+                            used to retrieve font objects,
+                            defined in font.R */
     FT_Outline_Funcs outlnFuns;
-                         /* functions to draw font outline */
+                         /* functions to draw font outline,
+                            defined in swfText.h */
 } swfDesc;
 
 typedef swfDesc* pswfDesc;
@@ -40,9 +41,9 @@ typedef swfDesc* pswfDesc;
 /* Setup the device descriptions data */
 Rboolean swfSetup(pDevDesc dev, const char *filename,
     double width, double height,
-	const int *bg, float frameRate, SEXP env);
+    const int *bg, float frameRate, SEXP env);
 
-/* Initialize swf device specific data */
+/* Initialize SWF device specific data */
 Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
     double width, double height,
     const int *bg, float frameRate, SEXP env);
@@ -53,9 +54,9 @@ void swfSetLineStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
 void swfSetFillStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
 /* Function to set text color */
 void swfSetTextColor(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
-/* Draw line respecting lty */
+/* Draw line respecting lty parameter */
 void swfDrawStyledLineTo(SWFShape shape, double x, double y, const pGEcontext gc);
-/* Get font FT_Face object */
+/* Get font FT_Face object according to gc parameter */
 FT_Face swfGetFTFace(const pGEcontext gc, pswfDesc swfInfo);
 
 
@@ -95,11 +96,11 @@ void swfPath(double *x, double *y, int npoly, int *nper, Rboolean winding, const
 
 /*
 static void swfRaster(unsigned int *raster, int w, int h,
-                   double x, double y, 
-                   double width, double height,
-                   double rot, 
-                   Rboolean interpolate,
-                   const pGEcontext gc, pDevDesc dd);
+                      double x, double y, 
+                      double width, double height,
+                      double rot, 
+                      Rboolean interpolate,
+                      const pGEcontext gc, pDevDesc dd);
 */
 
 /* static SEXP swfCap(pDevDesc dd); */
