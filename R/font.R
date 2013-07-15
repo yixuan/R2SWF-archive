@@ -92,7 +92,7 @@ add.fonts = function(ftname,
     lst = unique(unlist(.pkg.env$.font.list));
     for(i in seq_along(lst))
     {
-        .Call("swfCleanFont", lst[[i]], PACKAGE = "swf");
+        .Call("swfCleanFont", lst[[i]], PACKAGE = "R2SWF");
     }
     .pkg.env$.font.list = list();
     invisible(NULL);
