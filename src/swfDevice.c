@@ -211,6 +211,13 @@ Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
     
     swfInfo->pkgEnv = env;
     
+    swfInfo->outlnFuns.move_to = outlineMoveTo;
+    swfInfo->outlnFuns.line_to = outlineLineTo;
+    swfInfo->outlnFuns.conic_to = outlineConicTo;
+    swfInfo->outlnFuns.cubic_to = outlineCubicTo;
+    swfInfo->outlnFuns.shift = 0;
+    swfInfo->outlnFuns.delta = 0;
+    
     return TRUE;
 }
 
@@ -336,6 +343,18 @@ void swfSetFillStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo)
     SWFArray_append(swfInfo->array, (SWFObject) fill);
 }
 
+void swfSetTextColor(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo)
+{
+    SWFFillStyle fill;
+    fill = newSWFSolidFillStyle(R_RED(gc->col),
+                                R_GREEN(gc->col),
+                                R_BLUE(gc->col),
+                                R_ALPHA(gc->col));
+    SWFShape_setRightFillStyle(shape, fill);
+    
+    SWFArray_append(swfInfo->array, (SWFObject) fill);
+}
+
 void swfDrawStyledLineTo(SWFShape shape, double x, double y, const pGEcontext gc)
 {
     int lty = gc->lty;
@@ -421,6 +440,7 @@ void swfDrawStyledLineTo(SWFShape shape, double x, double y, const pGEcontext gc
     }
 }
 
+/* Get the font description object defined in swfFont.h */
 static pfontDesc swfGetFontDesc(const pGEcontext gc, pswfDesc swfInfo)
 {
     int gcfontface = gc->fontface;
@@ -431,6 +451,7 @@ static pfontDesc swfGetFontDesc(const pGEcontext gc, pswfDesc swfInfo)
     SEXP extPtr;
     int i, listLen;
     
+    /* Font list is .pkg.env$.font.list, defined in font.R */
     PROTECT(fontList = Rf_findVar(install(".font.list"), swfInfo->pkgEnv));
     UNPROTECT(1);
     fontNames = GET_NAMES(fontList);
@@ -456,14 +477,113 @@ static pfontDesc swfGetFontDesc(const pGEcontext gc, pswfDesc swfInfo)
     return font;
 }
 
-SWFFont swfGetFont(const pGEcontext gc, pswfDesc swfInfo)
-{    
-    return swfGetFontDesc(gc, swfInfo)->font;
-}
-
 FT_Face swfGetFTFace(const pGEcontext gc, pswfDesc swfInfo)
 {
     return swfGetFontDesc(gc, swfInfo)->face;
+}
+
+/* The following two functions are copied from R/src/main/util.c */
+static size_t utf8toucs(wchar_t *wc, const char *s)
+{
+    unsigned int byte;
+    wchar_t local, *w;
+    byte = *((unsigned char *)s);
+    w = wc ? wc: &local;
+
+    if (byte == 0)
+    {
+        *w = (wchar_t) 0;
+        return 0;
+    }
+    else if (byte < 0xC0)
+    {
+        *w = (wchar_t) byte;
+        return 1;
+    }
+    else if (byte < 0xE0)
+    {
+        if(strlen(s) < 2) return (size_t)-2;
+        if ((s[1] & 0xC0) == 0x80)
+        {
+            *w = (wchar_t) (((byte & 0x1F) << 6) | (s[1] & 0x3F));
+            return 2;
+        }
+        else return (size_t)-1;
+    }
+    else if (byte < 0xF0)
+    {
+        if(strlen(s) < 3) return (size_t)-2;
+        if (((s[1] & 0xC0) == 0x80) && ((s[2] & 0xC0) == 0x80))
+        {
+            *w = (wchar_t) (((byte & 0x0F) << 12)
+                            | (unsigned int) ((s[1] & 0x3F) << 6)
+                            | (s[2] & 0x3F));
+            byte = (unsigned int) *w;
+            /* Surrogates range */
+            if(byte >= 0xD800 && byte <= 0xDFFF) return (size_t)-1;
+            if(byte == 0xFFFE || byte == 0xFFFF) return (size_t)-1;
+            return 3;
+        }
+        else return (size_t)-1;
+    }
+    if(sizeof(wchar_t) < 4) return (size_t)-2;
+    /* So now handle 4,5.6 byte sequences with no testing */
+    if (byte < 0xf8)
+    {
+        if(strlen(s) < 4) return (size_t)-2;
+        *w = (wchar_t) (((byte & 0x0F) << 18)
+                        | (unsigned int) ((s[1] & 0x3F) << 12)
+                        | (unsigned int) ((s[2] & 0x3F) << 6)
+                        | (s[3] & 0x3F));
+        return 4;
+    }
+    else if (byte < 0xFC)
+    {
+        if(strlen(s) < 5) return (size_t)-2;
+        *w = (wchar_t) (((byte & 0x0F) << 24)
+                        | (unsigned int) ((s[1] & 0x3F) << 12)
+                        | (unsigned int) ((s[2] & 0x3F) << 12)
+                        | (unsigned int) ((s[3] & 0x3F) << 6)
+                        | (s[4] & 0x3F));
+        return 5;
+    }
+    else
+    {
+        if(strlen(s) < 6) return (size_t)-2;
+        *w = (wchar_t) (((byte & 0x0F) << 30)
+                        | (unsigned int) ((s[1] & 0x3F) << 24)
+                        | (unsigned int) ((s[2] & 0x3F) << 18)
+                        | (unsigned int) ((s[3] & 0x3F) << 12)
+                        | (unsigned int) ((s[4] & 0x3F) << 6)
+                        | (s[5] & 0x3F));
+        return 6;
+    }
+}
+
+static int utf8towcs(wchar_t *wc, const char *s, int n)
+{
+    ssize_t m, res = 0;
+    const char *t;
+    wchar_t *p;
+    wchar_t local;
+
+    if(wc)
+        for(p = wc, t = s; ; p++, t += m)
+        {
+            m  = (ssize_t) utf8toucs(p, t);
+            if (m < 0) error("invalid input '%s' in 'utf8towcs'");
+            if (m == 0) break;
+            res ++;
+            if (res >= n) break;
+        }
+    else
+        for(t = s; ; res++, t += m)
+        {
+            m  = (ssize_t) utf8toucs(&local, t);
+            if (m < 0) error("invalid input '%s' in 'utf8towcs'");
+            if (m == 0) break;
+        }
+    return (int) res;
 }
 
 
@@ -593,6 +713,7 @@ void swfMetricInfo(int c, const pGEcontext gc, double* ascent, double* descent, 
         c = -c;
     }
     
+    /* c is the unicode of the character */
     FT_Set_Char_Size(face, 0, fontSize * 64, 72, 0);
     FT_Load_Char(face, c, FT_LOAD_NO_SCALE);
     
@@ -651,13 +772,22 @@ double swfStrWidthUTF8(const char *str, const pGEcontext gc, pDevDesc dd)
         gc->fontfamily, str[0], str[1]);
 #endif
     pswfDesc swfInfo = (pswfDesc) dd->deviceSpecific;
-    double width;
-    
-    SWFText text = newSWFText();
-    SWFText_setFont(text, swfGetFont(gc, swfInfo));
-	SWFText_setHeight(text, gc->ps * gc->cex);
-    width = SWFText_getUTF8StringWidth(text, str);
-	destroySWFText(text);
+    /* Convert UTF-8 string to Unicode array */
+    int maxLen = strlen(str);
+    wchar_t *unicode = (wchar_t *) calloc(maxLen + 1, sizeof(wchar_t));
+    int len = utf8towcs(unicode, str, maxLen);
+    /* Get the font face object */
+    FT_Face face = swfGetFTFace(gc, swfInfo);
+    double fontSize = gc->ps * gc->cex;
+    double ratio = fontSize / face->units_per_EM;
+    double width = 0.0;
+    int i;
+    /* Add up the 'advance' of each character */
+    for(i = 0; i < len; i++)
+    {
+        FT_Load_Char(face, unicode[i], FT_LOAD_NO_SCALE);
+        width += face->glyph->metrics.horiAdvance * ratio;
+    }
 
 #ifdef SWF_DEBUG
     Rprintf("** strWidthUTF8(width = %f)\n", width);
@@ -665,6 +795,7 @@ double swfStrWidthUTF8(const char *str, const pGEcontext gc, pDevDesc dd)
 
     return width;
 }
+
 
 /* TODO: respect hadj */
 void swfTextUTF8(double x, double y, const char *str, double rot, double hadj, const pGEcontext gc, pDevDesc dd)
@@ -676,17 +807,22 @@ void swfTextUTF8(double x, double y, const char *str, double rot, double hadj, c
             str[0], str[1], str[2], str[3]);
 #endif
     pswfDesc swfInfo = (pswfDesc) dd->deviceSpecific;
+    SWFShape text = newSWFShape();
+    /* Convert UTF-8 string to Unicode array */
+    int maxLen = strlen(str);
+    wchar_t *unicode = (wchar_t *) calloc(maxLen + 1, sizeof(wchar_t));
+    int len = utf8towcs(unicode, str, maxLen);
     
-    SWFText text = newSWFText2();
-    SWFDisplayItem text_display = NULL;
-    SWFText_setFont(text, swfGetFont(gc, swfInfo));
-    SWFText_setHeight(text, gc->ps * gc->cex);
-    SWFText_setColor(text, R_RED(gc->col), R_GREEN(gc->col), R_BLUE(gc->col),
-                     R_ALPHA(gc->col));
-	SWFText_addUTF8String(text, str, NULL);
-    text_display = SWFMovieClip_add(swfInfo->currentFrame, (SWFBlock) text);
-	SWFDisplayItem_moveTo(text_display, x, y);
-	SWFDisplayItem_rotate(text_display, rot);
+    FT_Face face = swfGetFTFace(gc, swfInfo);
+    double fontSize = gc->ps * gc->cex;
+
+    swfSetTextColor(text, gc, swfInfo);
+    SWFShape_addString(text, unicode, len, fontSize, face,
+                       &(swfInfo->outlnFuns));
+    
+    SWFDisplayItem text_display = SWFMovieClip_add(swfInfo->currentFrame, (SWFBlock) text);
+    SWFDisplayItem_moveTo(text_display, x, y);
+    SWFDisplayItem_rotate(text_display, rot);
 }
 
 void swfClose(pDevDesc dd)

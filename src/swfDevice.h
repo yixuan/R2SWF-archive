@@ -4,6 +4,7 @@
 #include <ming.h>
 #include "swfArray.h"
 #include "swfFont.h"
+#include "swfText.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -17,7 +18,7 @@
 
 
 typedef struct swfDesc {
-	char filename[1024]; /* swf filename */
+    char filename[1024]; /* swf filename */
 	SWFMovie m;          /* movie object */
     SWFMovieClip currentFrame;
                          /* current frame */
@@ -25,10 +26,17 @@ typedef struct swfDesc {
                          /* current mask/clip layer */
     SWFArray array;      /* store temporary objects */
     SEXP pkgEnv;         /* environment storing objects in R */
+    FT_Outline_Funcs outlnFuns;
+                         /* functions to draw font outline */
 } swfDesc;
 
 typedef swfDesc* pswfDesc;
 
+/************************************************************* 
+ 
+ The followings are utility functions used by plotting handlers
+ 
+*************************************************************/
 /* Setup the device descriptions data */
 Rboolean swfSetup(pDevDesc dev, const char *filename,
     double width, double height,
@@ -43,14 +51,20 @@ Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
 void swfSetLineStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
 /* Function to set fill style */
 void swfSetFillStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
+/* Function to set text color */
+void swfSetTextColor(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo);
 /* Draw line respecting lty */
 void swfDrawStyledLineTo(SWFShape shape, double x, double y, const pGEcontext gc);
-/* Get font SWFFont object */
-SWFFont swfGetFont(const pGEcontext gc, pswfDesc swfInfo);
 /* Get font FT_Face object */
 FT_Face swfGetFTFace(const pGEcontext gc, pswfDesc swfInfo);
 
-/* Device plotting function hooks. Defined in R_ext/GraphicsDevice.h */
+
+
+/************************************************************* 
+ 
+ Device plotting function hooks. Defined in R_ext/GraphicsDevice.h
+ 
+*************************************************************/
 void swfActivate(pDevDesc dd);
 
 void swfCircle(double x, double y, double r, const pGEcontext gc, pDevDesc dd);
