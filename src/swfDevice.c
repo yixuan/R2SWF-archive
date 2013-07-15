@@ -24,23 +24,23 @@ SEXP swfDevice(SEXP filename_r, SEXP width_r, SEXP height_r,
     /* Check if there is enough place to allocate a device */
     R_CheckDeviceAvailable();
     BEGIN_SUSPEND_INTERRUPTS {
-	/* Allocate and initialize the device descriptions data */
-	if(!(dev = (pDevDesc) calloc(1, sizeof(DevDesc))))
+    /* Allocate and initialize the device description data */
+    if(!(dev = (pDevDesc) calloc(1, sizeof(DevDesc))))
         return 0;
-	if(!swfSetup(dev, filename, width, height, bg, frameRate, env_r))
+    if(!swfSetup(dev, filename, width, height, bg, frameRate, env_r))
     {
-	    free(dev);
-	    Rf_error("unable to start swf device");
-	}
+        free(dev);
+        Rf_error("unable to start swf device");
+    }
     
-	gdd = GEcreateDevDesc(dev);
-	GEaddDevice2(gdd, "swf");
+    gdd = GEcreateDevDesc(dev);
+    GEaddDevice2(gdd, "swf");
     } END_SUSPEND_INTERRUPTS;
 
     return R_NilValue;
 }
 
-/* Function to setup device descriptions data,
+/* Function to setup device description data,
    like physical characteristics and plotting functions */
 Rboolean swfSetup(pDevDesc dev, const char *filename,
     double width, double height,
@@ -71,9 +71,11 @@ Rboolean swfSetup(pDevDesc dev, const char *filename,
      
      (0, height)
     */
+    /* width and height are specified by inches.
+       Here we convert them to points. */
     dev->left = 0;                   /* left raster coordinate */
-    dev->right = width * 72.0;	     /* right raster coordinate */
-    dev->bottom = height * 72.0;	 /* bottom raster coordinate */
+    dev->right = width * 72.0;       /* right raster coordinate */
+    dev->bottom = height * 72.0;     /* bottom raster coordinate */
     dev->top = 0;                    /* top raster coordinate */
     
     /*
@@ -132,7 +134,7 @@ Rboolean swfSetup(pDevDesc dev, const char *filename,
     dev->canGenMouseUp = FALSE;      /* can the device generate mouseup events */
     dev->canGenKeybd = FALSE;        /* can the device generate keyboard events */
     dev->gettingEvent = FALSE;       /* This is set while getGraphicsEvent
-    			                        is actively looking for events */
+                                        is actively looking for events */
     
     /********************************************************
      * Device procedures.
@@ -182,10 +184,10 @@ Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
     double width, double height,
     const int *bg, float frameRate, SEXP env)
 {
-    /* filename */
+    /* Filename */
     strcpy(swfInfo->filename, filename);
     
-    /* movie object */
+    /* Movie object */
     swfInfo->m = newSWFMovieWithVersion(8);
     /* Set swf background color */
     SWFMovie_setBackground(swfInfo->m, bg[0], bg[1], bg[2]);
@@ -209,8 +211,12 @@ Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
        and free them when movie is written to hard disk */
     swfInfo->array = newSWFArray(100);
     
+    /* An R environment in which the font list is stored.
+       This serves as a "global" environment for plotting
+       functions in C */
     swfInfo->pkgEnv = env;
     
+    /* Functions to draw font outline, used by swfTextUTF8() */
     swfInfo->outlnFuns.move_to = outlineMoveTo;
     swfInfo->outlnFuns.line_to = outlineLineTo;
     swfInfo->outlnFuns.conic_to = outlineConicTo;
@@ -221,7 +227,6 @@ Rboolean swfSetupSWFInfo(pswfDesc swfInfo, const char *filename,
     return TRUE;
 }
 
-/* Device plotting function hooks. Defined in R_ext/GraphicsDevice.h */
 void swfActivate(pDevDesc dd) {}
 void swfDeactivate(pDevDesc dd) {}
 
@@ -290,6 +295,9 @@ void swfClip(double x0, double x1, double y0, double y1, pDevDesc dd)
     SWFDisplayItem_setMaskLevel(swfInfo->currentClip, 99999);
 }
 
+/**********************************
+ * Below are supporting functions *
+ **********************************/
 void swfSetLineStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo)
 {
     int cap = SWF_LINESTYLE_CAP_ROUND;
@@ -343,6 +351,7 @@ void swfSetFillStyle(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo)
     SWFArray_append(swfInfo->array, (SWFObject) fill);
 }
 
+/* R uses gc->col for text color, but actually we need to "fill" the outlines */
 void swfSetTextColor(SWFShape shape, const pGEcontext gc, pswfDesc swfInfo)
 {
     SWFFillStyle fill;
@@ -587,7 +596,9 @@ static int utf8towcs(wchar_t *wc, const char *s, int n)
 }
 
 
-
+/**********************************
+ * Device plotting function hooks *
+ **********************************/
 void swfRect(double x0, double y0, double x1, double y1, const pGEcontext gc, pDevDesc dd)
 {
 #ifdef SWF_DEBUG
@@ -717,8 +728,8 @@ void swfMetricInfo(int c, const pGEcontext gc, double* ascent, double* descent, 
     FT_Set_Char_Size(face, 0, fontSize * 64, 72, 0);
     FT_Load_Char(face, c, FT_LOAD_NO_SCALE);
     
-	*ascent = face->glyph->metrics.horiBearingY * ratio;
-	*descent = face->glyph->metrics.height * ratio - *ascent;
+    *ascent = face->glyph->metrics.horiBearingY * ratio;
+    *descent = face->glyph->metrics.height * ratio - *ascent;
     *width = face->glyph->metrics.horiAdvance * ratio;
 #ifdef SWF_DEBUG
     Rprintf("** metricInfo(ascent = %f, descent = %f, width = %f)\n",
