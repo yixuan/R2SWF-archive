@@ -662,17 +662,18 @@ void swfPolygon(int n, double *x, double *y, const pGEcontext gc, pDevDesc dd)
     SWFShape shape = newSWFShape();
     int i = 0;
     
-    swfSetLineStyle(shape, gc, swfInfo);
+    /* First fill the polygon with no stroke, then draw polyline additionally */
     swfSetFillStyle(shape, gc, swfInfo);
     
     SWFShape_movePenTo(shape, x[0], y[0]);
     for(i = 1; i < n; i++)
     {
-        swfDrawStyledLineTo(shape, x[i], y[i], gc);
+        SWFShape_drawLineTo(shape, x[i], y[i]);
     }
-    swfDrawStyledLineTo(shape, x[0], y[0], gc);
+    SWFShape_drawLineTo(shape, x[0], y[0]);
     SWFShape_end(shape);
     SWFMovieClip_add(swfInfo->currentFrame, (SWFBlock) shape);
+    swfPolyline(n, x, y, gc, dd);
 }
 
 
