@@ -458,7 +458,7 @@ static pfontDesc swfGetFontDesc(const pGEcontext gc, pswfDesc swfInfo)
     listLen = Rf_length(fontList);
     for(i = 0; i < listLen; i++)
     {
-        if(strcmp(gc->fontfamily, CHAR(STRING_ELT(fontNames, i))) != 0)
+        if(strcmp(gc->fontfamily, CHAR(STRING_ELT(fontNames, i))) == 0)
         {
             break;
         }
