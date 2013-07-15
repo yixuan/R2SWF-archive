@@ -1,3 +1,6 @@
+#ifndef SWFFONT_H_INCLUDED
+#define SWFFONT_H_INCLUDED
+
 #include <ming.h>
 
 #include <R.h>
@@ -10,9 +13,11 @@
 typedef struct fontDesc {
     FT_Library library;
     FT_Face face;
-    SWFFont font;
 } fontDesc;
 
 typedef fontDesc* pfontDesc;
 
 SEXP swfLoadFont(SEXP fontPath);
+
+
+#endif /* SWFFONT_H_INCLUDED */

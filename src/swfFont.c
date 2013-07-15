@@ -9,8 +9,6 @@ SEXP swfLoadFont(SEXP fontPath)
     FT_Init_FreeType(&(font->library));
     FT_New_Face(font->library, filePath, 0, &(font->face));
     
-    font->font = newSWFFont_fromFile(filePath);
-    
     extPtr = R_MakeExternalPtr(font, R_NilValue, R_NilValue);
     return extPtr;
 }
@@ -21,7 +19,6 @@ SEXP swfCleanFont(SEXP extPtr)
     
     if(font->face) FT_Done_Face(font->face);
     if(font->library) FT_Done_FreeType(font->library);
-    if(font->font) destroySWFFont(font->font);
     if(font) free(font);
     
     return R_NilValue;
