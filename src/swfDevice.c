@@ -473,11 +473,6 @@ static pfontDesc swfGetFontDesc(const pGEcontext gc, pswfDesc swfInfo)
         }
     }
     if(i == listLen) i = 0;
-    if(gcfontface == 5)
-    {
-        i = 1;
-        gcfontface = 3;
-    }
     if(gcfontface < 1 || gcfontface > 5) gcfontface = 1;
     
     extPtr = VECTOR_ELT(VECTOR_ELT(fontList, i), gcfontface - 1);
