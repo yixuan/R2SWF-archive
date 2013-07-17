@@ -1,7 +1,6 @@
-#' SWF Graphics device
+#' SWF graphics device
 #' 
-#' This function opens a SWF device similar to
-#' \code{\link[grDevices]{pdf}()}, but produces Flash animation
+#' This function opens a SWF device that produces Flash animation
 #' in SWF format. Every time you call a high level plotting function
 #' like \code{\link[graphics]{plot}()}, the movie will create a new
 #' frame and draw following shapes on it.

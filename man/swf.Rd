@@ -1,6 +1,6 @@
 \name{swf}
 \alias{swf}
-\title{SWF Graphics device}
+\title{SWF graphics device}
 \usage{
   swf(file = "Rplots.swf", width = 7, height = 7,
     bg = "white", fg = "black", frameRate = 12)
@@ -21,8 +21,7 @@
   second}
 }
 \description{
-  This function opens a SWF device similar to
-  \code{\link[grDevices]{pdf}()}, but produces Flash
+  This function opens a SWF device that produces Flash
   animation in SWF format. Every time you call a high level
   plotting function like \code{\link[graphics]{plot}()},
   the movie will create a new frame and draw following
