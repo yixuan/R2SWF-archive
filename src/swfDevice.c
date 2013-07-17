@@ -575,7 +575,7 @@ static int utf8towcs(wchar_t *wc, const char *s, int n)
         for(p = wc, t = s; ; p++, t += m)
         {
             m  = (ssize_t) utf8toucs(p, t);
-            if (m < 0) error("invalid input '%s' in 'utf8towcs'");
+            if (m < 0) Rf_error("invalid input '%s' in 'utf8towcs'", s);
             if (m == 0) break;
             res ++;
             if (res >= n) break;
@@ -584,7 +584,7 @@ static int utf8towcs(wchar_t *wc, const char *s, int n)
         for(t = s; ; res++, t += m)
         {
             m  = (ssize_t) utf8toucs(&local, t);
-            if (m < 0) error("invalid input '%s' in 'utf8towcs'");
+            if (m < 0) Rf_error("invalid input '%s' in 'utf8towcs'", s);
             if (m == 0) break;
         }
     return (int) res;
@@ -711,6 +711,7 @@ void swfMetricInfo(int c, const pGEcontext gc, double* ascent, double* descent, 
 #endif
     pswfDesc swfInfo = (pswfDesc) dd->deviceSpecific;
     FT_Face face = swfGetFTFace(gc, swfInfo);
+    FT_Error err;
     double fontSize = gc->ps * gc->cex;
     double ratio = fontSize / face->units_per_EM;
   
@@ -722,7 +723,13 @@ void swfMetricInfo(int c, const pGEcontext gc, double* ascent, double* descent, 
     
     /* c is the unicode of the character */
     FT_Set_Char_Size(face, 0, fontSize * 64, 72, 0);
-    FT_Load_Char(face, c, FT_LOAD_NO_SCALE);
+    err = FT_Load_Char(face, c, FT_LOAD_NO_SCALE);
+    if(err)
+    {
+        errorcode(err);
+        *ascent = *descent = *width = 0.0;
+        return;
+    }
     
     *ascent = face->glyph->metrics.horiBearingY * ratio;
     *descent = face->glyph->metrics.height * ratio - *ascent;
@@ -785,6 +792,7 @@ double swfStrWidthUTF8(const char *str, const pGEcontext gc, pDevDesc dd)
     int len = utf8towcs(unicode, str, maxLen);
     /* Get the font face object */
     FT_Face face = swfGetFTFace(gc, swfInfo);
+    FT_Error err;
     double fontSize = gc->ps * gc->cex;
     double ratio = fontSize / face->units_per_EM;
     double width = 0.0;
@@ -792,7 +800,12 @@ double swfStrWidthUTF8(const char *str, const pGEcontext gc, pDevDesc dd)
     /* Add up the 'advance' of each character */
     for(i = 0; i < len; i++)
     {
-        FT_Load_Char(face, unicode[i], FT_LOAD_NO_SCALE);
+        err = FT_Load_Char(face, unicode[i], FT_LOAD_NO_SCALE);
+        if(err)
+        {
+            errorcode(err);
+            continue;
+        }
         width += face->glyph->metrics.horiAdvance * ratio;
     }
 

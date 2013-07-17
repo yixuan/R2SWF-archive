@@ -3,6 +3,10 @@
 
 #include <ming.h>
 
+#include <R.h>
+#include <Rdefines.h>
+#include <Rinternals.h>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
@@ -22,6 +26,8 @@ int outlineLineTo(const FT_Vector* to, void* user);
 int outlineConicTo(const FT_Vector* control, const FT_Vector* to, void* user);
 int outlineCubicTo(const FT_Vector* control1, const FT_Vector* control2,
             const FT_Vector* to, void* user);
+
+void errorcode(FT_Error err);
 
 /* Draw a string on a SWFShape object. String will be placed at (0, 0),
    which is at the bottom left corner of the first character */

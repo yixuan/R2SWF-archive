@@ -18,7 +18,7 @@ typedef struct fontDesc {
 typedef fontDesc* pfontDesc;
 
 SEXP swfLoadFont(SEXP fontPath);
-
+SEXP swfCleanFont(SEXP extPtr);
 
 #endif /* SWFFONT_H_INCLUDED */
 

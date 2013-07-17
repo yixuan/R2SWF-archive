@@ -71,12 +71,50 @@ int outlineCubicTo(const FT_Vector* control1, const FT_Vector* control2,
     return 0;
 }
 
+
+/* Errors that may occur in loading font characters.
+   Here we just give warnings. */
+void errorcode(FT_Error err)
+{
+    switch(err)
+    {
+        case 0x10:
+            Rf_warning("freetype: invalid glyph index");
+            break;
+        case 0x11:
+            Rf_warning("freetype: invalid character code");
+            break;
+        case 0x12:
+            Rf_warning("freetype: unsupported glyph image format");
+            break;
+        case 0x13:
+            Rf_warning("freetype: cannot render this glyph format");
+            break;
+        case 0x14:
+            Rf_warning("freetype: invalid outline");
+            break;
+        case 0x15:
+            Rf_warning("freetype: invalid composite glyph");
+            break;
+        case 0x16:
+            Rf_warning("freetype: too many hints");
+            break;
+        case 0x17:
+            Rf_warning("freetype: invalid pixel size");
+            break;
+        default:
+            Rf_warning("freetype: error code %d", err);
+            break;
+    }
+}
+
 void SWFShape_addString(SWFShape shape, const wchar_t* str, size_t nchar,
                         double fontSize,
                         FT_Face face, FT_Outline_Funcs *funs)
 {
     OutlineData data;
     FT_Outline outline;
+    FT_Error err;
     int i;
     
     data.shape = shape;
@@ -86,9 +124,19 @@ void SWFShape_addString(SWFShape shape, const wchar_t* str, size_t nchar,
     for(i = 0; i < nchar; i++)
     {
         /* str should be Unicode */
-        FT_Load_Char(face, str[i], FT_LOAD_NO_SCALE);
+        err = FT_Load_Char(face, str[i], FT_LOAD_NO_SCALE);
+        if(err)
+        {
+            errorcode(err);
+            continue;
+        }
         outline = face->glyph->outline;
-        FT_Outline_Decompose(&outline, funs, &data);
+        err = FT_Outline_Decompose(&outline, funs, &data);
+        if(err)
+        {
+            errorcode(err);
+            continue;
+        }
         /* After we draw a character, we move the pen right to a distance
         of the advance */
         /* See the picture in
