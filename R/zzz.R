@@ -1,6 +1,7 @@
 .onLoad <- function(libname, pkgname) {
     library.dynam("R2SWF", pkgname, libname);
     .Call("swfInit", PACKAGE = "R2SWF");
+    .default.font.paths();
     .add.default.fonts();
 }
 
