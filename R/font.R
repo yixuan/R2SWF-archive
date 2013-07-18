@@ -5,20 +5,13 @@
 
 .default.font.paths = function()
 {
-    linux.path = function()
-    {
-        linux = c("/usr/share/fonts",
-                  "/usr/local/share/fonts",
-                  normalizePath("~/.fonts"));
-        subdirs = list.files(linux, full.names = TRUE);
-        subdirs = subdirs[file.info(subdirs)$isdir %in% TRUE];
-        return(c(linux, subdirs));
-    }
     path = switch(Sys.info()[["sysname"]],
            Windows = normalizePath(file.path(Sys.getenv("windir"), "Fonts")),
-           Linux = linux.path(),
-           Darwin = c("/Library/Fonts",
-                      normalizePath("~/Library/Fonts")));
+           Linux = list.dirs(c("/usr/share/fonts",
+                               "/usr/local/share/fonts",
+                               "~/.fonts")),
+           Darwin = list.dirs(c("/Library/Fonts",
+                                "~/Library/Fonts")));
     .pkg.env$.font.path = path;
 }
 
@@ -36,10 +29,11 @@
 #' \item For Windows, it is \code{\%windir\%\\Fonts}
 #'
 #' \item For Mac OS, default paths are \code{/Library/Fonts}
-#'       and \code{~/Library/Fonts}
+#'       and \code{~/Library/Fonts} and their subdirectories
 #'
-#' \item For Linux, default paths are \code{/usr/share/fonts},
-#'       \code{/usr/local/share/fonts} and \code{~/.fonts}
+#' \item For Linux, \code{/usr/share/fonts},
+#'       \code{/usr/local/share/fonts}, \code{~/.fonts}, and
+#'       their subdirectories
 #' }
 #' 
 #' @seealso See \code{\link{add.fonts}()} for details about how
