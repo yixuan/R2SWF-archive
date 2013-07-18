@@ -5,11 +5,18 @@
 
 .default.font.paths = function()
 {
+    linux.path = function()
+    {
+        linux = c("/usr/share/fonts",
+                  "/usr/local/share/fonts",
+                  normalizePath("~/.fonts"));
+        subdirs = list.files(linux, full.names = TRUE);
+        subdirs = subdirs[file.info(subdirs)$isdir %in% TRUE];
+        return(c(linux, subdirs));
+    }
     path = switch(Sys.info()[["sysname"]],
            Windows = normalizePath(file.path(Sys.getenv("windir"), "Fonts")),
-           Linux = c("/usr/share/fonts",
-                     "/usr/local/share/fonts",
-                     normalizePath("~/.fonts")),
+           Linux = linux.path(),
            Darwin = c("/Library/Fonts",
                       normalizePath("~/Library/Fonts")));
     .pkg.env$.font.path = path;
@@ -111,7 +118,7 @@ list.fonts = function()
 #' Add new font families for SWF device
 #' 
 #' This function registers new font families that can be used by SWF
-#' device.
+#' device. Currently supported formats are ttf/ttc fonts.
 #' 
 #' @param family a character string of maximum 200-byte size,
 #'               indicating the family name of the fonts you want to add.
