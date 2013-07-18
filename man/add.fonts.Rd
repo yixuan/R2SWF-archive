@@ -26,7 +26,8 @@
 }
 \description{
   This function registers new font families that can be
-  used by SWF device.
+  used by SWF device. Currently supported formats are
+  ttf/ttc fonts.
 }
 \details{
   In R graphics device, there are two parameters combined

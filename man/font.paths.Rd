@@ -21,11 +21,11 @@
   \code{\%windir\%\\Fonts}
 
   \item For Mac OS, default paths are \code{/Library/Fonts}
-  and \code{~/Library/Fonts}
+  and \code{~/Library/Fonts} and their subdirectories
 
-  \item For Linux, default paths are
-  \code{/usr/share/fonts}, \code{/usr/local/share/fonts}
-  and \code{~/.fonts} }
+  \item For Linux, \code{/usr/share/fonts},
+  \code{/usr/local/share/fonts}, \code{~/.fonts}, and their
+  subdirectories }
 }
 \author{
   Yixuan Qiu <\url{http://yixuan.cos.name/}>
