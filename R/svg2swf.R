@@ -2,8 +2,6 @@
 # graphics library, typically from svg() in the grDevices package (R >= 2.14.0
 # required for Windows OS), and CairoSVG() in the Cairo package.
 parseSVG = function(file.name) {
-  # Use XML package
-  library(XML)
   svgFile = xmlParse(file.name);
   # Don't forget the name space!
   newXMLNamespace(xmlRoot(svgFile), "http://www.w3.org/2000/svg", "svg");
@@ -158,6 +156,9 @@ parseSVG = function(file.name) {
 #'
 svg2swf = function(input, output = "./movie.swf", bgColor = "white",
                    interval = 1) {
+  # Use XML package
+  if(!require(XML))
+      stop("svg2swf() requires XML package");
   if(!inherits(input, "character"))
     stop("'input' must be a character vector naming the input SVG files");
 
