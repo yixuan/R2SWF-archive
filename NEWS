@@ -5,6 +5,12 @@ NEW FEATURES
     o A SWF device for R through swf()
 
 
+BUG FIXES
+
+    o Take care of absolute and relative paths of files
+    o Remove "outdir" argument from devswf()
+
+
 
 
 
