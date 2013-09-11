@@ -15,7 +15,7 @@
   frames}
 }
 \value{
-  The path of the SWF file.
+  The name of the SWF file.
 }
 \description{
   This function converts a sequence of PNG/JPEG/SVG image

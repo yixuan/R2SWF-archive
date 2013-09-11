@@ -2,8 +2,8 @@
 \alias{image2swf}
 \title{Convert bitmap images to SWF}
 \usage{
-  image2swf(input, output = "./movie.swf",
-    bgColor = "white", interval = 1)
+  image2swf(input, output = "movie.swf", bgColor = "white",
+    interval = 1)
 }
 \arguments{
   \item{input}{the file names of the images to be
@@ -17,8 +17,7 @@
   animation frames}
 }
 \value{
-  The path of the generated swf file if successful, or NULL
-  is returned.
+  The name of the generated swf file if successful.
 }
 \description{
   Given the file names of a sequence of images, this
@@ -39,7 +38,7 @@ if(capabilities("png")) {
   for(i in 1:9) plot(runif(20), ylim = c(0, 1))
   dev.off()
   output = image2swf(sprintf("Rplot\%03d.png", 1:9))
-  print(output)
+  swf2html(output)
   setwd(olddir)
 }
 }

@@ -2,7 +2,7 @@
 \alias{svg2swf}
 \title{Convert a sequence of SVG files to SWF file}
 \usage{
-  svg2swf(input, output = "./movie.swf", bgColor = "white",
+  svg2swf(input, output = "movie.swf", bgColor = "white",
     interval = 1)
 }
 \arguments{
@@ -17,7 +17,7 @@
   animation frames}
 }
 \value{
-  The path of the generated SWF file if successful.
+  The name of the generated SWF file if successful.
 }
 \description{
   Given the file names of a sequence of SVG files, this
