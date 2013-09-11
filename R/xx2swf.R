@@ -26,7 +26,7 @@
 #'
 image2swf <- function(input, output = "movie.swf", bgColor = "white",
                       interval = 1) {
-  if(!inherits(input, "character"))
+  if(!is.character(input))
     stop("'input' must be a character vector naming the input images");
 
   bg = col2rgb(bgColor, alpha = FALSE);

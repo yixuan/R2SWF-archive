@@ -159,7 +159,7 @@ svg2swf = function(input, output = "movie.swf", bgColor = "white",
   # Use XML package
   if(!require(XML))
       stop("svg2swf() requires XML package");
-  if(!inherits(input, "character"))
+  if(!is.character(input))
     stop("'input' must be a character vector naming the input SVG files");
 
   bg = col2rgb(bgColor, alpha = FALSE);
