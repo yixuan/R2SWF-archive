@@ -133,7 +133,7 @@ parseSVG = function(file.name) {
 #' @param output the name of the output SWF file
 #' @param bgColor background color of the output SWF file
 #' @param interval the time interval (in seconds) between animation frames
-#' @return The path of the generated SWF file if successful.
+#' @return The name of the generated SWF file if successful.
 #' @export
 #' @author Yixuan Qiu <\email{yixuan.qiu@@cos.name}>
 #' @examples \dontrun{if(capabilities("cairo")) {
@@ -154,7 +154,7 @@ parseSVG = function(file.name) {
 #' }
 #' }
 #'
-svg2swf = function(input, output = "./movie.swf", bgColor = "white",
+svg2swf = function(input, output = "movie.swf", bgColor = "white",
                    interval = 1) {
   # Use XML package
   if(!require(XML))
@@ -165,14 +165,17 @@ svg2swf = function(input, output = "./movie.swf", bgColor = "white",
   bg = col2rgb(bgColor, alpha = FALSE);
   bg = as.integer(bg);
 
+  if(!all(file.exists(input))) stop("one or more input files do not exist");
+  
   filesData = lapply(input, parseSVG);
   firstFile = xmlParse(input[1]);
   size = xmlAttrs(xmlRoot(firstFile))["viewBox"];
   size = as.numeric(unlist(strsplit(size, " ")));
 
-  .Call("svg2swf", filesData, as.character(output), size,
+  outfile = normalizePath(output, mustWork = FALSE);
+  .Call("svg2swf", filesData, outfile, size,
         bg, as.numeric(interval), PACKAGE = "R2SWF");
 
-  message("SWF file created at ", normalizePath(output));
-  invisible(normalizePath(output));
+  message("SWF file created at ", outfile);
+  invisible(output);
 }

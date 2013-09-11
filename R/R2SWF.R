@@ -11,8 +11,7 @@
 #' @param output the name of the output SWF file
 #' @param bgColor background color of the output SWF file
 #' @param interval the time interval (in seconds) between animation frames
-#' @return The path of the generated swf file if successful, or NULL is
-#'   returned.
+#' @return The name of the generated swf file if successful.
 #' @export
 #' @author Yixuan Qiu <\email{yixuan.qiu@@cos.name}>
 #' @examples if(capabilities("png")) {
@@ -21,28 +20,33 @@
 #'   for(i in 1:9) plot(runif(20), ylim = c(0, 1))
 #'   dev.off()
 #'   output = image2swf(sprintf("Rplot%03d.png", 1:9))
-#'   print(output)
+#'   swf2html(output)
 #'   setwd(olddir)
 #' }
 #'
-image2swf <- function(input, output = "./movie.swf", bgColor = "white",
+image2swf <- function(input, output = "movie.swf", bgColor = "white",
                       interval = 1) {
   if(!inherits(input, "character"))
     stop("'input' must be a character vector naming the input images");
 
   bg = col2rgb(bgColor, alpha = FALSE);
   bg = as.integer(bg);
+  
+  if(!all(file.exists(input))) stop("one or more input files do not exist");
 
   # The formats of files. 1 for png, 2 for jpg/jpeg, and 0 for others.
   fmt = integer(length(input));
-  fmt[grep("\\.[Pp][Nn][Gg]$", input)] = 1L;
-  fmt[grep("\\.[Jj][Pp][Ee]?[Gg]$", input)] = 2L;
+  fmt[grep("\\.png$", input, ignore.case = TRUE)] = 1L;
+  fmt[grep("\\.jpe?g$", input, ignore.case = TRUE)] = 2L;
+  
+  infile = normalizePath(input, mustWork = FALSE);
+  outfile = normalizePath(output, mustWork = FALSE);
 
-  .Call("image2swf", as.character(input), fmt, as.character(output), bg,
+  .Call("image2swf", input, fmt, outfile, bg,
         as.numeric(interval), PACKAGE = "R2SWF");
 
-  message("SWF file created at ", normalizePath(output));
-  invisible(normalizePath(output));
+  message("SWF file created at ", outfile);
+  invisible(output);
 }
 
 #' Convert R graphics to SWF using different graphics devices
@@ -57,7 +61,6 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
 #' device, e.g. \code{\link[Cairo]{CairoPNG}()} in the \pkg{Cairo} package. Note
 #' that the \code{file.ext} argument should be set accordingly.
 #' @param expr an expression to generate a sequence of images
-#' @param outdir the output directory
 #' @param output the name of the output swf file
 #' @param bgColor background color of the output SWF file
 #' @param interval the time interval between animation frames
@@ -66,22 +69,25 @@ image2swf <- function(input, output = "./movie.swf", bgColor = "white",
 #' @param file.ext the file extension for the images
 #' @param img.name the file name of the images without the extension
 #' @param \dots other arguments to be passed to the graphics device
-#' @return The path of the generated swf file if succeeded.
+#' @return The name of the generated swf file if succeeded.
 #' @export
 #' @author Yihui Xie <\url{http://yihui.name}>
 #' @examples
+#' olddir = setwd(tempdir())
 #' output1 = dev2swf({
 #'   for(i in 1:10) plot(runif(20), ylim = c(0, 1))
 #' }, dev='png', file.ext='png', output='movie-png.swf')
-#' print(output1)
+#' swf2html(output1)
 #'
 #' if(capabilities("cairo")) {
 #'     output2 = dev2swf({
 #'         for(i in 1:10) plot(runif(20), ylim = c(0, 1))
 #'     }, dev='svg', file.ext='svg', output='movie-svg.swf')
-#'     print(output2)
 #' }
-dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
+#' swf2html(output2)
+#'
+#' setwd(olddir)
+dev2swf <- function(expr, output = "movie.swf",
                     bgColor = "white", interval = 1, dev = "png",
                     file.ext = "png", img.name = "Rplot", ...) {
   if (is.character(dev)) dev = get(dev)
@@ -94,10 +100,8 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
   files = list.files(dirname(img.name),
                      paste(basename(img.name), "[0-9]+\\.", file.ext, '$', sep = ''),
                      full.names = TRUE)
-  output = file.path(outdir, output)
   file2swf(files, output)
-
-  invisible(normalizePath(output))
+  invisible(output)
 }
 
 #' Convert image files to SWF
@@ -107,7 +111,7 @@ dev2swf <- function(expr, outdir = tempdir(), output = "movie.swf",
 #' \code{\link{svg2swf}}.
 #' @inheritParams dev2swf
 #' @param files a character vector of input filenames
-#' @return The path of the SWF file.
+#' @return The name of the SWF file.
 #' @author Yihui Xie <\url{http://yihui.name}>
 #' @export
 file2swf = function(files, output, bgColor = 'white', interval = 1) {
