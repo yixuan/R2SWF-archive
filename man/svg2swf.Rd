@@ -35,7 +35,8 @@
   package.
 }
 \examples{
-\dontrun{if(capabilities("cairo")) {
+\dontrun{
+if(capabilities("cairo")) {
   olddir = setwd(tempdir())
   svg("Rplot\%03d.svg", onefile = FALSE)
   set.seed(123)
