@@ -165,7 +165,9 @@ list.fonts = function()
 #' #          add it to SWF device, and use it to draw text in swf()
 #' # WenQuanYi Micro Hei is an open source and high quality Chinese (and CJKV) font
 #' wd = setwd(tempdir());
-#' ft.url = "http://sourceforge.net/projects/wqy/files/wqy-microhei/0.2.0-beta/wqy-microhei-0.2.0-beta.tar.gz";
+#' ft.url = "http://sourceforge.net/projects/wqy/files/wqy-microhei";
+#' ft.url = paste(ft.url, "0.2.0-beta/wqy-microhei-0.2.0-beta.tar.gz",
+#'                sep = "/");
 #' download.file(ft.url, basename(ft.url));
 #' # Extract it into R2SWF/fonts and add the directory to search path
 #' ft.dir = system.file("fonts", package = "R2SWF");
