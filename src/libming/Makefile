@@ -44,18 +44,18 @@ OBJS = blocklist.o compat.o displaylist.o fill.o font_util.o \
 	position.o shape_cubic.o shape_util.o text_util.o
 
 
-.PHONY: actcmp blocks all clean
+.PHONY: actcmp blks all clean
 
 all: libming.a
 
-libming.a: actcmp blocks $(OBJS)
+libming.a: actcmp blks $(OBJS)
 	@$(RM) $@
 	$(AR_RC) $@ $(ACTCMP_OBJS) $(BLOCKS_OBJS) $(OBJS)
 
 actcmp:
 	cd actioncompiler && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
-blocks:
+blks:
 	cd blocks && $(MAKE) all CC="$(CC)" CFLAGS="$(CFLAGS)" CPPFLAGS="$(CPPFLAGS)"
 
 .c.o:
